@@ -24,7 +24,7 @@ class GeneralController extends Controller
             			$i++;
             			DB::table($table)
 				        ->where('id', $id)				        
-				        ->update(array('display_order' => $i));			
+				        ->update(array('col_order' => $i));			
             		}
             	}
             }

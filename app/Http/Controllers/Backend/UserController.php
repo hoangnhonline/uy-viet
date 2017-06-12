@@ -26,6 +26,7 @@ class UserController extends Controller
             'role' => 1,
             'status' => 1
         ));*/       
+        var_dump(Hash::make('123465@'));
         return view('backend.login');
     }
 
