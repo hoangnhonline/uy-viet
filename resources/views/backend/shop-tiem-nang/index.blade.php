@@ -29,7 +29,14 @@
         
         <!-- /.box-header -->
         <div class="box-body">
-          <table class="table table-bordered" id="table-list-data" data-table="shop_tiem_nang1480213595">
+          <form method="post" action={{ route('save-col-order')}} >
+            {{ csrf_field() }}
+            <input type="hidden" name="table" value="shop_tiem_nang1480213595">
+            <input type="hidden" name="return_url" value="{{ url()->current() }}">
+            @if($items->count() > 0)
+            <button type="submit" class="btn btn-warning btn-sm">Save thứ tự</button>
+            @endif
+          <table class="table table-bordered" id="table-list-data" data-table="shop_tiem_nang1480213595" style="margin-top:5px">
             <tr>
               <th style="width: 1%">#</th>
               <th style="width: 1%;white-space:nowrap">Thứ tự</th>
@@ -46,19 +53,19 @@
               <tr id="row-{{ $item->id }}">
                 <td><span class="order">{{ $i }}</span></td>
                 <td style="vertical-align:middle;text-align:center">
-                  <img src="{{ URL::asset('admin/dist/img/move.png')}}" class="move img-thumbnail" alt="Cập nhật thứ tự"/>
+                  <input type="text" value="{{ $item->col_order }}" name="col_order[{{$item->id}}]" style="width:50px" class="form-control" />
                 </td>
                 <td>                  
                   <a href="{{ route( 'shop-tiem-nang.edit', [ 'id' => $item->id ]) }}">{{ $item->type }}</a>
                 </td>  
                 <td>
-                  <div style="width:60px; height:30px; background-color:{{ $item->color }};padding:5px">{{ $item->color }}</div>
+                  <div style="width:60px; height:30px; background-color:{{ $item->color }};padding:5px;color:#FFF">{{ $item->color }}</div>
                 </td>
                 <td>
                   @if($item->status == 0)
-                  Ẩn
+                  <span class="label label-danger">Ẩn</span>
                   @else
-                  Hiện
+                  <span class="label label-success">Hiện</span>
                   @endif
                 </td>              
                 <td style="white-space:nowrap">
@@ -77,6 +84,7 @@
 
           </tbody>
           </table>
+          </form>
         </div>        
       </div>
       <!-- /.box -->     

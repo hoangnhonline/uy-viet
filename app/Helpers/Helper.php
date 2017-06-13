@@ -17,8 +17,19 @@ class Helper
    
     public static function showImage($image_url, $type = 'original'){
 
-        //return strpos($image_url, 'http') === false ? config('icho.upload_url') . $type . '/' . $image_url : $image_url;        
-        return strpos($image_url, 'http') === false ? config('icho.upload_url') . $image_url : $image_url;        
+        //return strpos($image_url, 'http') === false ? config('uv.upload_url') . $type . '/' . $image_url : $image_url;        
+        if(strpos($image_url, 'http') === false){
+            if(strpos($image_url, 'assets') === false){
+                $url = config('uv.upload_url') . $image_url;
+            }else{
+                $url = url('/').'/'.$image_url;
+            }
+            
+        }else{
+            $url = $image_url;   
+        }
+        //return strpos($image_url, 'http') === false ? config('uv.upload_url') . $image_url : $image_url;        
+        return $url;
 
     }
     public static function showImageThumb($image_url, $object_type = 1, $folder = ''){             
@@ -26,11 +37,11 @@ class Helper
         //object_type = 1 : product, 2 :article  3: project             
         if(strpos($image_url, 'http') === false){
             if($object_type == 1){
-                return config('icho.upload_url') . 'thumbs/' . $folder. '/' . $image_url;
+                return config('uv.upload_url') . 'thumbs/' . $folder. '/' . $image_url;
             }elseif($object_type == 2){
-                return config('icho.upload_url') . 'thumbs/articles/'. $folder. '/' . $image_url;
+                return config('uv.upload_url') . 'thumbs/articles/'. $folder. '/' . $image_url;
             }else{
-                return config('icho.upload_url') . 'thumbs/projects/'. $folder. '/' . $image_url;
+                return config('uv.upload_url') . 'thumbs/projects/'. $folder. '/' . $image_url;
             }    
         }else{
             return $image_url;
@@ -74,8 +85,8 @@ class Helper
 
         $basePath = $date_dir == true ? $basePath .= date('Y/m/d'). '/'  : $basePath = $basePath;        
         
-        $desPath = config('icho.upload_path'). $basePath;
-        $desThumbsPath = config('icho.upload_thumbs_path'). $basePath;
+        $desPath = config('uv.upload_path'). $basePath;
+        
         //set name for file
         $fileName = $file->getClientOriginalName();
         

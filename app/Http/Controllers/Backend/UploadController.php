@@ -61,7 +61,7 @@ class UploadController extends Controller
         $count = 0;
         if($dataArr['myfile']){
             
-            $url = config('icho.upload_url');
+            $url = config('uv.upload_url');
 
             foreach( $dataArr['myfile'] as $file ){
                 $count++;

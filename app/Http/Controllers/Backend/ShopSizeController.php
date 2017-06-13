@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\ShopSize;
-use Helper, File, Session, Auth;
+use Helper, File, Session, Auth, DB;
 
 class ShopSizeController extends Controller
 {
@@ -18,7 +18,7 @@ class ShopSizeController extends Controller
     */
     public function index(Request $request)
     {
-        $items = ShopSize::all()->sortBy('col_order', 'asc');
+        $items = ShopSize::all()->sortBy('col_order');
         return view('backend.shop-size.index', compact( 'items' ));
     }
 
@@ -47,13 +47,16 @@ class ShopSizeController extends Controller
             'color' => 'required',
         ],
         [
-            'type.required' => 'Bạn chưa nhập tên loại vốn',
+            'type.required' => 'Bạn chưa nhập tên size',
             'color.required' => 'Bạn chưa nhập màu'
-        ]);        
-        
-        ShopSize::create($dataArr);
+        ]);
 
-        Session::flash('message', 'Tạo mới loại vốn thành công');
+        $dataArr['col_order'] = Helper::getNextOrder('shop_size');
+        
+        unset($dataArr['_token']);
+        ShopSize::insert($dataArr);
+
+        Session::flash('message', 'Tạo mới size thành công');
 
         return redirect()->route('shop-size.index');
     }
@@ -100,7 +103,7 @@ class ShopSizeController extends Controller
             'color' => 'required',
         ],
         [
-            'type.required' => 'Bạn chưa nhập tên loại vốn',
+            'type.required' => 'Bạn chưa nhập tên size',
             'color.required' => 'Bạn chưa nhập màu'
         ]);
 
@@ -108,7 +111,7 @@ class ShopSizeController extends Controller
 
         $model->update($dataArr);
 
-        Session::flash('message', 'Cập nhật loại vốn thành công');
+        Session::flash('message', 'Cập nhật size thành công');
 
         return redirect()->route('shop-size.edit', $dataArr['id']);
     }
@@ -126,7 +129,7 @@ class ShopSizeController extends Controller
         $model->delete();
 
         // redirect
-        Session::flash('message', 'Xóa loại vốn thành công');
+        Session::flash('message', 'Xóa size thành công');
         return redirect()->route('shop-size.index');
     }
 }

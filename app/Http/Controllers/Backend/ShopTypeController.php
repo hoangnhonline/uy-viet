@@ -18,7 +18,7 @@ class ShopTypeController extends Controller
     */
     public function index(Request $request)
     {
-        $items = ShopType::all()->sortBy('col_order', 'asc');
+        $items = ShopType::all()->sortBy('col_order');
         return view('backend.shop-type.index', compact( 'items' ));
     }
 
@@ -65,7 +65,13 @@ class ShopTypeController extends Controller
             
             $dataArr['icon_url'] = $destionation;
         }   
-        ShopType::create($dataArr);
+
+        unset($dataArr['_token']);
+        unset($dataArr['icon_name']);
+
+        $dataArr['col_order'] = Helper::getNextOrder('shop_type');
+        
+        ShopType::insert($dataArr);           
 
         Session::flash('message', 'Tạo mới danh mục thành công');
 

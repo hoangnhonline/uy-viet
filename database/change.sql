@@ -1,0 +1,1 @@
+ALTER TABLE `shop_size` ADD `status` BOOLEAN NULL DEFAULT TRUE AFTER `col_order`;

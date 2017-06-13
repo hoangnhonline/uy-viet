@@ -51,7 +51,8 @@ class ShopQuyMoController extends Controller
             'color.required' => 'Bạn chưa nhập màu'
         ]);        
         $dataArr['col_order'] = Helper::getNextOrder('shop_tiem_nang1480213595');
-        ShopQuyMo::create($dataArr);
+        unset($dataArr['_token']);
+        ShopQuyMo::insert($dataArr);  
 
         Session::flash('message', 'Tạo mới loại vốn thành công');
 

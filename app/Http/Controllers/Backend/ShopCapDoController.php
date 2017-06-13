@@ -51,7 +51,9 @@ class ShopCapDoController extends Controller
             'color.required' => 'Bạn chưa nhập màu'
         ]);        
         $dataArr['col_order'] = Helper::getNextOrder('shop_cap_do_1480213548');
-        ShopCapDo::create($dataArr);
+
+        unset($dataArr['_token']);
+        ShopCapDo::insert($dataArr);      
 
         Session::flash('message', 'Tạo mới cấp độ thành công');
 

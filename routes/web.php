@@ -17,6 +17,14 @@ Route::get('backend/logout', ['as' => 'backend.logout', 'uses' => 'Backend\UserC
 Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => 'isAdmin'], function()
 {    
     Route::get('dashboard', ['as' => 'dashboard.index', 'uses' => "ShopVonController@dashboard"]);
+    Route::group(['prefix' => 'shop'], function () {
+        Route::get('/', ['as' => 'shop.index', 'uses' => 'ShopController@index']);
+        Route::get('/create', ['as' => 'shop.create', 'uses' => 'ShopController@create']);
+        Route::post('/store', ['as' => 'shop.store', 'uses' => 'ShopController@store']);
+        Route::get('{id}/edit',   ['as' => 'shop.edit', 'uses' => 'ShopController@edit']);
+        Route::post('/update', ['as' => 'shop.update', 'uses' => 'ShopController@update']);
+        Route::get('{id}/destroy', ['as' => 'shop.destroy', 'uses' => 'ShopController@destroy']);
+    });
     Route::group(['prefix' => 'shop-tiem-nang'], function () {
         Route::get('/', ['as' => 'shop-tiem-nang.index', 'uses' => 'ShopTiemNangController@index']);
         Route::get('/create', ['as' => 'shop-tiem-nang.create', 'uses' => 'ShopTiemNangController@create']);
@@ -33,7 +41,14 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'shop-von.update', 'uses' => 'ShopVonController@update']);
         Route::get('{id}/destroy', ['as' => 'shop-von.destroy', 'uses' => 'ShopVonController@destroy']);
     });   
-    
+    Route::group(['prefix' => 'shop-type'], function () {
+        Route::get('/', ['as' => 'shop-type.index', 'uses' => 'ShopTypeController@index']);
+        Route::get('/create', ['as' => 'shop-type.create', 'uses' => 'ShopTypeController@create']);
+        Route::post('/store', ['as' => 'shop-type.store', 'uses' => 'ShopTypeController@store']);
+        Route::get('{id}/edit',   ['as' => 'shop-type.edit', 'uses' => 'ShopTypeController@edit']);
+        Route::post('/update', ['as' => 'shop-type.update', 'uses' => 'ShopTypeController@update']);
+        Route::get('{id}/destroy', ['as' => 'shop-type.destroy', 'uses' => 'ShopTypeController@destroy']);
+    });
     Route::group(['prefix' => 'shop-quy-mo'], function () {
         Route::get('/', ['as' => 'shop-quy-mo.index', 'uses' => 'ShopQuyMoController@index']);
         Route::get('/create', ['as' => 'shop-quy-mo.create', 'uses' => 'ShopQuyMoController@create']);
@@ -50,7 +65,14 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'shop-cap-do.update', 'uses' => 'ShopCapDoController@update']);
         Route::get('{id}/destroy', ['as' => 'shop-cap-do.destroy', 'uses' => 'ShopCapDoController@destroy']);
     });   
-    
+    Route::group(['prefix' => 'shop-size'], function () {
+        Route::get('/', ['as' => 'shop-size.index', 'uses' => 'ShopSizeController@index']);
+        Route::get('/create', ['as' => 'shop-size.create', 'uses' => 'ShopSizeController@create']);
+        Route::post('/store', ['as' => 'shop-size.store', 'uses' => 'ShopSizeController@store']);
+        Route::get('{id}/edit',   ['as' => 'shop-size.edit', 'uses' => 'ShopSizeController@edit']);
+        Route::post('/update', ['as' => 'shop-size.update', 'uses' => 'ShopSizeController@update']);
+        Route::get('{id}/destroy', ['as' => 'shop-size.destroy', 'uses' => 'ShopSizeController@destroy']);
+    });
 
     Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
     Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);
@@ -69,6 +91,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'account.update', 'uses' => 'AccountController@update']);
         Route::get('{id}/destroy', ['as' => 'account.destroy', 'uses' => 'AccountController@destroy']);
     });
+    Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']);     
 });
 
 

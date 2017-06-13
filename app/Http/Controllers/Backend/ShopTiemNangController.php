@@ -53,7 +53,8 @@ class ShopTiemNangController extends Controller
         
         $dataArr['col_order'] = Helper::getNextOrder('shop_tiem_nang1480213595');
 
-        ShopTiemNang::create($dataArr);
+        unset($dataArr['_token']);
+        ShopTiemNang::insert($dataArr);        
 
         Session::flash('message', 'Tạo mới tiềm năng thành công');
 

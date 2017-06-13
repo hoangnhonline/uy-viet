@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Helpers\Helper;
-use DB;
+use DB, Session;
 class GeneralController extends Controller
 {
     public function updateOrder(Request $request){
@@ -40,5 +40,19 @@ class GeneralController extends Controller
     		}
     	}
     	return response()->json( ['str' => $strReturn] );
+    }
+
+    public function saveColOrder(Request $request){
+        $data = $request->all();
+        $table = $request->table;
+        $return_url = $request->return_url;
+        if(!empty($data['col_order'])){
+            foreach ($data['col_order'] as $id => $col_order) {
+                $model = DB::table($table)->where('id', $id)->update(['col_order' => $col_order]);                
+            }
+        }
+        Session::flash('message', 'Cập nhật thứ tự tin thành công');
+
+        return redirect()->to($return_url);
     }
 }

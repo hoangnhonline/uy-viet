@@ -29,5 +29,8 @@ class ShopType extends Model  {
                             'col_order',
                             'status'
                             ];
-   
+    public function shops()
+    {
+        return $this->hasMany('App\Models\Shop', 'type_id');
+    }
 }

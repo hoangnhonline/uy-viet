@@ -51,7 +51,9 @@ class ShopVonController extends Controller
             'color.required' => 'Bạn chưa nhập màu'
         ]);        
         $dataArr['col_order'] = Helper::getNextOrder('shop_von1484471015');
-        ShopVon::create($dataArr);
+
+        unset($dataArr['_token']);
+        ShopVon::insert($dataArr);   
 
         Session::flash('message', 'Tạo mới loại vốn thành công');
 

@@ -28,10 +28,6 @@ class ShopSize extends Model  {
                             'icon_url',
                             'col_order',
                             'status'
-                            ];
-    
-    public function shops()
-    {
-        return $this->hasMany('App\Models\ShopSelectCondition', 'von1484471015_id');
-    }
+                            ];    
+   
 }

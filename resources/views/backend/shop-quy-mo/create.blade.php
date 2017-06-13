@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group">
                   <label>Màu <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="color" id="color" value="{{ old('color') }}">
+                  <input type="text" class="form-control"  max-length="10" name="color"  id="color" value="{{ old('color') }}">
                 </div>               
                 <div class="form-group">
                   <label>Ẩn/hiện</label>

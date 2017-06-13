@@ -51,7 +51,7 @@
               </div>
              <div class="form-group">
                 <label>Màu sắc <span class="red-star">*</span></label>
-                <input type="text" class="form-control" name="color" id="color" value="{{ $detail->color }}">
+                <input type="text" class="form-control"  max-length="10" name="color"  id="color" value="{{ $detail->color }}">
               </div>
               
               <div class="form-group">

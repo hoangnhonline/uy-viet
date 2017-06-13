@@ -41,5 +41,24 @@ class Shop extends Model  {
                             'district_id',
                             'province_id'
                             ];
-   
+    public function province()
+    {
+        return $this->belongsTo('App\Models\Province', 'province_id');
+    }
+    public function district()
+    {
+        return $this->belongsTo('App\Models\District', 'district_id');
+    }
+    public function ward()
+    {
+        return $this->belongsTo('App\Models\Ward', 'ward_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+    public function type()
+    {
+        return $this->belongsTo('App\Models\ShopType', 'type_id');
+    }   
 }
