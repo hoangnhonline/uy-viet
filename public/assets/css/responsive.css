@@ -1,0 +1,162 @@
+/*------------------------------------------------------------------
+[Table of contents]
+1. 	
+------------------------*/
+
+/*----------------
+[Styles for devices(>1400px)]
+*/
+@media (min-width: 768px) {
+	.sidebar-collapse .main-header .logo {
+	    width: 50px;
+	}
+	.sidebar-collapse .main-header .logo>.logo-mini {
+	    display: block;
+	    margin-left: -15px;
+	    margin-right: -15px;
+	    font-size: 18px;
+	}
+	.sidebar-collapse .main-header .navbar {
+	    margin-left: 50px;
+	}
+	#search_icon {
+	    display: none;
+	}
+	.form-select {
+	    display: block;
+	}
+	nav .form-group:nth-child(1), nav .form-group:nth-child(2), nav .form-group:nth-child(3) {
+	    width: 23%;
+	}
+	.sidebar-mini.sidebar-collapse .main-sidebar {
+	    -webkit-transform: translate(0, 0);
+	    -ms-transform: translate(0, 0);
+	    -o-transform: translate(0, 0);
+	    transform: translate(0, 0);
+	    width: 50px !important;
+	    z-index: 850;
+	}
+	.sidebar-mini.sidebar-collapse .main-sidebar .user-panel>.info, .sidebar-mini.sidebar-collapse .sidebar-form, .sidebar-mini.sidebar-collapse .sidebar-menu>li>a>span, .sidebar-mini.sidebar-collapse .sidebar-menu>li>.treeview-menu, .sidebar-mini.sidebar-collapse .sidebar-menu>li>a>.pull-right, .sidebar-mini.sidebar-collapse .sidebar-menu li.header {
+	    display: none !important;
+	    -webkit-transform: translateZ(0);
+	}
+	.sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .right-side, .sidebar-mini.sidebar-collapse .main-footer {
+	    margin-left: 50px !important;
+	    z-index: 840;
+	}
+	.sidebar-mini.sidebar-collapse .sidebar-menu>li {
+	    position: relative;
+	}
+	.modal_custom .modal-dialog {
+	    width: 460px;
+	    margin: 100px auto;
+	}
+	.sidebar-mini.sidebar-collapse .main-footer {
+	    margin-left: 50px !important;
+	    z-index: 840;
+	}
+}
+
+@media (max-width: 767px) {
+	.main-header {
+	    position: relative;
+	}
+	.main-header .logo, .main-header .navbar {
+	    width: 100%;
+	    float: none;
+	}
+	.main-header .navbar {
+	    margin: 0;
+	}
+	#search_icon {
+	    display: block;
+	    top: 54px;
+	    right: 5px !important;
+	    z-index: 1001;
+	    position: absolute;
+	}
+	#search_icon .btn {
+	    border-radius: 100%;
+	    width: 40px;
+	    height: 40px;
+	}
+	#search_icon .btn-primary {
+	    background: #41adff;
+	    border: none;
+	    outline: none;
+	}
+	#search_icon .btn-primary span {
+	    font-size: 15px;
+	}
+	.form-select {
+	    display: none;
+	    height: auto;
+		left: auto;
+		right: 55px;
+	    position: absolute;
+	}
+	.main-sidebar, .left-side {
+	    padding-top: 100px;
+	}
+	.main-sidebar, .left-side {
+	    -webkit-transform: translate(-230px, 0);
+	    -ms-transform: translate(-230px, 0);
+	    -o-transform: translate(-230px, 0);
+	    transform: translate(-230px, 0);
+	}
+	.sidebar-mini .main-sidebar, .sidebar-mini .left-side {
+	    -webkit-transform: translate(0, 0);
+	    -ms-transform: translate(0, 0);
+	    -o-transform: translate(0, 0);
+	    transform: translate(0, 0);
+	}
+	.content-wrapper, .right-side, .main-footer {
+	    margin-left: 0;
+	}
+	.sidebar-mini .content-wrapper, .sidebar-mini .right-side, .sidebar-mini .main-footer {
+	    -webkit-transform: translate(230px, 0);
+	    -ms-transform: translate(230px, 0);
+	    -o-transform: translate(230px, 0);
+	    transform: translate(230px, 0);
+	}
+	.main-header .navbar .sidebar-toggle {
+	    border: 1px solid #d2d6de;
+	}
+	.group-list-drop-down {
+	    height: auto;
+	}
+	.form-select .group-list-drop-down {
+	    left: 0;
+	    top: 10px;
+	    border-top-width: 10px;
+	    background: #fff;
+	}
+	.group-list-drop-down .form-group {
+	    margin-bottom: 10px;
+	}
+	.btn-search-max {
+		width: 100%; 
+		padding: 0px;
+		margin-right: 0; 
+		z-index: 2;
+	}
+	.btn-search-max > button {
+	    background: #41adff;
+	    border: 1px solid #41adff;
+	    outline: none;
+	    z-index: 2;
+	    position: relative;
+	}
+	.btn-search-max > button span {
+		color: #fff;
+	}
+	.list-drop-down > .col-sm-2 {
+	    display: block;
+	    padding-left: 0;
+	}
+	.navbar-static-top .login {
+		float: right;
+		margin-top: 10px;
+		margin-right: 10px;
+	}
+}

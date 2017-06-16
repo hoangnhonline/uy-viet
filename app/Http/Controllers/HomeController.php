@@ -22,12 +22,12 @@ class HomeController
 {
 
     public function initPage() {
-        $shopType = DB::select('select id,type from shop_type where status = 1');
+        $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
         $listProvince = DB::select('select id,name from province');
         $levels = DB::select('select id,type from shop_cap_do_1480213548');
         $tiemnang = DB::select('select id,type from shop_tiem_nang1480213595');
         $quymo = DB::select('select id,type from shop_quy_mo1480440358');
-        return view('home', [
+        return view('layouts.master', [
             'shopType' => $shopType,
             'listProvince' => $listProvince,
             'levels' => $levels,
@@ -78,8 +78,7 @@ class HomeController
         $listWard = DB::select('select id, name from ward where district_id = ?',[$districtId]);
         return \Response::json($listWard);
     }
-
-
+    
     public function doLogin(Request $request)
     {
         $info = $request->input();

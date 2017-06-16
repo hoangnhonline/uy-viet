@@ -74,14 +74,14 @@ $(function() {
         init();
     });
 
-    $('#check-list-box li').on('click', function(event) {
+    $('#check-list-box li a').on('click', function(event) {        
+        $(this).parent().toggleClass('active');
         event.preventDefault();
         checkedItems = [], counter = 0;
-        $("#check-list-box li.active").each(function(idx, li) {
+        $("#check-list-box li.active a").each(function(idx, li) {            
             checkedItems[counter] = $(this).attr('value');
             counter++;
-        });
-        console.log(checkedItems);
+        });        
         markerCluster.clearMarkers();
         markers = [];
         var markerFilter = [];
@@ -129,14 +129,13 @@ $(function() {
         markerCluster.addMarkers(markers);
     });
 
-    $('#check-list-box-level li').on('click', function(event) {
+    $('#check-list-box-level li a').on('click', function(event) {
         event.preventDefault();
         checkedItems = [], counter = 0;
-        $("#check-list-box-level li.active").each(function(idx, li) {
+        $("#check-list-box-level li.active a").each(function(idx, li) {
             checkedItems[counter] = $(this).attr('value');
             counter++;
-        });
-        console.log(checkedItems);
+        });        
         markerCluster.clearMarkers();
         markers = [];
         var markerFilter = [];
@@ -242,7 +241,7 @@ $(function() {
     $('#check-list-box-tiemnang li').on('click', function(event) {
         event.preventDefault();
         checkedItems = [], counter = 0;
-        $("#check-list-box-tiemnang li.active").each(function(idx, li) {
+        $("#check-list-box-tiemnang li.active a").each(function(idx, li) {
             checkedItems[counter] = $(this).attr('value');
             counter++;
         });
