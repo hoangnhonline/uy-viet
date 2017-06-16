@@ -112,114 +112,41 @@
 				<ul class="sidebar-menu" data-widget="tree">
 					<li class="active treeview menu-open">
 						<a href="javascript:void(0)" title="">
-							<i class="fa fa-dashboard"></i>
+							<i class="fa fa-th"></i>
 							<span>Danh mục cửa hàng</span>
 							<span class="pull-right-container">
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu list-group checked-list-box" id="check-list-box">
+						<ul class="treeview-menu list-group checked-list-box check-list-box">
 							@foreach($shopType as $type)		                        
-		                        <li class="active"><a href="javascript:void(0)" title="" value="{{$type->id}}" >
+		                        <li class="active"><a href="javascript:void(0)" title="" value="{{ $type->id }}" data-col="type_id">
 									<span><img src="{{ Helper::showImage($type->icon_url) }}" alt="{!! $type->type !!}"></span>
 									{!! $type->type !!}
 								</a></li>
 		                    @endforeach							
 						</ul>
 					</li><!-- /.treeview -->
+					@foreach($conditionList as $condition)
 					<li class="treeview">
 						<a href="#" title="">
 							<i class="fa fa-th"></i>
-							<span>Cấp độ</span>
+							<span>{!! $condition->display_name !!}</span>
 							<span class="pull-right-container">
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu">
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
+						<?php 
+						$dataList = DB::table('shop_'. $condition->name)->where('status', 1)->get();
+						?>
+						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box">
+							@foreach($dataList as $data)
+								<li><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
+			                @endforeach
 						</ul>
+						
 					</li><!-- /.treeview -->
-					<li class="treeview">
-						<a href="#" title="">
-							<i class="fa fa-edit"></i>
-							<span>Tiếm năng</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-						</ul>
-					</li><!-- /.treeview -->
-					<li class="treeview">
-						<a href="#" title="">
-							<i class="fa fa-pie-chart"></i>
-							<span>Quy mô</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-							<li><a href="#" title="">
-								<span><img src="{{ URL::asset('assets/images/icon-menu/10.jpg') }}" alt=""></span>
-								Phòng Nha
-							</a></li>
-						</ul>
-					</li><!-- /.treeview -->
+					@endforeach					
 				</ul>
 			</section><!-- /.sidebar -->
 		</aside><!-- /main-sidebar -->
@@ -269,5 +196,97 @@
 	@endif
 	<script src="{{ URL::asset('js/home.js') }}"></script>
 	<script src="{{ URL::asset('js/checkbox.js') }}"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$('.check-list-box li a').on('click', function(event) {
+        
+        		
+
+		        $(this).parent().toggleClass('active');
+		        
+		        event.preventDefault();
+		        
+		        var selectedArr = colArr = [];
+				selectedArr['type_id'] = [];
+				@foreach($conditionList as $cond)
+					selectedArr['{{$cond->name}}'] = [];
+					colArr.push('{{ $cond->name }}');
+				@endforeach
+
+		        checkedItems = [], counter = 0;
+
+		        $(".check-list-box li.active a").each(function(idx, li) {            
+		            var col = $(this).data('col');    
+		            var val = $(this).attr('value');
+		          	
+		            checkedItems[counter] = $(this).attr('value');
+		            selectedArr[col].push(val);	            
+		            
+		            counter++;
+		        });        
+		       
+		        markerCluster.clearMarkers();
+		        markers = [];
+		        var markerFilter = [];
+		        console.log(colArr);
+		        for (var i = 0; i < markers_temp.length; i++) {
+		        	
+		        	for(var k = 0; k < colArr.length; k++){
+		        		console.log(selectedArr[colArr[k]]);
+		        	}
+		            //$.each(selectedArr, function( index, value ) {
+		            //	console.log(index, value);
+		                /*
+		                if (value == markers_temp[i].cap_do_1480213548_id) {
+		                    markerFilter.push(markers_temp[i]);
+		                    return false;
+
+		                }
+		                */
+		            //});
+		            //markerFilter.push(markers_temp[i]);
+		            //return false;
+		            
+		           
+		        }
+		        return false;
+		        for (var i = 0; i < markerFilter.length; i++) {
+		            marker = new google.maps.Marker({
+		                position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
+		                map: map,
+		                title: markerFilter[i].shop_name,
+		                data: markerFilter[i],
+		                icon: {
+		                    url: markerFilter[i].icon_url,
+		                    size: new google.maps.Size(50, 50),
+		                },
+
+		            });
+		            markers.push(marker);
+		            (function(marker, i) {
+		                google.maps.event.addListener(marker, 'click', function() {
+		                    infowindow = new google.maps.InfoWindow({
+		                        content: getContent(marker.data)
+		                    });
+		                    if(tempIW)
+		                        tempIW.close();
+		                    infowindow.open(map, marker);
+		                    tempIW = infowindow;
+		                    google.maps.event.addListener(infowindow, 'domready', function() {
+		                        $("#view-more").on("click", function() {
+		                            view_more($(this).attr("data"));
+		                        });
+
+		                    });
+		                });
+
+		            })(marker, i);
+		        }
+		        markerCluster.addMarkers(markers);
+		    });
+		})
+
+	</script>
 </body>
 </html>

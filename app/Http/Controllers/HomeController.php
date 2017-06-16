@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\SelectCondition;
 use Auth;
 
 
@@ -24,15 +25,17 @@ class HomeController
     public function initPage() {
         $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
         $listProvince = DB::select('select id,name from province');
-        $levels = DB::select('select id,type from shop_cap_do_1480213548');
+        $levels = DB::select('select id,type, color from shop_cap_do_1480213548');
         $tiemnang = DB::select('select id,type from shop_tiem_nang1480213595');
         $quymo = DB::select('select id,type from shop_quy_mo1480440358');
+        $conditionList = SelectCondition::orderBy('col_order')->get();
         return view('layouts.master', [
             'shopType' => $shopType,
             'listProvince' => $listProvince,
             'levels' => $levels,
             'tiemnang' =>$tiemnang,
             'quymo' => $quymo,
+            'conditionList' => $conditionList
 
         ]);
 

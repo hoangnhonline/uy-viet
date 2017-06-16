@@ -598,9 +598,15 @@ img {
     padding: 15px;
     color: #444;
     border-top: 1px solid #d2d6de;
+    position: relative;
 }
 #map {
     position: absolute !important;
     height: 100%;
     width: 100%;
+}
+.treeview-border li a {
+    border-left-style: solid;
+    border-left-width: 7px;
+    padding: 10px !important;
 }
