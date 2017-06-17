@@ -168,7 +168,7 @@ body {
             {{ Session::get('error') }}
         </div>
     @endif
-    <form method="POST" action="{{ route('backend.check-login') }}">
+    <form method="POST" action="{{ route('do-login') }}">
       {!! csrf_field() !!}
       <input type="text" placeholder="Username" name="username" />
       <input type="password" placeholder="Mật khẩu" name="password" />

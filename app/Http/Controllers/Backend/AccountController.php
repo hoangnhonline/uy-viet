@@ -20,7 +20,7 @@ class AccountController extends Controller
     public function index(Request $request)
     {         
         if(Auth::user()->role == 1){
-            return redirect()->route('product.index');
+            return redirect()->route('shop.index');
         }
         $role = $leader_id = 0;
         $role = Auth::user()->role;
@@ -45,7 +45,7 @@ class AccountController extends Controller
     public function create()
     {        
         if(Auth::user()->role == 1){
-            return redirect()->route('product.index');
+            return redirect()->route('shop.index');
         }
         $modList = Account::where(['role' => 2, 'status' => 1])->get();
         
@@ -120,7 +120,7 @@ class AccountController extends Controller
     public function destroy($id)
     {
         if(Auth::user()->role == 1){
-            return redirect()->route('product.index');
+            return redirect()->route('shop.index');
         }
         // delete
         $model = Account::find($id);
@@ -133,7 +133,7 @@ class AccountController extends Controller
     public function edit($id)
     {
         if(Auth::user()->role == 1){
-            return redirect()->route('product.index');
+            return redirect()->route('shop.index');
         }
         $detail = Account::find($id);
         

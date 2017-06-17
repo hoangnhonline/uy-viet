@@ -8,21 +8,36 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests;
+use Illuminate\Http\Request;
 use DB;
 use App\Quotation;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
 use App\Models\SelectCondition;
-use Auth;
 
-
+use Helper, Auth, Schema;
 
 class HomeController
 {
 
     public function initPage() {
+        /*
+        $table_name = 'test';
+        Schema::create($table_name, function($table) {
+            $table->increments('id');
+            $table->string('type', 100);
+            $table->string('color', 10);
+            $table->tinyInteger("col_order");
+            $table->boolean('status');            
+        });
+        
+        $col = "abc_id";
+            Schema::table('shop_select_condition', function($table) use ($col) {
+            $table->tinyInteger($col);
+                 
+        });
+        */
+        if(!Auth::check()){
+            return redirect()->route('login-form');
+        }
         $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
         $listProvince = DB::select('select id,name from province');
         $levels = DB::select('select id,type, color from shop_cap_do_1480213548');
@@ -40,7 +55,17 @@ class HomeController
         ]);
 
     }
-
+    public function loginForm()
+    {
+        /*User::create(array(
+            'full_name'     => 'Andy',            
+            'email'    => 'andy2016@gmail.com',
+            'password' => Hash::make('matkhaucuatui'),
+            'role' => 1,
+            'status' => 1
+        ));*/               
+        return view('layouts.login');
+    }
 
     public function findItem(Request $request) {
         $filter = $request->input();
@@ -82,7 +107,7 @@ class HomeController
         return \Response::json($listWard);
     }
     
-    public function doLogin(Request $request)
+    public function doLogin2(Request $request)
     {
         $info = $request->input();
         $passMd5 = md5($info['pass']);;
@@ -99,9 +124,40 @@ class HomeController
         }
     }
 
+    public function doLogin(Request $request)
+    {
+        $dataArr = $request->all();
+        // if any error send back with message.
+        if($request->username == '' || $request->password == ''){
+            Session::flash('error', 'Vui lòng nhập đầy đủ Username và Mật khẩu'); 
+            return redirect()->route('backend.login-form');
+        }
+        
+        $dataArr = [
+            'username' => $request->username,
+            'password' => $request->password,
+        ];
+        if (Auth::validate($dataArr)) {
+
+            if (Auth::attempt($dataArr)) {
+              
+                return redirect()->route('home');
+              
+            }
+
+        }else {
+            // if any error send back with message.
+            Session::flash('error', 'Email hoặc mật khẩu không đúng.'); 
+            return redirect()->route('login-form');
+        }
+
+        return redirect()->route('home');
+    }
+
+
     public function doLogout() {
-        session()->flush();
-        return Redirect::to('/');
+        Auth::logout();
+        return redirect()->route('login-form');
     }
 
     public function doEditMarker(Request $request) {

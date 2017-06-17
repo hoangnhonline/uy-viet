@@ -43,19 +43,24 @@
           <li {{ in_array(\Request::route()->getName(), ['shop-type.create']) ? "class=active" : "" }}><a href="{{ route('shop-type.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
         </ul>
       </li>
-      <li class="treeview {{ in_array(\Request::route()->getName(), ['shop-von.index', 'shop-von.create']) ? 'active' : '' }}">
+      <?php 
+      $condList = DB::table('select_condition')->orderBy('col_order')->get();
+      ?>
+      @foreach($condList as $cond)
+      <li class="treeview {{ in_array(\Request::route()->getName(), ['condition.index', 'condition.create', 'condition.edit']) && $table_name = $cond->name ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-twitch"></i> 
-          <span>Vốn</span>
+          <span>{{ $cond->display_name }}</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
         <ul class="treeview-menu">
-          <li {{ in_array(\Request::route()->getName(), ['shop-von.index', 'shop-von.edit']) ? "class=active" : "" }}><a href="{{ route('shop-von.index') }}"><i class="fa fa-circle-o"></i> Danh sách </a></li>
-          <li {{ in_array(\Request::route()->getName(), ['shop-von.create']) ? "class=active" : "" }}><a href="{{ route('shop-von.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
+          <li {{ in_array(\Request::route()->getName(), ['condition.index', 'condition.edit']) ? "class=active" : "" }}><a href="{{ route('condition.index', ['table' => $cond->name]) }}"><i class="fa fa-circle-o"></i> Danh sách </a></li>
+          <li {{ in_array(\Request::route()->getName(), ['condition.create']) ? "class=active" : "" }}><a href="{{ route('shop-von.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
         </ul>
       </li>
+      @endforeach
       <li class="treeview {{ in_array(\Request::route()->getName(), ['shop-tiem-nang.index', 'shop-tiem-nang.create']) ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-twitch"></i> 

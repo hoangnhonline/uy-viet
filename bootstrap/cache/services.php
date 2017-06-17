@@ -11,7 +11,7 @@
     7 => 'Illuminate\\Encryption\\EncryptionServiceProvider',
     8 => 'Illuminate\\Filesystem\\FilesystemServiceProvider',
     9 => 'Illuminate\\Foundation\\Providers\\FoundationServiceProvider',
-    10 => 'Illuminate\\Hashing\\HashServiceProvider',
+    10 => 'App\\Libraries\\MD5HashServiceProvider',
     11 => 'Illuminate\\Mail\\MailServiceProvider',
     12 => 'Illuminate\\Notifications\\NotificationServiceProvider',
     13 => 'Illuminate\\Pagination\\PaginationServiceProvider',
@@ -36,14 +36,15 @@
     3 => 'Illuminate\\Encryption\\EncryptionServiceProvider',
     4 => 'Illuminate\\Filesystem\\FilesystemServiceProvider',
     5 => 'Illuminate\\Foundation\\Providers\\FoundationServiceProvider',
-    6 => 'Illuminate\\Notifications\\NotificationServiceProvider',
-    7 => 'Illuminate\\Pagination\\PaginationServiceProvider',
-    8 => 'Illuminate\\Session\\SessionServiceProvider',
-    9 => 'Illuminate\\View\\ViewServiceProvider',
-    10 => 'App\\Providers\\AppServiceProvider',
-    11 => 'App\\Providers\\AuthServiceProvider',
-    12 => 'App\\Providers\\EventServiceProvider',
-    13 => 'App\\Providers\\RouteServiceProvider',
+    6 => 'App\\Libraries\\MD5HashServiceProvider',
+    7 => 'Illuminate\\Notifications\\NotificationServiceProvider',
+    8 => 'Illuminate\\Pagination\\PaginationServiceProvider',
+    9 => 'Illuminate\\Session\\SessionServiceProvider',
+    10 => 'Illuminate\\View\\ViewServiceProvider',
+    11 => 'App\\Providers\\AppServiceProvider',
+    12 => 'App\\Providers\\AuthServiceProvider',
+    13 => 'App\\Providers\\EventServiceProvider',
+    14 => 'App\\Providers\\RouteServiceProvider',
   ),
   'deferred' => 
   array (
@@ -114,7 +115,6 @@
     'command.queue.retry' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'command.queue.forget' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'command.queue.flush' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
-    'hash' => 'Illuminate\\Hashing\\HashServiceProvider',
     'mailer' => 'Illuminate\\Mail\\MailServiceProvider',
     'swift.mailer' => 'Illuminate\\Mail\\MailServiceProvider',
     'swift.transport' => 'Illuminate\\Mail\\MailServiceProvider',
@@ -147,9 +147,6 @@
     array (
     ),
     'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider' => 
-    array (
-    ),
-    'Illuminate\\Hashing\\HashServiceProvider' => 
     array (
     ),
     'Illuminate\\Mail\\MailServiceProvider' => 

@@ -25,6 +25,14 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'shop.update', 'uses' => 'ShopController@update']);
         Route::get('{id}/destroy', ['as' => 'shop.destroy', 'uses' => 'ShopController@destroy']);
     });
+    Route::group(['prefix' => 'condition'], function () {
+        Route::get('/', ['as' => 'condition.index', 'uses' => 'ConditionController@index']);
+        Route::get('/create', ['as' => 'condition.create', 'uses' => 'ConditionController@create']);
+        Route::post('/store', ['as' => 'condition.store', 'uses' => 'ConditionController@store']);
+        Route::get('{id}/edit',   ['as' => 'condition.edit', 'uses' => 'ConditionController@edit']);
+        Route::post('/update', ['as' => 'condition.update', 'uses' => 'ConditionController@update']);
+        Route::get('{id}/destroy', ['as' => 'condition.destroy', 'uses' => 'ConditionController@destroy']);
+    });
     Route::group(['prefix' => 'shop-tiem-nang'], function () {
         Route::get('/', ['as' => 'shop-tiem-nang.index', 'uses' => 'ShopTiemNangController@index']);
         Route::get('/create', ['as' => 'shop-tiem-nang.create', 'uses' => 'ShopTiemNangController@create']);
@@ -94,14 +102,14 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
     Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']);     
 });
 
-
-Route::get('/', 'HomeController@initPage');
+Route::get('/', ['as' => 'home', 'uses' => 'HomeController@initPage']);
 Route::get('/location', 'HomeController@findItem');
 Route::post('/getInfoShop', 'HomeController@getInfoShop');
 Route::get('/getdistrict', 'HomeController@getDistrictList');
 Route::get('/getward', 'HomeController@getWardList');
-Route::post('/login', 'HomeController@doLogin');
-Route::get('/logout', 'HomeController@doLogout');
+Route::post('/login',['as' => 'do-login' , 'uses' => 'HomeController@doLogin']);
+Route::get('/login',['as' => 'login-form' , 'uses' => 'HomeController@loginForm']);
+Route::get('/logout',['as' => 'logout', 'uses' => 'HomeController@doLogout']);
 Route::post('/doEdit', 'HomeController@doEditMarker');
 Route::post('/updatemarker', 'HomeController@updateMarker');
 Route::get('/editMarker/{shopid}', 'HomeController@editMarkerUI')->where(['shopid' => '[0-9]+']);

@@ -25,8 +25,10 @@ class UserController extends Controller
             'password' => Hash::make('matkhaucuatui'),
             'role' => 1,
             'status' => 1
-        ));*/       
-        var_dump(Hash::make('123465@'));
+        ));*/               
+        if(!Auth::check()){
+            return redirect()->route('shop.index');
+        }
         return view('backend.login');
     }
 
@@ -41,22 +43,22 @@ class UserController extends Controller
         $dataArr = $request->all();
         
         $this->validate($request,[
-            'email' => 'required|email',
+            'username' => 'required',
             'password' => 'required'
         ],
         [
-            'email.required' => 'Bạn chưa nhập email',
+            'username.required' => 'Bạn chưa nhập username',
             'password.required' => 'Bạn chưa nhập mật khẩu'            
         ]);
         $dataArr = [
-            'email' => $request->email,
+            'username' => $request->username,
             'password' => $request->password,
         ];
         if (Auth::validate($dataArr)) {
 
             if (Auth::attempt($dataArr)) {
               
-                return redirect()->route('product.index');
+                return redirect()->route('shop.index');
               
             }
 

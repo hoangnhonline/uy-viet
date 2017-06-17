@@ -74,29 +74,48 @@ $(function() {
         init();
     });
 
-    
+    $('.check-list-box li a').on('click', function(event) {
 
-    $('#check-list-box-level li a').on('click', function(event) {
-        console.log(markers_temp);
-        $(this).toggleClass('active');
+        $(this).parent().toggleClass('active');
+        
         event.preventDefault();
+        
+        var selectedArr = colArr = [];
+        selectedArr['type_id'] = [];
+
         checkedItems = [], counter = 0;
-        $("#check-list-box-level li.active a").each(function(idx, li) {
-            checkedItems[counter] = $(this).attr('value');
-            counter++;
+        $('.checked_value').val('');
+        $(".check-list-box li.active a").each(function(idx, li) {            
+            var col = $(this).data('col');    
+            var val = $(this).attr('value');
+            var tmp = $('#' + col).val();
+            $('#' + col).val(tmp + val  + ";");
         });        
+       
         markerCluster.clearMarkers();
         markers = [];
-        var markerFilter = [];
+        var markerFilter = [];              
         for (var i = 0; i < markers_temp.length; i++) {
-            $.each(checkedItems, function( index, value ) {
-                if (value == markers_temp[i].cap_do_1480213548_id) {
-                    markerFilter.push(markers_temp[i]);
-                    return false;
-
-                }
-            });
+            var rs = true;
+            $('.checked_value').each(function(){                        
+                var value = $(this).val();
+                if(value != ''){
+                    var result = value.slice(0, -1);
+                    var tmpArr = result.split(';')
+                    var col = $(this).attr('id');                           
+                    if($.inArray(markers_temp[i][col].toString(), tmpArr) === -1){
+                        rs = false;
+                    }
+                }                       
+            });                 
+            if(rs == true){                 
+                markerFilter.push(markers_temp[i]);                     
+            }
+        }               
+        if($(".check-list-box li.active a").length==0){
+            markerFilter = [];
         }
+        //return false;
         for (var i = 0; i < markerFilter.length; i++) {
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
@@ -131,115 +150,4 @@ $(function() {
         }
         markerCluster.addMarkers(markers);
     });
-
-    $('#check-list-box-quymo li').on('click', function(event) {
-        event.preventDefault();
-        checkedItems = [], counter = 0;
-        $("#check-list-box-quymo li.active").each(function(idx, li) {
-            checkedItems[counter] = $(this).attr('value');
-            counter++;
-        });
-        console.log(checkedItems);
-        markerCluster.clearMarkers();
-        markers = [];
-        var markerFilter = [];
-        for (var i = 0; i < markers_temp.length; i++) {
-            $.each(checkedItems, function( index, value ) {
-                if (value == markers_temp[i].quy_mo1480440358_id) {
-                    markerFilter.push(markers_temp[i]);
-                    return false;
-
-                }
-            });
-        }
-        for (var i = 0; i < markerFilter.length; i++) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
-                map: map,
-                title: markerFilter[i].shop_name,
-                data: markerFilter[i],
-                icon: {
-                    url: markerFilter[i].icon_url,
-                    size: new google.maps.Size(50, 50),
-                },
-
-            });
-            markers.push(marker);
-            (function(marker, i) {
-                google.maps.event.addListener(marker, 'click', function() {
-                    infowindow = new google.maps.InfoWindow({
-                        content: getContent(marker.data)
-                    });
-                    if(tempIW)
-                        tempIW.close();
-                    infowindow.open(map, marker);
-                    tempIW = infowindow;
-                    google.maps.event.addListener(infowindow, 'domready', function() {
-                        $("#view-more").on("click", function() {
-                            view_more($(this).attr("data"));
-                        });
-
-                    });
-                });
-
-            })(marker, i);
-        }
-        markerCluster.addMarkers(markers);
-    })
-
-    $('#check-list-box-tiemnang li').on('click', function(event) {
-        event.preventDefault();
-        checkedItems = [], counter = 0;
-        $("#check-list-box-tiemnang li.active a").each(function(idx, li) {
-            checkedItems[counter] = $(this).attr('value');
-            counter++;
-        });
-        console.log(checkedItems);
-        markerCluster.clearMarkers();
-        markers = [];
-        var markerFilter = [];
-        for (var i = 0; i < markers_temp.length; i++) {
-            $.each(checkedItems, function( index, value ) {
-                if (value == markers_temp[i].tiem_nang1480213595_id) {
-                    markerFilter.push(markers_temp[i]);
-                    return false;
-
-                }
-            });
-        }
-        for (var i = 0; i < markerFilter.length; i++) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
-                map: map,
-                title: markerFilter[i].shop_name,
-                data: markerFilter[i],
-                icon: {
-                    url: markerFilter[i].icon_url,
-                    size: new google.maps.Size(50, 50),
-                },
-
-            });
-            markers.push(marker);
-            (function(marker, i) {
-                google.maps.event.addListener(marker, 'click', function() {
-                    infowindow = new google.maps.InfoWindow({
-                        content: getContent(marker.data)
-                    });
-                    if(tempIW)
-                        tempIW.close();
-                    infowindow.open(map, marker);
-                    tempIW = infowindow;
-                    google.maps.event.addListener(infowindow, 'domready', function() {
-                        $("#view-more").on("click", function() {
-                            view_more($(this).attr("data"));
-                        });
-
-                    });
-                });
-
-            })(marker, i);
-        }
-        markerCluster.addMarkers(markers);
-    })
-
 });

@@ -464,10 +464,14 @@ img {
 .treeview-menu>li>a>.fa, .treeview-menu>li>a>.glyphicon, .treeview-menu>li>a>.ion {
     width: 20px;
 }
-.sidebar-menu .treeview-menu>li.active>a, .sidebar-menu .treeview-menu>li>a:hover {
+.sidebar-menu .treeview-menu>li.active>a{
     color: #333;
     font-weight: bold;
     background: #ffe6e6;
+}
+.sidebar-menu .treeview-menu>li>a:hover{
+    color: #333;
+    font-weight: bold;
 }
 .sidebar-menu>li>a {
     border-left: 3px solid transparent;

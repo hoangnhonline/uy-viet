@@ -141,7 +141,7 @@
 						?>
 						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box">
 							@foreach($dataList as $data)
-								<li><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
+								<li class="active"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
 			                @endforeach
 						</ul>
 						
@@ -162,6 +162,10 @@
 		</footer>
 
 	</div>
+	@foreach($conditionList as $cond)
+		<input type="hidden" id="{{ $cond->name }}_id" value="" class="checked_value">
+	@endforeach
+		<input type="hidden" id="type_id" value="" class="checked_value">	
 	<!-- /.wrapper -->
 
 	<!-- ===== JS ===== -->
@@ -178,10 +182,10 @@
 	<script src="{{ URL::asset('assets/js/common.js') }}"></script>
 
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo3ykqb8xloOHX36rgPXSd1zBQilLqy98&callback=initMap"></script>
-    @if(session()->has('userId'))
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo3ykqb8xloOHX36rgPXSd1zBQilLqy98&callback=initMap"></script>  
+    @if(Auth::check())
 	<script>
-	var userId = {{session('userId')}};
+	var userId = {{ Auth::user()->id }};
 	</script>
 	@endif
 	@if (!empty($init_location))
@@ -199,93 +203,8 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 
-			$('.check-list-box li a').on('click', function(event) {
-        
-        		
-
-		        $(this).parent().toggleClass('active');
-		        
-		        event.preventDefault();
-		        
-		        var selectedArr = colArr = [];
-				selectedArr['type_id'] = [];
-				@foreach($conditionList as $cond)
-					selectedArr['{{$cond->name}}'] = [];
-					colArr.push('{{ $cond->name }}');
-				@endforeach
-
-		        checkedItems = [], counter = 0;
-
-		        $(".check-list-box li.active a").each(function(idx, li) {            
-		            var col = $(this).data('col');    
-		            var val = $(this).attr('value');
-		          	
-		            checkedItems[counter] = $(this).attr('value');
-		            selectedArr[col].push(val);	            
-		            
-		            counter++;
-		        });        
-		       
-		        markerCluster.clearMarkers();
-		        markers = [];
-		        var markerFilter = [];
-		        console.log(colArr);
-		        for (var i = 0; i < markers_temp.length; i++) {
-		        	
-		        	for(var k = 0; k < colArr.length; k++){
-		        		console.log(selectedArr[colArr[k]]);
-		        	}
-		            //$.each(selectedArr, function( index, value ) {
-		            //	console.log(index, value);
-		                /*
-		                if (value == markers_temp[i].cap_do_1480213548_id) {
-		                    markerFilter.push(markers_temp[i]);
-		                    return false;
-
-		                }
-		                */
-		            //});
-		            //markerFilter.push(markers_temp[i]);
-		            //return false;
-		            
-		           
-		        }
-		        return false;
-		        for (var i = 0; i < markerFilter.length; i++) {
-		            marker = new google.maps.Marker({
-		                position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
-		                map: map,
-		                title: markerFilter[i].shop_name,
-		                data: markerFilter[i],
-		                icon: {
-		                    url: markerFilter[i].icon_url,
-		                    size: new google.maps.Size(50, 50),
-		                },
-
-		            });
-		            markers.push(marker);
-		            (function(marker, i) {
-		                google.maps.event.addListener(marker, 'click', function() {
-		                    infowindow = new google.maps.InfoWindow({
-		                        content: getContent(marker.data)
-		                    });
-		                    if(tempIW)
-		                        tempIW.close();
-		                    infowindow.open(map, marker);
-		                    tempIW = infowindow;
-		                    google.maps.event.addListener(infowindow, 'domready', function() {
-		                        $("#view-more").on("click", function() {
-		                            view_more($(this).attr("data"));
-		                        });
-
-		                    });
-		                });
-
-		            })(marker, i);
-		        }
-		        markerCluster.addMarkers(markers);
-		    });
-		})
+			
+		});
 
 	</script>
 </body>
