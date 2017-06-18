@@ -57,50 +57,10 @@
         </a>
         <ul class="treeview-menu">
           <li {{ in_array(\Request::route()->getName(), ['condition.index', 'condition.edit']) ? "class=active" : "" }}><a href="{{ route('condition.index', ['table' => $cond->name]) }}"><i class="fa fa-circle-o"></i> Danh sách </a></li>
-          <li {{ in_array(\Request::route()->getName(), ['condition.create']) ? "class=active" : "" }}><a href="{{ route('shop-von.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
+          <li {{ in_array(\Request::route()->getName(), ['condition.create']) ? "class=active" : "" }}><a href="{{ route('condition.create', ['table' => $cond->name]) }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
         </ul>
       </li>
       @endforeach
-      <li class="treeview {{ in_array(\Request::route()->getName(), ['shop-tiem-nang.index', 'shop-tiem-nang.create']) ? 'active' : '' }}">
-        <a href="#">
-          <i class="fa fa-twitch"></i> 
-          <span>Tiềm năng</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li {{ in_array(\Request::route()->getName(), ['shop-tiem-nang.index', 'shop-tiem-nang.edit']) ? "class=active" : "" }}><a href="{{ route('shop-tiem-nang.index') }}"><i class="fa fa-circle-o"></i> Danh sách </a></li>
-          <li {{ in_array(\Request::route()->getName(), ['shop-tiem-nang.create']) ? "class=active" : "" }}><a href="{{ route('shop-tiem-nang.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
-        </ul>
-      </li>
-      <li class="treeview {{ in_array(\Request::route()->getName(), ['shop-quy-mo.index', 'shop-quy-mo.create']) ? 'active' : '' }}">
-        <a href="#">
-          <i class="fa fa-twitch"></i> 
-          <span>Quy mô</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li {{ in_array(\Request::route()->getName(), ['shop-quy-mo.index', 'shop-quy-mo.edit']) ? "class=active" : "" }}><a href="{{ route('shop-quy-mo.index') }}"><i class="fa fa-circle-o"></i> Danh sách </a></li>
-          <li {{ in_array(\Request::route()->getName(), ['shop-quy-mo.create']) ? "class=active" : "" }}><a href="{{ route('shop-quy-mo.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
-        </ul>
-      </li>
-      <li class="treeview {{ in_array(\Request::route()->getName(), ['shop-cap-do.index', 'shop-cap-do.create']) ? 'active' : '' }}">
-        <a href="#">
-          <i class="fa fa-twitch"></i> 
-          <span>Cấp độ</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li {{ in_array(\Request::route()->getName(), ['shop-cap-do.index', 'shop-cap-do.edit']) ? "class=active" : "" }}><a href="{{ route('shop-cap-do.index') }}"><i class="fa fa-circle-o"></i> Danh sách </a></li>
-          <li {{ in_array(\Request::route()->getName(), ['shop-cap-do.create']) ? "class=active" : "" }}><a href="{{ route('shop-cap-do.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
-        </ul>
-      </li>
-      
       @endif
       
       @if(Auth::user()->role > 1)

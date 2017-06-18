@@ -70,9 +70,10 @@
                   @endif
                 </td>              
                 <td style="white-space:nowrap">
-                  <a href="{{ route( 'condition.edit', [ 'id' => $item->id ]) }}?table={{ $detailCond->name }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                                  
-                  
-                  <a onclick="return callDelete('{{ $item->type }}','{{ route( 'condition.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>                 
+                  <a href="{{ route( 'condition.edit', [ 'id' => $item->id ]) }}?table={{ $detailCond->name }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>
+                  @if(DB::table('shop_select_condition')->where($detailCond->name."_id", $item->id)->count() == 0)
+                  <a onclick="return callDelete('{{ $item->type }}','shop_{{ $detailCond->name }}', '{{ $item->id }}');" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>                 
+                  @endif
                   
                 </td>
               </tr> 
