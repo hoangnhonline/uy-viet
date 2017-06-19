@@ -77,15 +77,20 @@ $(function() {
     $('.check-list-box li a').on('click', function(event) {
 
         $(this).parent().toggleClass('active');
-        if($(this).parent('li').hasClass('filter_all')){
-            var flt = $(this).parent('li').data('filter');
-            console.log(flt);
+        var flt = $(this).parent('li').data('filter');
+        if($(this).parent('li').hasClass('filter_all')){            
+            
             var col = $(this).data('col');
             if($(this).parent('li').hasClass('active')){
                 $('li.' + flt ).addClass('active');  
             }else{
                 $('li.' + flt ).removeClass('active');    
-                //$('#'+ col).val('');
+                
+            }
+        }else{
+            
+            if($(this).parent('li').hasClass('active') == false){
+                $(this).parents('ul.' + flt).find('.filter_all').removeClass('active');
             }
         }
         event.preventDefault();
@@ -105,7 +110,7 @@ $(function() {
         markerCluster.clearMarkers();
         markers = [];
         var markerFilter = []; 
-        //console.log(markers_temp);             
+        
         if(typeof markers_temp !== "undefined"){
             for (var i = 0; i < markers_temp.length; i++) {
                 var rs = true;

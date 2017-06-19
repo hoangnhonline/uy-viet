@@ -138,7 +138,7 @@
 								</a>
 							</li>
 							@foreach($shopType as $type)		                        
-		                        <li class="active filter_type" ><a href="javascript:void(0)" title="" value="{{ $type->id }}" data-col="type_id">
+		                        <li class="active filter_type" data-filter="filter_type"><a href="javascript:void(0)" title="" value="{{ $type->id }}" data-col="type_id">
 									<span><img src="{{ Helper::showImage($type->icon_url) }}" alt="{!! $type->type !!}"></span>
 									{!! $type->type !!}
 								</a></li>
@@ -160,7 +160,7 @@
 						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box filter_{{ $condition->name }}">
 							<li class="active  filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
 							@foreach($dataList as $data)
-								<li class="active filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
+								<li class="active filter_{{ $condition->name }}" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
 			                @endforeach
 						</ul>
 						
