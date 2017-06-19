@@ -278,8 +278,8 @@ class ComposerStaticInit569a3119cfe4d04f5533280dc30787d4
     );
 
     public static $classMap = array (
-        'App\\Libraries\\MD5HashServiceProvider' => __DIR__ . '/../..' . '/app/libraries/MD5HashServiceProvider.php',
-        'App\\Libraries\\MD5Hasher' => __DIR__ . '/../..' . '/app/libraries/MD5Hasher.php',
+        'App\\Libraries\\MD5HashServiceProvider' => __DIR__ . '/../..' . '/app/Libraries/MD5HashServiceProvider.php',
+        'App\\Libraries\\MD5Hasher' => __DIR__ . '/../..' . '/app/Libraries/MD5Hasher.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',

@@ -53,10 +53,10 @@
                 <div class="form-group">
                   <label>Role</label>
                   <select class="form-control" name="role" id="role">                             
-                    <option value="1" {{ old('role', $detail->role) == 1 ? "selected" : "" }}>Editor</option>
-                    @if(Auth::user()->role == 3)                  
-                    <option value="2" {{ old('role', $detail->role) == 2 ? "selected" : "" }}>Mod</option>
-                    <option value="3" {{ old('role', $detail->role) == 3 ? "selected" : "" }}>Admin</option>
+                    <option value="1" {{ old('role', $detail->type) == 1 ? "selected" : "" }}>Editor</option>
+                    @if(Auth::user()->type == 3)                  
+                    <option value="2" {{ old('role', $detail->type) == 2 ? "selected" : "" }}>Mod</option>
+                    <option value="3" {{ old('role', $detail->type) == 3 ? "selected" : "" }}>Admin</option>
                     @endif                    
                   </select>
                 </div>      

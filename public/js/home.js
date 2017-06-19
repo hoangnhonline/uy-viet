@@ -79,20 +79,73 @@ function initMap() {
                 wardId :  $("select#ward").val()
             },
             success: function(data) {
+                //$(".check-list-box li").addClass('active');
                 markers_temp = data;
-                for (var i = 0; i < markers_temp.length; i++) {
-                    // init markers
-                    marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(parseFloat(markers_temp[i].location.split(',')[0]), parseFloat(markers_temp[i].location.split(',')[1])),
-                        map: map,
-                        title: markers_temp[i].shop_name,
-                        data : markers_temp[i],
-                        icon: {
-                            url: markers_temp[i].icon_url,
-                            size: new google.maps.Size(50, 50),
-                        },
 
-                    });
+                var markerFilter = []; 
+                $('.checked_value').val('');
+                $(".check-list-box li.active a").each(function(idx, li) {            
+                    var col = $(this).data('col');    
+                    var val = $(this).attr('value');
+                    var tmp = $('#' + col).val();
+                    $('#' + col).val(tmp + val  + ";");
+                }); 
+
+                for (var i = 0; i < markers_temp.length; i++) {
+
+                    var rs = true;
+                    $('.checked_value').each(function(){                        
+                        var value = $(this).val();
+                        
+                        if(value != ''){
+                            var result = value.slice(0, -1);
+                            var tmpArr = result.split(';')
+                            var col = $(this).attr('id'); 
+                        
+                            if($.inArray(markers_temp[i][col].toString(), tmpArr) === -1){
+                                rs = false;
+                            }
+                        }else{
+                            rs = false;
+                        }                       
+                    });                 
+                    if(rs == true){                 
+                        markerFilter.push(markers_temp[i]);
+
+                    }
+
+                }
+
+                if($(".check-list-box li.active a").length==0){
+                    markerFilter = [];
+                }                
+                
+                for (var i = 0; i < markerFilter.length; i++) {
+                    if($('#show_label').val() == 1){
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
+                            map: map,
+                            title: markerFilter[i].shop_name,
+                            data: markerFilter[i],
+                            icon: {
+                                url: markerFilter[i].icon_url,
+                                size: new google.maps.Size(50, 50)
+                            },
+                            label: {text: markers_temp[i].shop_name, color: "red", labelClass : 'labels-marker'}
+
+                        });
+                    }else{
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
+                            map: map,
+                            title: markerFilter[i].shop_name,
+                            data: markerFilter[i],
+                            icon: {
+                                url: markerFilter[i].icon_url,
+                                size: new google.maps.Size(50, 50)
+                            }
+                        });
+                    }
                     markers.push(marker);
                     (function(marker, i) {
                         google.maps.event.addListener(marker, 'click', function() {
@@ -112,11 +165,14 @@ function initMap() {
                         });
 
                     })(marker, i);
-
                 }
-                markerCluster.addMarkers(markers);
-                map.setCenter(new google.maps.LatLng(parseFloat(markers_temp[0].location.split(',')[0]), parseFloat(markers_temp[0].location.split(',')[1])));
-                map.setZoom(14);
+
+                if(markerFilter.length > 0){
+                    markerCluster.addMarkers(markers);
+                    map.setCenter(new google.maps.LatLng(parseFloat(markerFilter[0].location.split(',')[0]), parseFloat(markerFilter[0].location.split(',')[1])));
+                    map.setZoom(14);
+                }
+
             },
         });
     });
@@ -285,5 +341,3 @@ function doLogin() {
         }
     });
 }
-
-

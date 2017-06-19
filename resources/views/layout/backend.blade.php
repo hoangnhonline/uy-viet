@@ -21,8 +21,7 @@
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{{ URL::asset('admin/dist/css/skins/_all-skins.min.css') }}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{{ URL::asset('admin/plugins/iCheck/flat/blue.css') }}">
+  <!-- iCheck -->  
   <link rel="stylesheet" href="{{ URL::asset('admin/dist/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ URL::asset('admin/dist/css/sweetalert2.min.css') }}">  
 
@@ -83,9 +82,6 @@
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ URL::asset('https://code.jquery.com/ui/1.10.0/jquery-ui.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
 <!-- Bootstrap 3.3.6 -->
 <script src="{{ URL::asset('admin/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ URL::asset('admin/dist/js/ajax-upload.js') }}"></script>
@@ -96,7 +92,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
 
 <!-- Slimscroll -->
-<script src="{{ URL::asset('admin/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ URL::asset('admin/dist/js/app.min.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
@@ -104,7 +99,6 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{ URL::asset('admin/dist/js/demo.js') }}"></script>
 <script src="{{ URL::asset('admin/dist/js/lazy.js') }}"></script>
-<script src="{{ URL::asset('admin/dist/js/ckeditor/ckeditor.js') }}"></script>
 
 <script type="text/javascript" type="text/javascript">
 $(document).ready(function(){

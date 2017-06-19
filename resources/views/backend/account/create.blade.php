@@ -54,13 +54,13 @@
                   <select class="form-control" name="role" id="role">      
                     <option value="" >--Chọn role--</option>                       
                     <option value="1" {{ old('role') == 1 ? "selected" : "" }}>Editor</option>                  
-                    @if(Auth::user()->role == 3)
+                    @if(Auth::user()->type == 3)
                     <option value="2" {{ old('role') == 2 ? "selected" : "" }}>Mod</option> 
                     <option value="3" {{ old('role') == 3 ? "selected" : "" }}>Admin</option>                  
                     @endif
                   </select>
                 </div> 
-                @if(Auth::user()->role == 3)
+                @if(Auth::user()->type == 3)
                 <div class="form-group" style="display:none" id="chon_mod">
                   <label>Mod</label>
                   <select class="form-control" name="leader_id" id="leader_id">
@@ -107,7 +107,7 @@
         $('#btnSave').hide();
         $('#btnLoading').show();
       });
-      @if(Auth::user()->role == 3)
+      @if(Auth::user()->type == 3)
       $('#role').change(function(){
         if($(this).val() == 1){
           $('#chon_mod').show();

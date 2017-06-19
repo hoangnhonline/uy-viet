@@ -6,8 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Libraries\\MD5HashServiceProvider' => $baseDir . '/app/libraries/MD5HashServiceProvider.php',
-    'App\\Libraries\\MD5Hasher' => $baseDir . '/app/libraries/MD5Hasher.php',
+    'App\\Libraries\\MD5HashServiceProvider' => $baseDir . '/app/Libraries/MD5HashServiceProvider.php',
+    'App\\Libraries\\MD5Hasher' => $baseDir . '/app/Libraries/MD5Hasher.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',

@@ -63,7 +63,7 @@
       @endforeach
       @endif
       
-      @if(Auth::user()->role > 1)
+      @if(Auth::user()->type > 1)
       <li class="treeview {{ in_array(\Request::route()->getName(), ['account.index', 'info-seo.index', 'settings.index', 'settings.noti']) || (in_array(\Request::route()->getName(), ['custom-link.edit', 'custom-link.index', 'custom-link.create']) && isset($block_id) && $block_id == 2 ) ? 'active' : '' }}">
         <a href="#">
           <i class="fa  fa-gears"></i>
@@ -77,6 +77,19 @@
         </ul>
       </li>
       @endif
+      <li class="treeview {{ in_array(\Request::route()->getName(), ['dieu-kien.index', 'dieu-kien.create']) ? 'active' : '' }}">
+        <a href="#">
+          <i class="fa fa-twitch"></i> 
+          <span>Điều kiện</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li {{ in_array(\Request::route()->getName(), ['dieu-kien.index', 'dieu-kien.edit']) ? "class=active" : "" }}><a href="{{ route('dieu-kien.index') }}"><i class="fa fa-circle-o"></i> Danh sách </a></li>
+          <li {{ in_array(\Request::route()->getName(), ['dieu-kien.create']) ? "class=active" : "" }}><a href="{{ route('dieu-kien.create') }}"><i class="fa fa-circle-o"></i> Thêm mới</a></li>          
+        </ul>
+      </li>
       <!--<li class="header">LABELS</li>
       <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
       <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>

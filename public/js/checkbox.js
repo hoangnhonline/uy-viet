@@ -77,7 +77,17 @@ $(function() {
     $('.check-list-box li a').on('click', function(event) {
 
         $(this).parent().toggleClass('active');
-        
+        if($(this).parent('li').hasClass('filter_all')){
+            var flt = $(this).parent('li').data('filter');
+            console.log(flt);
+            var col = $(this).data('col');
+            if($(this).parent('li').hasClass('active')){
+                $('li.' + flt ).addClass('active');  
+            }else{
+                $('li.' + flt ).removeClass('active');    
+                //$('#'+ col).val('');
+            }
+        }
         event.preventDefault();
         
         var selectedArr = colArr = [];
@@ -94,40 +104,60 @@ $(function() {
        
         markerCluster.clearMarkers();
         markers = [];
-        var markerFilter = [];              
-        for (var i = 0; i < markers_temp.length; i++) {
-            var rs = true;
-            $('.checked_value').each(function(){                        
-                var value = $(this).val();
-                if(value != ''){
-                    var result = value.slice(0, -1);
-                    var tmpArr = result.split(';')
-                    var col = $(this).attr('id');                           
-                    if($.inArray(markers_temp[i][col].toString(), tmpArr) === -1){
+        var markerFilter = []; 
+        //console.log(markers_temp);             
+        if(typeof markers_temp !== "undefined"){
+            for (var i = 0; i < markers_temp.length; i++) {
+                var rs = true;
+                $('.checked_value').each(function(){                        
+                    var value = $(this).val();
+                    if(value != ''){
+                        var result = value.slice(0, -1);
+                        var tmpArr = result.split(';')
+                        var col = $(this).attr('id');                           
+                        if($.inArray(markers_temp[i][col].toString(), tmpArr) === -1){
+                            rs = false;
+                        }
+                    }else{
                         rs = false;
-                    }
-                }                       
-            });                 
-            if(rs == true){                 
-                markerFilter.push(markers_temp[i]);                     
-            }
-        }               
+                    }                       
+                });                 
+                if(rs == true){                 
+                    markerFilter.push(markers_temp[i]);                     
+                }
+            }               
+        }
+
         if($(".check-list-box li.active a").length==0){
             markerFilter = [];
         }
-        //return false;
+        
         for (var i = 0; i < markerFilter.length; i++) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
-                map: map,
-                title: markerFilter[i].shop_name,
-                data: markerFilter[i],
-                icon: {
-                    url: markerFilter[i].icon_url,
-                    size: new google.maps.Size(50, 50),
-                },
+            if($('#show_label').val() == 1){
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
+                    map: map,
+                    title: markerFilter[i].shop_name,
+                    data: markerFilter[i],
+                    icon: {
+                        url: markerFilter[i].icon_url,
+                        size: new google.maps.Size(50, 50)
+                    },
+                    label: {text: markers_temp[i].shop_name, color: "red", labelClass : 'labels-marker'}
 
-            });
+                });
+            }else{
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
+                    map: map,
+                    title: markerFilter[i].shop_name,
+                    data: markerFilter[i],
+                    icon: {
+                        url: markerFilter[i].icon_url,
+                        size: new google.maps.Size(50, 50)
+                    }
+                });
+            }
             markers.push(marker);
             (function(marker, i) {
                 google.maps.event.addListener(marker, 'click', function() {

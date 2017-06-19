@@ -11,6 +11,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use DB;
 use App\Quotation;
+use App\Models\Settings;
 use App\Models\SelectCondition;
 
 use Helper, Auth, Schema;
@@ -18,23 +19,12 @@ use Helper, Auth, Schema;
 class HomeController
 {
 
-    public function initPage() {
-        /*
-        $table_name = 'test';
-        Schema::create($table_name, function($table) {
-            $table->increments('id');
-            $table->string('type', 100);
-            $table->string('color', 10);
-            $table->tinyInteger("col_order");
-            $table->boolean('status');            
-        });
-        
-        $col = "abc_id";
-            Schema::table('shop_select_condition', function($table) use ($col) {
-            $table->tinyInteger($col);
-                 
-        });
-        */
+    public function initPage() {        
+        $settingArr =[];
+        $tmpArr = Settings::all();
+        foreach($tmpArr as $tmp){
+            $settingArr[$tmp->name] = $tmp->value;
+        }
         if(!Auth::check()){
             return redirect()->route('login-form');
         }
@@ -50,8 +40,8 @@ class HomeController
             'levels' => $levels,
             'tiemnang' =>$tiemnang,
             'quymo' => $quymo,
-            'conditionList' => $conditionList
-
+            'conditionList' => $conditionList,
+            'settingArr' => $settingArr
         ]);
 
     }

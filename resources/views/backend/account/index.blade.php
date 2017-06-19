@@ -21,7 +21,7 @@
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
       <a href="{{ route('account.create') }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
-      @if(Auth::user()->role == 3)
+      @if(Auth::user()->type == 3)
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Bộ lọc</h3>
@@ -84,7 +84,7 @@
                     <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->full_name }}</a>                                
                   </td>
                   <td>{{ $item->email }}</td>
-                  <td>{{ $item->role == 1 ? "Editor"  : ($item->role == 2 ? "Mod" : "Admin" ) }}</td>
+                  <td>{{ $item->type == 1 ? "Editor"  : ($item->type == 2 ? "Mod" : "Admin" ) }}</td>
                   <td>{{ $item->status == 1 ? "Mở"  : "Khóa" }}</td>
                   <td style="white-space:nowrap">  
                     <a href="{{ route( 'account.update-status', ['status' => $item->status == 1 ? 2 : 1 , 'id' => $item->id ])}}" class="btn btn-sm {{ $item->status == 1 ? "btn-warning" : "btn-info" }}" 

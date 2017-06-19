@@ -61,7 +61,7 @@ class ConditionController extends Controller
             'type.required' => 'Bạn chưa nhập tên loại vốn',
             'color.required' => 'Bạn chưa nhập màu'
         ]);        
-        $dataArr['col_order'] = Helper::getNextOrder('shop_tiem_nang1480213595');
+        $dataArr['col_order'] = Helper::getNextOrder($dataArr['table']);
         unset($dataArr['_token']);
         unset($dataArr['table']);
         $table = $request->table;

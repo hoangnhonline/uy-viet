@@ -17,6 +17,7 @@ Route::get('backend/logout', ['as' => 'backend.logout', 'uses' => 'Backend\UserC
 Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => 'isAdmin'], function()
 {    
     Route::get('dashboard', ['as' => 'dashboard.index', 'uses' => "ShopVonController@dashboard"]);
+    Route::post('delete', ['as' => 'delete', 'uses' => "GeneralController@delete"]);
     Route::group(['prefix' => 'shop'], function () {
         Route::get('/', ['as' => 'shop.index', 'uses' => 'ShopController@index']);
         Route::get('/create', ['as' => 'shop.create', 'uses' => 'ShopController@create']);
@@ -24,6 +25,14 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('{id}/edit',   ['as' => 'shop.edit', 'uses' => 'ShopController@edit']);
         Route::post('/update', ['as' => 'shop.update', 'uses' => 'ShopController@update']);
         Route::get('{id}/destroy', ['as' => 'shop.destroy', 'uses' => 'ShopController@destroy']);
+    });
+    Route::group(['prefix' => 'dieu-kien'], function () {
+        Route::get('/', ['as' => 'dieu-kien.index', 'uses' => 'DieuKienController@index']);
+        Route::get('/create', ['as' => 'dieu-kien.create', 'uses' => 'DieuKienController@create']);
+        Route::post('/store', ['as' => 'dieu-kien.store', 'uses' => 'DieuKienController@store']);
+        Route::get('{id}/edit',   ['as' => 'dieu-kien.edit', 'uses' => 'DieuKienController@edit']);
+        Route::post('/update', ['as' => 'dieu-kien.update', 'uses' => 'DieuKienController@update']);
+        Route::get('{id}/destroy', ['as' => 'dieu-kien.destroy', 'uses' => 'DieuKienController@destroy']);
     });
     Route::group(['prefix' => 'condition'], function () {
         Route::get('/', ['as' => 'condition.index', 'uses' => 'ConditionController@index']);

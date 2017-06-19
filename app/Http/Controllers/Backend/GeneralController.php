@@ -30,7 +30,11 @@ class GeneralController extends Controller
             }
         }        
     }
-    
+    public function delete(Request $request){
+        $table = $request->table;
+        $id = $request->id;
+        DB::table($table)->where('id', $id)->delete();                
+    }
     public function getSlug(Request $request){
     	$strReturn = '';
     	if( $request->ajax() ){

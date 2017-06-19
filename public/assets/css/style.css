@@ -466,8 +466,7 @@ img {
 }
 .sidebar-menu .treeview-menu>li.active>a{
     color: #333;
-    font-weight: bold;
-    background: #ffe6e6;
+    font-weight: bold;    
 }
 .sidebar-menu .treeview-menu>li>a:hover{
     color: #333;
@@ -483,7 +482,18 @@ img {
     max-width: 30px;
     max-height: 30px;
 }
+.sidebar-menu .treeview-menu>li.active>a:before {
+    content: "\f00c";
+    font-family: "FontAwesome";
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    color: #03599a;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
 
+}
 /*===== Content Wrapper =====*/
 .content-wrapper, .right-side, .main-footer {
     -webkit-transition: -webkit-transform .3s ease-in-out,margin .3s ease-in-out;

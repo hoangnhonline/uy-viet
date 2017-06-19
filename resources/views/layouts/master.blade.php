@@ -31,6 +31,19 @@
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond/js/1.4.2/respond.min.js"></script>
 	<![endif]-->
+	<style type="text/css">
+		#map .labels {
+		  color: red;
+		  padding-top: 10px;
+		  background-color: yellow;
+		  font-family: "Lucida Grande", "Arial", sans-serif;
+		  font-size: 10px;
+		  text-align: center;
+		  width: 30px;
+		  white-space: nowrap;
+
+		}
+	</style>
 </head>
 <body class="main">
 	
@@ -118,9 +131,14 @@
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
 						</a>
-						<ul class="treeview-menu list-group checked-list-box check-list-box">
+						<ul class="treeview-menu list-group checked-list-box check-list-box filter_type">
+							<li class="active filter_all" data-filter="filter_type">
+								<a href="javascript:void(0)" title="" value="" data-col="type_id">							
+									<span><img src="{{ URL::asset('assets/images/all.png') }}" alt="Tất cả"></span>Tất cả
+								</a>
+							</li>
 							@foreach($shopType as $type)		                        
-		                        <li class="active"><a href="javascript:void(0)" title="" value="{{ $type->id }}" data-col="type_id">
+		                        <li class="active filter_type" ><a href="javascript:void(0)" title="" value="{{ $type->id }}" data-col="type_id">
 									<span><img src="{{ Helper::showImage($type->icon_url) }}" alt="{!! $type->type !!}"></span>
 									{!! $type->type !!}
 								</a></li>
@@ -139,9 +157,10 @@
 						<?php 
 						$dataList = DB::table('shop_'. $condition->name)->where('status', 1)->get();
 						?>
-						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box">
+						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box filter_{{ $condition->name }}">
+							<li class="active  filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
 							@foreach($dataList as $data)
-								<li class="active"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
+								<li class="active filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
 			                @endforeach
 						</ul>
 						
@@ -166,6 +185,7 @@
 		<input type="hidden" id="{{ $cond->name }}_id" value="" class="checked_value">
 	@endforeach
 		<input type="hidden" id="type_id" value="" class="checked_value">	
+		<input type="hidden" id="show_label" value="{{ $settingArr['show_label'] }}">
 	<!-- /.wrapper -->
 
 	<!-- ===== JS ===== -->
