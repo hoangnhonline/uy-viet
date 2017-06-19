@@ -1,4 +1,4 @@
-<p>Hi {{ $full_name }}!</p>
+<p>Hi {{ $fullname }}!</p>
 
 <p>Chào mừng bạn đến với hệ thống quản trị nhadat.vn</p>
 

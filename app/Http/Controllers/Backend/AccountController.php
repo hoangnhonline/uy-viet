@@ -8,6 +8,11 @@ use Hash;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\GroupUser;
+use App\Models\Company;
+use App\Models\Province;
+use App\Models\UserProvince;
+
 use Helper, File, Session, Auth;
 
 class AccountController extends Controller
@@ -19,19 +24,19 @@ class AccountController extends Controller
     */
     public function index(Request $request)
     {         
-        if(Auth::user()->role == 1){
+        if(Auth::user()->type > 2){
             return redirect()->route('shop.index');
         }
-        $role = $leader_id = 0;
-        $role = Auth::user()->role;
+        $type = $leader_id = 0;
+        $type = Auth::user()->type;
         $query = Account::where('status', '>', 0);
 
-        if( $role == 2){
-            $query->where(['role' => 1, 'leader_id' => Auth::user()->id]);
+        if( $type == 2){
+            $query->where(['type' => 1, 'leader_id' => Auth::user()->id]);
         }else{
-            $role = $request->role ? $request->role : 0;
-            if($role > 0){
-                $query->where('role', $role);
+            $type = $request->type ? $request->type : 0;
+            if($type > 0){
+                $query->where('type', $type);
             }
             $leader_id = $request->leader_id ? $request->leader_id : 0;
             if($leader_id > 0){
@@ -39,17 +44,23 @@ class AccountController extends Controller
             }
         }
         $items = $query->orderBy('id', 'desc')->get();
-        $modList = Account::where(['role' => 2, 'status' => 1])->get();
-        return view('backend.account.index', compact('items', 'role', 'leader_id', 'modList'));
+        $modList = Account::where(['type' => 2, 'status' => 1])->get();
+
+        $groupList = GroupUser::all();
+        $companyList = Company::all();
+        $provinceList = Province::all();
+        return view('backend.account.index', compact('items', 'type', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList'));
     }
     public function create()
     {        
-        if(Auth::user()->role == 1){
+        if(Auth::user()->type > 2){
             return redirect()->route('shop.index');
         }
-        $modList = Account::where(['role' => 2, 'status' => 1])->get();
-        
-        return view('backend.account.create', compact('modList'));
+        $modList = Account::where(['type' => 2, 'status' => 1])->get();
+        $groupList = GroupUser::all();
+        $companyList = Company::all();
+        $provinceList = Province::all();
+        return view('backend.account.create', compact('modList', 'groupList', 'companyList', 'provinceList'));
     }
     public function changePass(){
         return view('backend.account.change-pass');   
@@ -86,24 +97,47 @@ class AccountController extends Controller
         $dataArr = $request->all();
          
         $this->validate($request,[
-            'full_name' => 'required',
-            'email' => 'required|unique:users,email',
+            'company_id' => 'required',
+            'fullname' => 'required',
+            'email' => 'required|unique:user,email',
+            'username' => 'required|unique:user,username',
+            'password' => 'required',
+            're_password' => 'required|same:password',            
+            'type' => 'required'
         ],
         [
-            'name.required' => 'Bạn chưa nhập họ tên',
+            'company_id.required' => 'Bạn chưa chọn company',
+            'fullname.required' => 'Bạn chưa nhập họ tên',
+            'username.required' => 'Bạn chưa nhập username',
+            'username.unique' => 'Username đã được sử dụng.',
+            'password.required' => 'Bạn chưa nhập mật khẩu',
+            're_password.required' => 'Bạn chưa nhập lại mật khẩu',
+            're_password.same' => 'Nhập khẩu nhập lại không khớp',            
             'email.required' => 'Bạn chưa nhập email',
-            'email.unique' => 'Email đã được sử dụng.'
+            'email.unique' => 'Email đã được sử dụng.',
+            'type.required' => 'Bạn chưa chọn loại tài khoản.'
         ]);       
         
-        $tmpPassword = str_random(10);
-        $dataArr['leader_id'] = Auth::user()->role == 2 ? Auth::user()->id : $dataArr['leader_id'];
-        $dataArr['password'] = Hash::make('123465@');
+        $tmpPassword = str_random(10);        
+        $dataArr['password'] = Hash::make($request->password);
         
         $dataArr['created_user'] = Auth::user()->id;
 
         $dataArr['updated_user'] = Auth::user()->id;
 
         $rs = Account::create($dataArr);
+        $user_id = $rs->id;
+        // xu ly tags
+        if( !empty( $dataArr['province_id'] ) && $user_id ){
+            
+
+            foreach ($dataArr['province_id'] as $province_id) {
+                $model = new UserProvince;
+                $model->user_id = $user_id;
+                $model->province_id  = $province_id;                
+                $model->save();
+            }
+        }
         /*
         if ( $rs->id > 0 ){
             Mail::send('backend.account.mail', ['full_name' => $request->full_name, 'password' => $tmpPassword, 'email' => $request->email], function ($message) use ($request) {
@@ -113,13 +147,13 @@ class AccountController extends Controller
             });   
         }*/
 
-        Session::flash('message', 'Tạo mới tài khoản thành công. Mật khẩu mặc định là : 123465@');
+        Session::flash('message', 'Tạo mới tài khoản thành công.');
 
         return redirect()->route('account.index');
     }
     public function destroy($id)
     {
-        if(Auth::user()->role == 1){
+        if(Auth::user()->type == 1){
             return redirect()->route('shop.index');
         }
         // delete
@@ -132,12 +166,14 @@ class AccountController extends Controller
     }
     public function edit($id)
     {
-        if(Auth::user()->role == 1){
+        if(Auth::user()->type == 1){
             return redirect()->route('shop.index');
         }
         $detail = Account::find($id);
-        
-        return view('backend.account.edit', compact( 'detail'));
+        $groupList = GroupUser::all();
+        $companyList = Company::all();
+        $provinceList = Province::all();
+        return view('backend.account.edit', compact( 'detail', 'groupList', 'companyList', 'provinceList'));
     }
     public function update(Request $request)
     {

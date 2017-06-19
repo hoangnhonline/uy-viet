@@ -103,6 +103,7 @@
 <script type="text/javascript" type="text/javascript">
 $(document).ready(function(){
   $('img.lazy').lazyload();
+  $(".select2").select2();
   $.ajaxSetup({
       headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

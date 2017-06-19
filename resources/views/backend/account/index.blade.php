@@ -30,11 +30,15 @@
         <form class="form-inline" role="form" method="GET" action="{{ route('account.index') }}">
         <div class="form-group">
             <label>Role</label>
-            <select class="form-control" name="role" id="role">      
-              <option value="" >--Tất cả--</option>                       
-              <option value="1" {{ $role == 1 ? "selected" : "" }}>Editor</option>
-              <option value="2" {{ $role == 2 ? "selected" : "" }}>Mod</option> 
-              <option value="3" {{ $role == 3 ? "selected" : "" }}>Admin</option>
+            <select class="form-control" name="type" id="type">      
+              <option value="" >--Tất cả--</option>              
+              @if(Auth::user()->type == 1)
+              <option value="2" {{ $type == 2 ? "selected" : "" }}>Company</option>                  
+              @endif                    
+              <option value="3" {{ $type == 3 ? "selected" : "" }}>Operator</option> 
+              <option value="4" {{ $type == 3 ? "selected" : "" }}>Executive</option>
+              <option value="5" {{ $type == 5 ? "selected" : "" }}>Supervisor</option>
+              <option value="6" {{ $type == 6 ? "selected" : "" }}>Sale</option>
             </select>
           </div>
           @if($role == 1)
@@ -44,7 +48,7 @@
                 <option value="">--Tất cả--</option>
                 @if($modList)
                   @foreach($modList as $mod)
-                <option value="{{ $mod->id }}" {{ $leader_id == $mod->id ? "selected" : "" }}>{{ $mod->full_name }}</option> 
+                <option value="{{ $mod->id }}" {{ $leader_id == $mod->id ? "selected" : "" }}>{{ $mod->fullname }}</option> 
                   @endforeach
                 @endif                                
               </select>
@@ -81,12 +85,40 @@
                   <td><span class="order">{{ $i }}</span></td>
                  
                   <td>                  
-                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->full_name }}</a>                                
+                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->fullname }}</a>                                
                   </td>
                   <td>{{ $item->email }}</td>
-                  <td>{{ $item->type == 1 ? "Editor"  : ($item->type == 2 ? "Mod" : "Admin" ) }}</td>
+                  <td>
+                  <?php                  
+                  switch ($item->type) {
+                    case 1:
+                      echo "Admin";
+                      break;
+                    case 2:
+                      echo "Company";
+                      break;
+                    case 3:
+                      echo "Operator";
+                      break;
+                    case 4:
+                      echo "Executive";
+                      break;
+                    case 5:
+                      echo "Supervisor";
+                      break;
+                    case 6:
+                      echo "Sale";
+                      break;                      
+                    
+                    default:
+                      # code...
+                      break;
+                  }
+                  ?>
+                  </td>
                   <td>{{ $item->status == 1 ? "Mở"  : "Khóa" }}</td>
                   <td style="white-space:nowrap">  
+                    @if($item->type != 1)
                     <a href="{{ route( 'account.update-status', ['status' => $item->status == 1 ? 2 : 1 , 'id' => $item->id ])}}" class="btn btn-sm {{ $item->status == 1 ? "btn-warning" : "btn-info" }}" 
                     @if( $item->status == 2)
                     onclick="return confirm('Bạn chắc chắn muốn MỞ khóa tài khoản này? '); "
@@ -97,7 +129,7 @@
                     <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}" class="btn-sm btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>                 
                     
                     <a onclick="return callDelete('{{ $item->name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn-sm btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-                    
+                    @endif
                   </td>
                 </tr> 
               @endforeach
@@ -136,7 +168,7 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
-  $('#role, #leader_id').change(function(){
+  $('#type, #leader_id').change(function(){
     $(this).parents('form').submit();
   });
   $('#table-list-data tbody').sortable({

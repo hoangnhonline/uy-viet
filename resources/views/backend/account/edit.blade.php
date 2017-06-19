@@ -43,7 +43,7 @@
                  <!-- text input -->
                 <div class="form-group">
                   <label>Họ tên <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="full_name" id="full_name" value="{{ $detail->full_name }}">
+                  <input type="text" class="form-control" name="fullname" id="fullname" value="{{ $detail->fullname }}">
                 </div>
                  <div class="form-group">
                   <label>Email <span class="red-star">*</span></label>
@@ -52,11 +52,11 @@
                                          
                 <div class="form-group">
                   <label>Role</label>
-                  <select class="form-control" name="role" id="role">                             
-                    <option value="1" {{ old('role', $detail->type) == 1 ? "selected" : "" }}>Editor</option>
+                  <select class="form-control" name="type" id="type">                             
+                    <option value="1" {{ old('type', $detail->type) == 1 ? "selected" : "" }}>Editor</option>
                     @if(Auth::user()->type == 3)                  
-                    <option value="2" {{ old('role', $detail->type) == 2 ? "selected" : "" }}>Mod</option>
-                    <option value="3" {{ old('role', $detail->type) == 3 ? "selected" : "" }}>Admin</option>
+                    <option value="2" {{ old('type', $detail->type) == 2 ? "selected" : "" }}>Mod</option>
+                    <option value="3" {{ old('type', $detail->type) == 3 ? "selected" : "" }}>Admin</option>
                     @endif                    
                   </select>
                 </div>      
