@@ -189,10 +189,10 @@
 		</footer>
 
 	</div>
-	<div class="notFound" id="div_result">
+	<div class="notFound" id="div_result" style="display:none">
 		<p>
 			<i class="fa fa-exclamation-circle"></i>
-			<span id="txt_result">{{ count($provinceArr) }}  tỉnh/thành có kết quả</span>
+			<span id="txt_result"></span>
 		</p>
 	</div>
 	@foreach($conditionList as $cond)
@@ -279,7 +279,7 @@
                         url: markerFilter[i].icon_url,
                         size: new google.maps.Size(50, 50)
                     },*/
-                    label: {text: '{{ $pro["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
+                    //label: {text: '{{ $pro["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
 
                 });
 			markers.push(marker);
