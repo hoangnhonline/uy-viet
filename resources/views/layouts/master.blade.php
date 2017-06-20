@@ -51,7 +51,7 @@
 	<div class="wrapper">
 		
 		<header class="main-header">
-			<a href="./" class="logo">
+			<a href="{{ route('home') }}" class="logo">
                 <!-- mini logo -->
                 <span class="logo-mini"><b>U</b>V</span>
                 <!-- logo -->

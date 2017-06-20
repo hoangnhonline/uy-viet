@@ -37,7 +37,8 @@
                 </label>
               </div>
               @endforeach
-            </div>      
+            </div>     
+            <br> <br> 
             <div class="form-group">
               <select class="form-control" name="user_id" id="user_id" style="width:150px;">
                 <option value="">--User  --</option>

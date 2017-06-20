@@ -94,7 +94,11 @@ class HomeController
         $filter = $request->input();        
         $province_id = $request->provinceId ? $request->provinceId : null;
         $district_id = $request->districtId ? $request->districtId : null;
-        $company_id = $request->companyId ? $request->companyId : null;
+        if($request->company_id == 0){
+            $company_id = 0;
+        }else{
+            $company_id = $request->companyId ? $request->companyId : null;
+        }
         $ward_id = $request->ward_id ? $request->ward_id : null; 
   
         $query =  Shop::where('shop.status', 1);
@@ -111,7 +115,7 @@ class HomeController
             }                
             $query->whereIn('user_id', $userIdArr);
         }
-        if($company_id){
+        if($company_id > -1){
             $query->where('shop.company_id', $company_id);
         }
         if($province_id){
