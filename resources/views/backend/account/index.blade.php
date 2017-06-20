@@ -12,7 +12,10 @@
     <li class="active">Danh sách</li>
   </ol>
 </section>
-
+<?php 
+$loginType = Auth::user()->type;
+$loginId = Auth::user()->id;
+?>
 <!-- Main content -->
 <section class="content">
   <div class="row">
@@ -21,39 +24,43 @@
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
       <a href="{{ route('account.create') }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
-      @if(Auth::user()->type == 3)
+      @if($loginType < 3)
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Bộ lọc</h3>
         </div>            
       <div class="panel-body">
         <form class="form-inline" role="form" method="GET" action="{{ route('account.index') }}">
-        <div class="form-group">
-            <label>Role</label>
-            <select class="form-control" name="type" id="type">      
-              <option value="" >--Tất cả--</option>              
-              @if(Auth::user()->type == 1)
-              <option value="2" {{ $type == 2 ? "selected" : "" }}>Company</option>                  
-              @endif                    
-              <option value="3" {{ $type == 3 ? "selected" : "" }}>Operator</option> 
-              <option value="4" {{ $type == 3 ? "selected" : "" }}>Executive</option>
-              <option value="5" {{ $type == 5 ? "selected" : "" }}>Supervisor</option>
-              <option value="6" {{ $type == 6 ? "selected" : "" }}>Sale</option>
+        @if($loginType == 1)
+        <div class="form-group">           
+        
+            <select class="form-control" name="company_id" id="company_id">      
+              <option value="" >--Company--</option>              
+               @foreach($companyList as $com)
+                <option value="{{ $com->id }}" {{ ($searchArr['company_id'] == $com->id && $searchArr['company_id'] > -1) ? "selected" : "" }}>{{ $com->company_name }}</option> 
+                @endforeach
             </select>
           </div>
-          @if($role == 1)
-          <div class="form-group">
-              <label>Mod</label>
-              <select class="form-control" name="leader_id" id="leader_id">
-                <option value="">--Tất cả--</option>
-                @if($modList)
-                  @foreach($modList as $mod)
-                <option value="{{ $mod->id }}" {{ $leader_id == $mod->id ? "selected" : "" }}>{{ $mod->fullname }}</option> 
-                  @endforeach
-                @endif                                
-              </select>
-            </div> 
-            @endif
+        @endif
+        <div class="form-group">            
+            <select class="form-control" name="type" id="type">      
+              <option value="" >--Type--</option>              
+              @if(Auth::user()->type == 1)
+              <option value="2" {{ $searchArr['type'] == 2 ? "selected" : "" }}>Company</option>                  
+              @endif                    
+              <option value="3" {{ $searchArr['type'] == 3 ? "selected" : "" }}>Operator</option> 
+              <option value="4" {{ $searchArr['type'] == 4 ? "selected" : "" }}>Executive</option>
+              <option value="5" {{ $searchArr['type'] == 5 ? "selected" : "" }}>Supervisor</option>
+              <option value="6" {{ $searchArr['type'] == 6 ? "selected" : "" }}>Sale</option>
+            </select>
+        </div>
+        <div class="form-group">            
+            <input type="text" name="username" value="{{ $searchArr['username'] }}" class="form-control" placeholder="Username">
+        </div>
+        <div class="form-group">            
+            <input type="text" name="email" value="{{ $searchArr['email'] }}" class="form-control" placeholder="Email">
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Lọc</button>
           </form>
       </div>
       </div>
@@ -62,7 +69,7 @@
       <div class="box">
 
         <div class="box-header with-border">
-          <h3 class="box-title">Danh sách</h3>
+          <h3 class="box-title">Danh sách ( {{ $items->count() }} user)</h3>
         </div>
         
         <!-- /.box-header -->
@@ -74,6 +81,7 @@
               <th>Email</th>
               <th>Role</th>
               <th>Trạng thái</th>
+              <th>Shop</th>
               <th width="1%" style="white-space:nowrap">Thao tác</th>
             </tr>
             <tbody>
@@ -117,6 +125,7 @@
                   ?>
                   </td>
                   <td>{{ $item->status == 1 ? "Mở"  : "Khóa" }}</td>
+                  <td>{{ $item->shops()->count()}}</td>
                   <td style="white-space:nowrap">  
                     @if($item->type != 1)
                     <a href="{{ route( 'account.update-status', ['status' => $item->status == 1 ? 2 : 1 , 'id' => $item->id ])}}" class="btn btn-sm {{ $item->status == 1 ? "btn-warning" : "btn-info" }}" 
@@ -168,7 +177,7 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
-  $('#type, #leader_id').change(function(){
+  $('#company_id, #type').change(function(){
     $(this).parents('form').submit();
   });
   $('#table-list-data tbody').sortable({

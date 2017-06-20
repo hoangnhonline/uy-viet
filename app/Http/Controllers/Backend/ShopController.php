@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
+use App\Models\Account;
 use App\Models\ShopType;
 use App\Models\ShopCapDo;
 use App\Models\ShopTiemNang;
@@ -27,17 +28,26 @@ class ShopController extends Controller
     */
     public function index(Request $request)
     {
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+        
         $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;         
         //$typeIdArr = ShopType::lists('id')->toArray();
-        $arrSearch['type_id'] = $type_id = isset($request->type_id) ? $request->type_id : [1, 2, 3, 4, 5, 6];     
+        $shopTypeList = ShopType::all();
+        
+        foreach ($shopTypeList as $key => $value) {
+            $typeIdDefault[] = $value->id;
+        }        
+        $arrSearch['type_id'] = $type_id = isset($request->type_id) ? $request->type_id : $typeIdDefault;     
 
         $arrSearch['district_id'] = $district_id = isset($request->district_id) ? $request->district_id : null;
         $arrSearch['ward_id'] = $ward_id = isset($request->ward_id) ? $request->ward_id : null;
+        $arrSearch['user_id'] = $user_id = isset($request->user_id) ? $request->user_id : null;
         $arrSearch['condition_id'] = $condition_id = isset($request->condition_id) ? $request->condition_id : null;
-        $arrSearch['province_id'] = $province_id = isset($request->province_id) ? $request->province_id : 79;
+        $arrSearch['province_id'] = $province_id = isset($request->province_id) ? $request->province_id : null;
 
         $arrSearch['shop_name'] = $shop_name = isset($request->shop_name) && trim($request->shop_name) != '' ? trim($request->shop_name) : '';
-        $user_id = '';
+        
         $query = Shop::where('shop.status', $status);
         $wardList = (object) [];
         if( $user_id ){
@@ -49,6 +59,9 @@ class ShopController extends Controller
         if( $province_id ){
             $query->where('shop.province_id', $province_id);
         }
+        if($loginType != 1){
+            $query->whereRaw('shop.province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')');
+        }      
         if( $district_id ){
             $query->where('shop.district_id', $district_id);
             $wardList = Ward::where('district_id', $district_id)->get();
@@ -62,13 +75,23 @@ class ShopController extends Controller
         if( $shop_name != ''){
             $query->where('shop.shop_name', 'LIKE', '%'.$shop_name.'%');            
         }
-     
+        
         $query->orderBy('shop.id', 'desc');   
         $items = $query->paginate(100);
-        $shopTypeList = ShopType::where('status', 1)->get();
-        $provinceList = Province::all();
+        $shopTypeList = ShopType::all();
+        if($loginType == 1){
+            $provinceList = Province::all();
+        }else{
+            $provinceList = Province::whereRaw('province.id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();            
+        }
         $districtList = District::where('province_id', $province_id)->get();
-        return view('backend.shop.index', compact( 'items', 'arrSearch', 'provinceList', 'districtList', 'shopTypeList', 'wardList'));
+        
+        if($loginType == 1){
+            $userList = Account::where('type', '>', 1)->get();
+        }else{
+            $userList = Account::where('type', '>', $loginType)->where('created_user', $loginId)->get();
+        }            
+        return view('backend.shop.index', compact( 'items', 'arrSearch', 'provinceList', 'districtList', 'shopTypeList', 'wardList', 'userList'));
     }
 
     /**

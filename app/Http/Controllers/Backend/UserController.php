@@ -26,7 +26,7 @@ class UserController extends Controller
             'role' => 1,
             'status' => 1
         ));*/               
-        if(!Auth::check()){
+        if(Auth::check()){
             return redirect()->route('shop.index');
         }
         return view('backend.login');

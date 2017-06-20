@@ -67,16 +67,21 @@
                 <div class="row">
                 	<form class="row form-select">
                         <div class="col-sm-12 group-list-drop-down">
+                        	@if(Auth::user()->type == 1)
                             <div class="form-group col-sm-2 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Công Ty</label>
-                                <div class="col-sm-10" id="company">
-									<select id="standard" name="standard" class="selectpicker custom-select form-control" data-live-search="true">
-										<option value="none">Tất cả</option>
-										<option value="5">Hóa Sinh</option>
-										<option value="0">Uy Việt</option>
+                                <div class="col-sm-10">
+									<select id="company" name="company" class="selectpicker custom-select form-control" data-live-search="true">
+										<option value="">Tất cả</option>
+										@foreach($companyList as $com)
+					                    <option value="{{ $com->id }}">{{ $com->company_name }}</option>
+					                    @endforeach
 									</select>
 								</div>
                             </div>
+                            @else
+                            <input type="hidden" id="company" value="{{ Auth::user()->company_id }}">
+                            @endif
                             <div class="form-group col-sm-3 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Tỉnh / Thành Phố</label>
                                 <div class="col-sm-10">
@@ -271,26 +276,26 @@
 
 		    }
 		    @foreach($provinceArr as $province_id => $pro)
-			marker = new google.maps.Marker({
-                    position: new google.maps.LatLng({{ $pro['location'][0] }}, {{ $pro['location'][1] }}),
-                    map: map,
-                    province_id : {{ $province_id }},
-                    /*icon: {
-                        url: markerFilter[i].icon_url,
-                        size: new google.maps.Size(50, 50)
-                    },*/
-                    //label: {text: '{{ $pro["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
+				marker = new google.maps.Marker({
+	                    position: new google.maps.LatLng({{ $pro['location'][0] }}, {{ $pro['location'][1] }}),
+	                    map: map,
+	                    province_id : {{ $province_id }},
+	                    /*icon: {
+	                        url: markerFilter[i].icon_url,
+	                        size: new google.maps.Size(50, 50)
+	                    },*/
+	                    label: {text: '{{ $pro["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
 
-                });
-			markers.push(marker);
-			marker.addListener('click', function() {				
-	         	$('select#province').val({{$province_id}}).selectpicker('refresh');
-	         	getListDistrict();
-	         	//$('.selectpicker').selectpicker('refesh');
-            	$('#search').click();
-	        });
-			
-		@endforeach
+	                });
+				markers.push(marker);
+				marker.addListener('click', function() {				
+		         	$('select#province').val({{$province_id}}).selectpicker('refresh');
+		         	getListDistrict();
+		         	//$('.selectpicker').selectpicker('refesh');
+	            	$('#search').click();
+		        });
+				
+			@endforeach
 			
 		    $("#search").click(function (){
 		    	setMapOnAll(null);
@@ -304,6 +309,7 @@
 		                userId : userId,
 		                provinceId : $("select#province").val(),
 		                districtId : $("select#district").val(),
+		                companyId : $("#company").val(),
 		                wardId :  $("select#ward").val()
 		            },
 		            success: function(data) {

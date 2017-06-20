@@ -103,8 +103,8 @@ $(function () {
     },
     {
       value: 500,
-      color: "#00a65a",
-      highlight: "#00a65a",
+      color: "#0E609E",
+      highlight: "#0E609E",
       label: "IE"
     },
     {
@@ -115,14 +115,14 @@ $(function () {
     },
     {
       value: 600,
-      color: "#28AA4A",
-      highlight: "#28AA4A",
+      color: "#0E609E",
+      highlight: "#0E609E",
       label: "Safari"
     },
     {
       value: 300,
-      color: "#28AA4A",
-      highlight: "#28AA4A",
+      color: "#0E609E",
+      highlight: "#0E609E",
       label: "Opera"
     },
     {
@@ -194,7 +194,7 @@ $(function () {
     },
     markerStyle: {
       initial: {
-        fill: '#00a65a',
+        fill: '#0E609E',
         stroke: '#111'
       }
     },

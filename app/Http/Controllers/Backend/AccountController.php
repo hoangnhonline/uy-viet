@@ -28,12 +28,24 @@ class AccountController extends Controller
             return redirect()->route('shop.index');
         }
         $type = $leader_id = 0;
+        if($request->company_id != 0){
+            $searchArr['company_id'] = $company_id = $request->company_id ? $request->company_id : null;
+        }else{
+            $searchArr['company_id'] = $company_id = 0;
+        }
         $type = Auth::user()->type;
         $query = Account::where('status', '>', 0);
-
-        if( $type == 2){
-            $query->where(['type' => 1, 'leader_id' => Auth::user()->id]);
+       
+        if($company_id > -1){            
+            $query->where('company_id', $company_id);
+        }
+        if( $type == 2){            
+            $query->where(['created_user' => Auth::user()->id]);
+            $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();
+            $companyList = (object)[];
         }else{
+            $groupList = GroupUser::all();
+            $companyList = Company::all();
             $type = $request->type ? $request->type : 0;
             if($type > 0){
                 $query->where('type', $type);
@@ -43,23 +55,41 @@ class AccountController extends Controller
                 $query->where('leader_id', $leader_id);
             }
         }
-        $items = $query->orderBy('id', 'desc')->get();
-        $modList = Account::where(['type' => 2, 'status' => 1])->get();
-
-        $groupList = GroupUser::all();
-        $companyList = Company::all();
-        $provinceList = Province::all();
-        return view('backend.account.index', compact('items', 'type', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList'));
+        $searchArr['type'] = $type = $request->type ? $request->type : null;
+        $searchArr['username'] = $username = $request->username ? $request->username : null;
+        $searchArr['email'] = $email = $request->email ? $request->email : null;
+        if($type){
+            $query->where('user.type', $type);
+        }
+        if( $username != ''){
+            $query->where('username', 'LIKE', '%'.$username.'%');
+        }
+        if( $email != ''){
+            $query->where('email', 'LIKE', '%'.$email.'%');
+        }
+        $items = $query->orderBy('user.type')->orderBy('id', 'desc')->get();
+        $modList = Account::where(['type' => 2, 'status' => 1])->get();        
+        
+        $provinceList = Province::all();        
+        return view('backend.account.index', compact('items', 'type', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList', 'searchArr'));
     }
     public function create()
     {        
         if(Auth::user()->type > 2){
             return redirect()->route('shop.index');
         }
+        if(Auth::user()->type == 2){
+            $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();         
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.Auth::user()->id.')')->get();
+        }else{
+            $groupList = GroupUser::all();
+            $provinceList = Province::all();
+        }
+
         $modList = Account::where(['type' => 2, 'status' => 1])->get();
-        $groupList = GroupUser::all();
+        
         $companyList = Company::all();
-        $provinceList = Province::all();
+        
         return view('backend.account.create', compact('modList', 'groupList', 'companyList', 'provinceList'));
     }
     public function changePass(){
@@ -124,6 +154,7 @@ class AccountController extends Controller
         $dataArr['created_user'] = Auth::user()->id;
 
         $dataArr['updated_user'] = Auth::user()->id;
+        $dataArr['group_user_id'] = (int) $dataArr['group_user_id'];
 
         $rs = Account::create($dataArr);
         $user_id = $rs->id;
@@ -166,31 +197,66 @@ class AccountController extends Controller
     }
     public function edit($id)
     {
-        if(Auth::user()->type == 1){
+        if(Auth::user()->type > 2){
             return redirect()->route('shop.index');
         }
         $detail = Account::find($id);
-        $groupList = GroupUser::all();
-        $companyList = Company::all();
-        $provinceList = Province::all();
-        return view('backend.account.edit', compact( 'detail', 'groupList', 'companyList', 'provinceList'));
+        if($detail->created_user !=  Auth::user()->id && Auth::user()->type == 2){
+            return redirect()->route('shop.index');   
+        }        
+        $companyList = Company::all();        
+        $tmp = UserProvince::where('user_id', $id)->get();
+        $provinceSelected = [];
+        if($tmp){
+            foreach($tmp as $pro){
+                $provinceSelected[] = $pro->province_id;
+            }
+        }
+        if(Auth::user()->type == 2){
+            $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();         
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.Auth::user()->id.')')->get();
+        }else{
+            $groupList = GroupUser::all();
+            $provinceList = Province::all();
+        }
+        return view('backend.account.edit', compact( 'detail', 'groupList', 'companyList', 'provinceList', 'provinceSelected'));
     }
     public function update(Request $request)
     {
         $dataArr = $request->all();
         
         $this->validate($request,[
-            'full_name' => 'required'            
+            'company_id' => 'required',
+            'fullname' => 'required',
+            'email' => 'required',                      
+            'type' => 'required'
         ],
         [
-            'name.required' => 'Bạn chưa nhập họ tên'           
-        ]);      
+            'company_id.required' => 'Bạn chưa chọn company',
+            'fullname.required' => 'Bạn chưa nhập họ tên',                         
+            'email.required' => 'Bạn chưa nhập email',            
+            'type.required' => 'Bạn chưa chọn loại tài khoản.'
+        ]);       
+            
 
         $model = Account::find($dataArr['id']);
 
         $dataArr['updated_user'] = Auth::user()->id;
-
+        $dataArr['group_user_id'] = (int) $dataArr['group_user_id'];
+        
         $model->update($dataArr);
+
+        UserProvince::where(['user_id' => $dataArr['id']])->delete();
+        if( !empty( $dataArr['province_id'] ) &&  $dataArr['id'] ){
+            
+
+            foreach ($dataArr['province_id'] as $province_id) {
+                $model = new UserProvince;
+                $model->user_id =  $dataArr['id'];
+                $model->province_id  = $province_id;                
+                $model->save();
+            }
+        }
 
         Session::flash('message', 'Cập nhật tài khoản thành công');
 

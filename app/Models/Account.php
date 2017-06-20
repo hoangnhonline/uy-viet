@@ -36,5 +36,8 @@ class Account extends Model  {
                             'created_user',
                             'updated_user'
                             ];
-   
+    public function shops()
+    {
+        return $this->hasMany('App\Models\Shop', 'user_id');
+    }
 }

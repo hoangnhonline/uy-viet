@@ -39,7 +39,7 @@
                       </ul>
                   </div>
               @endif
-                 
+                @if(Auth::user()->type == 1)
                 <div class="form-group">
                   <label>Company</label>
                   <select class="form-control" name="company_id" id="company_id">      
@@ -49,6 +49,9 @@
                     @endforeach
                   </select>
                 </div>  <!-- text input -->
+                @else
+                <input type="hidden" name="company_id" value="{{ Auth::user()->company_id }}">
+                @endif
                 <div class="form-group">
                   <label>Họ tên <span class="red-star">*</span></label>
                   <input type="text" class="form-control" name="fullname" id="fullname" value="{{ old('fullname') }}">
@@ -81,7 +84,7 @@
                     <option value="2" {{ old('type') == 2 ? "selected" : "" }}>Company</option>                  
                     @endif                    
                     <option value="3" {{ old('type') == 3 ? "selected" : "" }}>Operator</option> 
-                    <option value="4" {{ old('type') == 3 ? "selected" : "" }}>Executive</option>
+                    <option value="4" {{ old('type') == 4 ? "selected" : "" }}>Executive</option>
                     <option value="5" {{ old('type') == 5 ? "selected" : "" }}>Supervisor</option>
                     <option value="6" {{ old('type') == 6 ? "selected" : "" }}>Sale</option>
                   </select>

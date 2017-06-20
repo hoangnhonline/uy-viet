@@ -37,7 +37,18 @@
                 </label>
               </div>
               @endforeach
-            </div>             
+            </div>      
+            <div class="form-group">
+              <select class="form-control" name="user_id" id="user_id" style="width:150px;">
+                <option value="">--User  --</option>
+                @foreach( $userList as $value )
+                  <option value="{{ $value->id }}"
+                  {{ $arrSearch['user_id'] == $value->id ? "selected" : "" }}                          
+
+                  >{{ $value->fullname }}</option>
+                  @endforeach
+              </select>
+            </div>       
             <div class="form-group">
               <select class="form-control" name="province_id" id="province_id" style="width:150px;">
                 <option value="">--Tỉnh/Thành  --</option>

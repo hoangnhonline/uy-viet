@@ -40,10 +40,10 @@ body {
   font-size: 12px;
 }
 .pen-title span .fa {
-  color: #33b5e5;
+  color: #0E609E;
 }
 .pen-title span a {
-  color: #33b5e5;
+  color: #0E609E;
   font-weight: 600;
   text-decoration: none;
 }
@@ -54,7 +54,7 @@ body {
   background: #ffffff;
   max-width: 320px;
   width: 100%;
-  border-top: 5px solid #33b5e5;
+  border-top: 5px solid #0E609E;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
 }
@@ -63,7 +63,7 @@ body {
   position: absolute;
   top: -0;
   right: -0;
-  background: #33b5e5;
+  background: #0E609E;
   width: 30px;
   height: 30px;
   margin: -5px 0 0;
@@ -102,7 +102,7 @@ body {
 }
 .form-module h2 {
   margin: 0 0 20px;
-  color: #33b5e5;
+  color: #0E609E;
   font-size: 18px;
   font-weight: 400;
   line-height: 1;
@@ -120,12 +120,12 @@ body {
   transition: 0.3s ease;
 }
 .form-module input:focus {
-  border: 1px solid #33b5e5;
+  border: 1px solid #0E609E;
   color: #333333;
 }
 .form-module button {
   cursor: pointer;
-  background: #33b5e5;
+  background: #0E609E;
   width: 100%;
   border: 0;
   padding: 10px 15px;
@@ -134,7 +134,7 @@ body {
   transition: 0.3s ease;
 }
 .form-module button:hover {
-  background: #178ab4;
+  background: #0E609E;
 }
 .form-module .cta {
   background: #f2f2f2;

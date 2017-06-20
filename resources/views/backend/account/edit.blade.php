@@ -4,12 +4,12 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-    Tài khoản
+      Cập nhật tài khoản
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
       <li><a href="{{ route('account.index') }}">Tài khoản</a></li>
-      <li class="active">Chỉnh sửa</li>
+      <li class="active">Cập nhật</li>
     </ol>
   </section>
 
@@ -17,14 +17,15 @@
   <section class="content">
     <a class="btn btn-default btn-sm" href="{{ route('account.index') }}" style="margin-bottom:5px">Quay lại</a>
     <form role="form" method="POST" action="{{ route('account.update') }}" id="formData">
+    <input type="hidden" name="id" value="{{ $detail->id }}">
     <div class="row">
       <!-- left column -->
-      <input type="hidden" name="id" value="{{ $detail->id }}"> 
-      <div class="col-md-7">
+
+      <div class="col-md-8">
         <!-- general form elements -->
         <div class="box box-primary">
           <div class="box-header with-border">
-            Chỉnh sửa
+            <h3 class="box-title">Cập nhật</h3>
           </div>
           <!-- /.box-header -->               
             {!! csrf_field() !!}
@@ -40,31 +41,68 @@
                   </div>
               @endif
                  
-                 <!-- text input -->
+                <div class="form-group">
+                  <label>Company</label>
+                  <select class="form-control" name="company_id" id="company_id">      
+                    <option value="" >--Chọn company--</option>
+                    @foreach($companyList as $com)
+                    <option value="{{ $com->id }}" {{ old('company_id', $detail->company_id) == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option> 
+                    @endforeach
+                  </select>
+                </div>  <!-- text input -->
                 <div class="form-group">
                   <label>Họ tên <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="fullname" id="fullname" value="{{ $detail->fullname }}">
+                  <input type="text" class="form-control" name="fullname" id="fullname" value="{{ old('fullname', $detail->fullname) }}">
                 </div>
                  <div class="form-group">
                   <label>Email <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" readonly="true" name="email" id="email" value="{{ $detail->email }}">
+                  <input type="text" class="form-control" name="email" id="email" value="{{ old('email', $detail->email) }}">
                 </div>
-                                         
                 <div class="form-group">
-                  <label>Role</label>
-                  <select class="form-control" name="type" id="type">                             
-                    <option value="1" {{ old('type', $detail->type) == 1 ? "selected" : "" }}>Editor</option>
-                    @if(Auth::user()->type == 3)                  
-                    <option value="2" {{ old('type', $detail->type) == 2 ? "selected" : "" }}>Mod</option>
-                    <option value="3" {{ old('type', $detail->type) == 3 ? "selected" : "" }}>Admin</option>
+                  <label>Điện thoại</label>
+                  <input type="text" class="form-control" name="phone" id="phone" value="{{ old('phone', $detail->phone) }}">
+                </div>
+                <div class="form-group">
+                  <label>Username <span class="red-star">*</span></label>
+                  <input type="text" class="form-control" readonly="readonly" value="{{ old('username', $detail->username) }}">
+                </div>                       
+                <div class="form-group">
+                  <label>Type <span class="red-star">*</span></label>
+                  <select class="form-control" name="type" id="type">      
+                    <option value="" >--Chọn type--</option>                       
+                    @if(Auth::user()->type == 1)
+                    <option value="2" {{ old('type', $detail->type) == 2 ? "selected" : "" }}>Company</option>                  
                     @endif                    
+                    <option value="3" {{ old('type', $detail->type) == 3 ? "selected" : "" }}>Operator</option> 
+                    <option value="4" {{ old('type', $detail->type) == 4 ? "selected" : "" }}>Executive</option>
+                    <option value="5" {{ old('type', $detail->type) == 5 ? "selected" : "" }}>Supervisor</option>
+                    <option value="6" {{ old('type', $detail->type) == 6 ? "selected" : "" }}>Sale</option>
                   </select>
-                </div>      
+                </div> 
+                <div class="form-group">
+                  <label>Khu vực</label>
+                  <select class="form-control" name="group_user_id" id="group_user_id">      
+                    <option value="" >--Chọn khu vực--</option>
+                    @foreach($groupList as $group)
+                    <option value="{{ $group->id }}" {{ old('group_user_id', $detail->group_user_id) == $group->id ? "selected" : "" }}>{{ $group->name }}</option> 
+                    @endforeach
+                  </select>
+                </div>       
+                <div class="form-group">
+                    <label>Tỉnh / Thành</label>
+                    <select class="form-control select2" name="province_id[]" id="province_id" multiple="multiple">                  
+                      @if( $provinceList->count() > 0)
+                        @foreach( $provinceList as $value )
+                        <option value="{{ $value->id }}" {{ (in_array($value->id, old('province_id', $provinceSelected))) ? "selected" : "" }}>{{ $value->name }}</option>
+                        @endforeach
+                      @endif
+                    </select>                    
+                  </div>         
                 <div class="form-group">
                   <label>Trạng thái</label>
                   <select class="form-control" name="status" id="status">                                      
-                    <option value="1" {{ $detail->status == 1 ? "selected" : "" }}>Mở</option>                  
-                    <option value="2" {{ $detail->status == 2 ? "selected" : "" }}>Khóa</option>                    
+                    <option value="1" {{ old('status', $detail->status) == 1 ? "selected" : "" }}>Mở</option>                  
+                    <option value="2" {{ old('status', $detail->status) == 2 ? "selected" : "" }}>Khóa</option>                  
                   </select>
                 </div>
             </div>
@@ -78,7 +116,8 @@
         <!-- /.box -->     
 
       </div>
-      
+      <div class="col-md-4">
+      </div>
       <!--/.col (left) -->      
     </div>
     </form>
@@ -94,6 +133,15 @@
         $('#btnSave').hide();
         $('#btnLoading').show();
       });
+      @if(Auth::user()->type == 3)
+      $('#type').change(function(){
+        if($(this).val() == 1){
+          $('#chon_mod').show();
+        }else{
+          $('#chon_mod').hide();
+        }
+      });
+      @endif
     });
     
 </script>
