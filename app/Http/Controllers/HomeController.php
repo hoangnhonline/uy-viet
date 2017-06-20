@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Quotation;
 use App\Models\Settings;
+use App\Models\Shop;
 use App\Models\SelectCondition;
 
 use Helper, Auth, Schema;
@@ -20,7 +21,7 @@ class HomeController
 {
 
     public function initPage() {        
-        $settingArr =[];
+        $settingArr = $provinceArr = [];
         $tmpArr = Settings::all();
         foreach($tmpArr as $tmp){
             $settingArr[$tmp->name] = $tmp->value;
@@ -29,22 +30,31 @@ class HomeController
             return redirect()->route('login-form');
         }
         $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
-        $listProvince = DB::select('select id,name from province');
-        $levels = DB::select('select id,type, color from shop_cap_do_1480213548');
-        $tiemnang = DB::select('select id,type from shop_tiem_nang1480213595');
-        $quymo = DB::select('select id,type from shop_quy_mo1480440358');
+        $listProvince = DB::select('select id,name from province');        
         $conditionList = SelectCondition::orderBy('col_order')->get();
+
+        $provinceHasShop = Shop::where('status', 1)
+                //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
+                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))->groupBy('province_id')->get();
+        foreach($provinceHasShop as $pro){
+            $location = $pro->location;
+            $tmp = explode(",", $location);            
+            $provinceArr[$pro->province_id]['location'] = $tmp;
+            $provinceArr[$pro->province_id]['total'] = $pro->total;
+
+        }
+       
+
         return view('layouts.master', [
             'shopType' => $shopType,
-            'listProvince' => $listProvince,
-            'levels' => $levels,
-            'tiemnang' =>$tiemnang,
-            'quymo' => $quymo,
+            'listProvince' => $listProvince,            
             'conditionList' => $conditionList,
-            'settingArr' => $settingArr
+            'settingArr' => $settingArr,
+            'provinceArr' => $provinceArr
         ]);
 
     }
+
     public function loginForm()
     {
         /*User::create(array(

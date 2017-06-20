@@ -624,3 +624,32 @@ img {
     border-left-width: 7px;
     padding: 10px !important;
 }
+/*===== Not Found =====*/
+.notFound {
+    position: fixed;
+    bottom: 90px;
+    right: 0;
+    background: rgba(84, 167, 191, 0.83);
+    color: #fff;
+    font-size: 15px;
+    padding: 25px 20px;
+    width: 300px;
+    border-radius: 5px;
+    cursor: pointer;
+    -webkit-transition: -webkit-transform .3s ease-in-out,width .3s ease-in-out;
+    -moz-transition: -moz-transform .3s ease-in-out,width .3s ease-in-out;
+    -o-transition: -o-transform .3s ease-in-out,width .3s ease-in-out;
+    transition: transform .3s ease-in-out,width .3s ease-in-out;
+}
+.notFound:hover {
+    background: #54A7BF;
+    -webkit-transition: -webkit-transform .3s ease-in-out,width .3s ease-in-out;
+    -moz-transition: -moz-transform .3s ease-in-out,width .3s ease-in-out;
+    -o-transition: -o-transform .3s ease-in-out,width .3s ease-in-out;
+    transition: transform .3s ease-in-out,width .3s ease-in-out;
+}
+.notFound p i {
+    margin-right: 20px;
+    font-size: 26px;
+    vertical-align: middle;
+}

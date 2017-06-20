@@ -79,7 +79,7 @@
                             </div>
                             <div class="form-group col-sm-3 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Tỉnh / Thành Phố</label>
-                                <div class="col-sm-10" id="province">
+                                <div class="col-sm-10">
 								<select id="province" class="selectpicker custom-select form-control"  title="Chọn tỉnh/thành" data-live-search="true" onchange="getListDistrict()">
 									 @foreach($listProvince as $province)
 				                    <option value="{{$province->id}}">{{$province->name}}</option>
@@ -166,7 +166,14 @@
 						</ul>
 						
 					</li><!-- /.treeview -->
-					@endforeach					
+					@endforeach		
+					<li style="padding-left:10px;padding-top:20px">
+						
+						<label style="color:red">
+							<input type="checkbox" id="check_show_label" {{ $settingArr['show_label'] == 1 ? "checked" : "" }}> Hiển thị tên shop
+						</label>
+						
+					</li>			
 				</ul>
 			</section><!-- /.sidebar -->
 		</aside><!-- /main-sidebar -->
@@ -181,6 +188,12 @@
 			<a href="#" title="" class="link"><strong>uv.net.vn</strong></a>
 		</footer>
 
+	</div>
+	<div class="notFound" id="div_result">
+		<p>
+			<i class="fa fa-exclamation-circle"></i>
+			<span id="txt_result">{{ count($provinceArr) }}  tỉnh/thành có kết quả</span>
+		</p>
 	</div>
 	@foreach($conditionList as $cond)
 		<input type="hidden" id="{{ $cond->name }}_id" value="" class="checked_value">
@@ -222,9 +235,177 @@
 	<script src="{{ URL::asset('js/home.js') }}"></script>
 	<script src="{{ URL::asset('js/checkbox.js') }}"></script>
 	<script type="text/javascript">
-		$(document).ready(function(){
+	$(document).ready(function(){
+		$('#check_show_label').click(function(){
+			if($(this).prop('checked') == true){
+				$('#show_label').val(1);				
+			}else{
+				$('#show_label').val(0);
+			}
+			$('#search').click();
+		});
+	});
+		 //tạo map, tạo marker
+		function initMap() {
+		    latLong = new google.maps.LatLng(parseFloat(updatePosition.split(',')[0]), parseFloat(updatePosition.split(',')[1]));
+		    map = new google.maps.Map(document.getElementById('map'), {
+		        zoom: 6,
+		        center: latLong
+		    });
 
+		    markerCluster = new MarkerClusterer(map, markers,
+		        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
+		    $('#modal-edit').on('show.bs.modal', function(e) {
+		        current_shopId = $(e.relatedTarget).data('id');
+
+		    });
+
+		    if (window.location.pathname != '/') {
+		        getRelateLocation();
+
+		    }
+		    @foreach($provinceArr as $province_id => $pro)
+			marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({{ $pro['location'][0] }}, {{ $pro['location'][1] }}),
+                    map: map,
+                    province_id : {{ $province_id }},
+                    /*icon: {
+                        url: markerFilter[i].icon_url,
+                        size: new google.maps.Size(50, 50)
+                    },*/
+                    label: {text: '{{ $pro["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
+
+                });
+			marker.addListener('click', function() {
+				console.log('{{$province_id}}');
+	         	$('select#province').val({{$province_id}}).selectpicker('refresh');
+	         	//$('.selectpicker').selectpicker('refesh');
+            	$('#search').click();
+	        });
 			
+		@endforeach
+			
+		    $("#search").click(function (){
+		        markerCluster.clearMarkers();
+		        markers = [];
+		        $.ajax({
+		            type: "GET",
+		            url: '/location',
+		            data: {
+		                userId : userId,
+		                provinceId : $("select#province").val(),
+		                districtId : $("select#district").val(),
+		                wardId :  $("select#ward").val()
+		            },
+		            success: function(data) {
+		                //$(".check-list-box li").addClass('active');
+		                markers_temp = data;
+
+		                var markerFilter = []; 
+		                $('.checked_value').val('');
+		                $(".check-list-box li.active a").each(function(idx, li) {            
+		                    var col = $(this).data('col');    
+		                    var val = $(this).attr('value');
+		                    var tmp = $('#' + col).val();
+		                    $('#' + col).val(tmp + val  + ";");
+		                }); 
+
+		                for (var i = 0; i < markers_temp.length; i++) {
+
+		                    var rs = true;
+		                    $('.checked_value').each(function(){                        
+		                        var value = $(this).val();
+		                        
+		                        if(value != ''){
+		                            var result = value.slice(0, -1);
+		                            var tmpArr = result.split(';')
+		                            var col = $(this).attr('id'); 
+		                        
+		                            if($.inArray(markers_temp[i][col].toString(), tmpArr) === -1){
+		                                rs = false;
+		                            }
+		                        }else{
+		                            rs = false;
+		                        }                       
+		                    });                 
+		                    if(rs == true){                 
+		                        markerFilter.push(markers_temp[i]);
+
+		                    }
+
+		                }
+
+		                if($(".check-list-box li.active a").length==0){
+		                    markerFilter = [];
+		                }                
+		                
+		                for (var i = 0; i < markerFilter.length; i++) {
+		                    console.log(markerFilter[i]);
+		                    if($('#show_label').val() == 1){
+		                        marker = new google.maps.Marker({
+		                            position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
+		                            map: map,
+		                            title: markerFilter[i].shop_name,
+		                            data: markerFilter[i],
+		                            icon: {
+		                                url: markerFilter[i].icon_url,
+		                                size: new google.maps.Size(50, 50)
+		                            },
+		                            label: {text: markers_temp[i].shop_name, color: "red", labelClass : 'labels-marker'}
+
+		                        });
+		                    }else{
+		                        marker = new google.maps.Marker({
+		                            position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
+		                            map: map,
+		                            title: markerFilter[i].shop_name,
+		                            data: markerFilter[i],
+		                            icon: {
+		                                url: markerFilter[i].icon_url,
+		                                size: new google.maps.Size(50, 50)
+		                            }
+		                        });
+		                    }
+		                    markers.push(marker);
+		                    (function(marker, i) {
+		                        google.maps.event.addListener(marker, 'click', function() {
+		                            infowindow = new google.maps.InfoWindow({
+		                                content: getContent(marker.data)
+		                            });
+		                            if(tempIW)
+		                                tempIW.close();
+		                            infowindow.open(map, marker);
+		                            tempIW = infowindow;
+		                            google.maps.event.addListener(infowindow, 'domready', function() {
+		                                $("#view-more").on("click", function() {
+		                                    view_more($(this).attr("data"));
+		                                });
+
+		                            });
+		                        });
+
+		                    })(marker, i);
+		                }
+
+		                if(markerFilter.length > 0){
+		                    markerCluster.addMarkers(markers);
+		                    map.setCenter(new google.maps.LatLng(parseFloat(markerFilter[0].location.split(',')[0]), parseFloat(markerFilter[0].location.split(',')[1])));
+		                    map.setZoom(14);
+
+		                }
+		                $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
+		                $('#div_result').show();
+		                setTimeout(function(){ $('#div_result').hide() }, 3000);
+
+		            },
+		        });
+		    });
+
+		}
+		$(document).ready(function(){
+			
+				
 		});
 
 	</script>
