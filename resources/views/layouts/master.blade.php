@@ -119,8 +119,8 @@
 						<img src="{{ URL::asset('assets/images/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
 					</div>
 					<div class="pull-left info">
-						<p>Hi , {{session('fullname')}}</p>
-						<a href="#" title=""><i class="fa fa-circle text-success"></i> Online</a>
+						<p>Hi , {{ Auth::user()->fullname }}</p>
+						<a href="{{ route('logout') }}" title="Logout" style="color:red"><i class="fa fa-circle text-danger"></i> Logout</a>
 					</div>
 				</div><!-- /.user-panel -->
 				<ul class="sidebar-menu" data-widget="tree">
@@ -200,6 +200,7 @@
 	@endforeach
 		<input type="hidden" id="type_id" value="" class="checked_value">	
 		<input type="hidden" id="show_label" value="{{ $settingArr['show_label'] }}">
+		<input type="hidden" id="is_search" value="0">
 	<!-- /.wrapper -->
 
 	<!-- ===== JS ===== -->
@@ -252,7 +253,11 @@
 		        zoom: 6,
 		        center: latLong
 		    });
-
+		    function setMapOnAll(map) {
+		        for (var i = 0; i < markers.length; i++) {
+		          markers[i].setMap(map);
+		        }
+		      }
 		    markerCluster = new MarkerClusterer(map, markers,
 		        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
@@ -277,8 +282,8 @@
                     label: {text: '{{ $pro["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
 
                 });
-			marker.addListener('click', function() {
-				console.log('{{$province_id}}');
+			markers.push(marker);
+			marker.addListener('click', function() {				
 	         	$('select#province').val({{$province_id}}).selectpicker('refresh');
 	         	getListDistrict();
 	         	//$('.selectpicker').selectpicker('refesh');
@@ -288,6 +293,8 @@
 		@endforeach
 			
 		    $("#search").click(function (){
+		    	setMapOnAll(null);
+		    	$('#is_search').val(1);
 		        markerCluster.clearMarkers();
 		        markers = [];
 		        $.ajax({
@@ -341,8 +348,7 @@
 		                    markerFilter = [];
 		                }                
 		                
-		                for (var i = 0; i < markerFilter.length; i++) {
-		                    console.log(markerFilter[i]);
+		                for (var i = 0; i < markerFilter.length; i++) {		                    
 		                    if($('#show_label').val() == 1){
 		                        marker = new google.maps.Marker({
 		                            position: new google.maps.LatLng(parseFloat(markerFilter[i].location.split(',')[0]), parseFloat(markerFilter[i].location.split(',')[1])),
@@ -395,9 +401,11 @@
 		                    map.setZoom(14);
 
 		                }
-		                $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
-		                $('#div_result').show();
-		                setTimeout(function(){ $('#div_result').hide() }, 3000);
+		                if($('#is_search').val() == 1){
+			                $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
+			                $('#div_result').show();
+			                setTimeout(function(){ $('#div_result').hide() }, 3000);
+		            	}
 
 		            },
 		        });

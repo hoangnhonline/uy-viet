@@ -73,9 +73,15 @@ $(function() {
         }
         init();
     });
-
+    function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
     $('.check-list-box li a').on('click', function(event) {
-
+        if($('#is_search').val() == 1){
+            setMapOnAll(null);
+        }
         $(this).parent().toggleClass('active');
         var flt = $(this).parent('li').data('filter');
         if($(this).parent('li').hasClass('filter_all')){            
@@ -183,9 +189,11 @@ $(function() {
 
             })(marker, i);
         }
-        $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
-        $('#div_result').show();
-        setTimeout(function(){ $('#div_result').hide() }, 2000);
+        if($('#is_search').val() == 1){
+            $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
+            $('#div_result').show();
+            setTimeout(function(){ $('#div_result').hide() }, 2000);
+        }
         markerCluster.addMarkers(markers);
     });
 });
