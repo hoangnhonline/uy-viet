@@ -280,6 +280,7 @@
 			marker.addListener('click', function() {
 				console.log('{{$province_id}}');
 	         	$('select#province').val({{$province_id}}).selectpicker('refresh');
+	         	getListDistrict();
 	         	//$('.selectpicker').selectpicker('refesh');
             	$('#search').click();
 	        });
