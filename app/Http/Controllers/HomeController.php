@@ -114,10 +114,7 @@ class HomeController
                 $userIdArr = [$loginId];
             }                
             $query->whereIn('user_id', $userIdArr);
-        }
-        if($company_id > -1){
-            $query->where('shop.company_id', $company_id);
-        }
+        }       
         if($province_id){
             $query->where('shop.province_id', $province_id);
         }
