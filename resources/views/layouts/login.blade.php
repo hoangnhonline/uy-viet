@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Uy Việt - Đăng nhập hệ thống</title>
-    
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">    
     
     <link rel="stylesheet" href="css/reset.css">
 
