@@ -18,6 +18,7 @@ use App\Models\Province;
 use App\Models\District;
 use App\Models\Ward;
 use App\Models\SelectCondition;
+use App\Models\Image;
 use App\Models\Company;
 
 use Helper, File, Session, Auth;
@@ -197,7 +198,20 @@ class ShopController extends Controller
         if($detail->district_id){
             $wardList = Ward::where('district_id', $detail->district_id)->get();
         }
-        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList'));
+        $hinhArr = [];
+        $tmp = Image::where('shop_id', $id)->first();
+        if($tmp){
+            $folder = $tmp->url;
+           
+            $path = public_path()."/UY_VIET_DINH_VI/".$folder."/";
+
+            if(is_dir($path)){                
+                foreach(glob($path.'*') as $filename){                    
+                    $hinhArr[] = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);                    
+                }
+            }
+        }
+        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr'));
     }
 
     /**
