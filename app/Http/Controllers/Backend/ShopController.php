@@ -17,6 +17,9 @@ use App\Models\ShopVon;
 use App\Models\Province;
 use App\Models\District;
 use App\Models\Ward;
+use App\Models\SelectCondition;
+use App\Models\Company;
+
 use Helper, File, Session, Auth;
 
 class ShopController extends Controller
@@ -101,7 +104,24 @@ class ShopController extends Controller
     */
     public function create()
     {
-        return view('backend.shop.create');
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+
+        $shopTypeList = DB::select('select id,type, icon_url from shop_type where status = 1');
+        if($loginType > 1){
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+        }else{
+            $provinceList = Province::all();        
+        }      
+        
+        $conditionList = SelectCondition::orderBy('col_order')->get();
+        $companyList = Company::all();
+        return view('backend.shop.create', compact(
+            'provinceList',
+            'conditionList',
+            'companyList',
+            'shopTypeList'
+            ));
     }
 
     /**
@@ -151,9 +171,33 @@ class ShopController extends Controller
     */
     public function edit($id)
     {
-        $detail = Shop::find($id);
+        
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+        if($loginType > 1){
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+        }else{
+            $provinceList = Province::all();        
+        }      
+        
+        $shopTypeList = ShopType::where('status', 1)->get();
 
-        return view('backend.shop.edit', compact( 'detail' ));
+        $conditionList = SelectCondition::orderBy('col_order')->get();
+        
+        $companyList = Company::all();
+        
+        $detail = Shop::find($id);
+        
+        $districtList = (object)[];
+        
+        if($detail->province_id){
+            $districtList = District::where('province_id', $detail->province_id)->get();
+        }
+        $wardList = (object)[];
+        if($detail->district_id){
+            $wardList = Ward::where('district_id', $detail->district_id)->get();
+        }
+        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList'));
     }
 
     /**

@@ -113,6 +113,12 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@initPage']);
 Route::get('/location', 'HomeController@findItem');
+Route::get('/get-image-thumbnail', ['as' => 'get-image-thumbnail' , 'uses' => 'HomeController@getImageThumbnail']);
+Route::get('/gallery', ['as' => 'gallery' , 'uses' => 'HomeController@gallery']);
+Route::get('ward-{district_id}.html', ['as' => 'ward-marker', 'uses' => 'HomeController@wardMarker']);
+Route::get('{slug}.html', ['as' => 'district-marker', 'uses' => 'HomeController@districtMarker']);
+
+
 Route::post('/getInfoShop', 'HomeController@getInfoShop');
 Route::get('/getdistrict', 'HomeController@getDistrictList');
 Route::get('/getward', 'HomeController@getWardList');

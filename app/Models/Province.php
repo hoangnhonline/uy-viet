@@ -25,7 +25,8 @@ class Province extends Model  {
      */
     protected $fillable = [
                             'name', 
-                            'type'
+                            'type',
+                            'slug'
                             ];
    
 }

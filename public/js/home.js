@@ -6,46 +6,66 @@ var tempIW = '';
 var current_shopId, latLong;
 // lấy thông tin khi click vào marker
 function getContent(data) {
-    return '<div class="info-box-wrap row">     ' +
-        '       <div class="col-sm-4">      ' +
-        '           <img src="assets/images/shop.jpg" />        ' +
-        '           <a class="btn btn-info" id="view-more" data="' + data.shop_id + '">More</a>' +
-        '       </div>    ' +
+    var img_url = '';
+    $.ajax({
+        url : $('#route_get_image_thumbnail').val(),
+        type : 'GET',
+        data : {
+            id : data.shop_id
+        },
+        async: false,
+        success : function (response){
+            img_url = response;
+        }
+    });
+    var html =  '<div class="info-box-wrap" style="padding-top:10px">     ' +
+        '       <div class="col-sm-4" style="padding:0px;position:relative">      ' +
+        '           <img src="' + img_url + '" class="img-responsive" style="width:100%" />        ';
+        if(img_url != $('#default_image').val() ){
+               html+='<a class="btn btn-info btn-sm view-more" data-id="'+ data.id + '" style="padding: 4px 10px; margin-top:2px;position:absolute;bottom:0;width:100%" data="' + data.shop_id + '">More</a>';
+        }
+        html +='</div>    ' +
         '       <div class="info-box-text-wrap col-sm-8">           ' +
-        '           <h6 class="address">' + data.shop_name + '</h6>         ' +
-        '               <div class="action-btns">           ' +
+        '           <h6 class="address" style="font-size:17px;color:#0e609e;margin-bottom:10px">' + data.shop_name + '</h6>         ' +
+        '               <div class="action-btns" style="line-height:25px;">           ' +
         '                   <i class="fa fa-volume-control-phone"></i>  ' +
-        '                   <strong>  ' + data.namer + ": " + data.phone + '</strong> <br><i class="fa fa-user"></i><strong>' + data.fullname + '</strong>                   ' +
-        '                   <br><i class="fa fa-map-marker"></i>' +
+        '                   <strong>  ' + data.namer + ": " + data.phone + '</strong> <br><i class="fa fa-user"></i>  <strong>' + data.fullname + '</strong>                   ' +
+        '                   <br><i class="fa fa-map-marker"></i>  ' +
         '                   <strong>' + data.full_address + '</strong><br></div>' +
                             (edit_link != "" ? '<div class="row">' +
-                            '<a data-toggle="modal" data-target="#modal-edit" class="pull-right" id="edit-shop" onclick="getInfoUpdate('+data.id+')" data-id="'+ data.id + '"><i class="fa fa-pencil-square-o"></i></a></div>' : '') + '</div>    </div>';
-}
-
-//lấy thông tin khi click vào chỉnh sửa
-function getInfoUpdate(shop_id) {
+                            '<a data-toggle="modal" data-target="#modal-edit" class="pull-right edit-shop" data-id="'+ data.id + '"><i class="fa fa-pencil-square-o"></i></a></div>' : '') + '</div>    </div>';
+    return html;
+}   
+$(document).on('click', '.view-more', function(){
+    var obj = $(this);
     $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: "POST",
+        type: "GET",
         data : {
-            id :shop_id,
+            id : obj.data('id'),
         } ,
-        url: '/getInfoShop',
+        url: $('#route_gallery').val(),
         success: function(data) {
-            $("input[name=full_address]").val(data[0].full_address);
-            $("input[name=shop_name]").val(data[0].shop_name);
-            $("input[name=namer]").val(data[0].namer);
-            $("input[name=phone]").val(data[0].phone);
-            $("select[name=level]").val(data[0].cap_do_1480213548_id);
-            $("select[name=quymo]").val(data[0].quy_mo1480440358_id);
-            $("input[name=status]").prop('checked', data[0].status);
-            $("select[name=tiemnang]").val(data[0].tiem_nang1480213595_id);
+            $('#content_gallery').html(data);
+            $('#myModalGallery').modal('show');
         },
 
     });
-}
+});
+$(document).on('click', '.edit-shop', function(){
+    var obj = $(this);
+    $.ajax({
+        type: "GET",
+        data : {
+            id : obj.data('id'),
+        } ,
+        url: $('#route_edit_fe').val(),
+        success: function(data) {
+            $('#content_edit').html(data);
+            $('#myModalEdit').modal('show');
+        },
+
+    });
+});
 
 
 function getListDistrict() {

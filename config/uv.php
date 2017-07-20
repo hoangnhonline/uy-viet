@@ -1,5 +1,4 @@
 <?php 
-$url = 'http://'.$_SERVER['SERVER_NAME'];
 return [    
     'paging' => 100, // number rows for paging
     'uploads' => [
@@ -11,6 +10,7 @@ return [
     'upload_path' => public_path() . '/uploads/', // media_upload_path   
 	'upload_thumbs_path' => public_path() . '/uploads/thumbs/', // media_upload_path    
     'upload_url' => $url . '/uploads/', // image path,
+    'image_url' => config('app.url'),
     'max_size_upload' => 8000000    
 ];
 ?>

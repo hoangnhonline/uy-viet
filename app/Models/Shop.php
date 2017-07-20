@@ -39,11 +39,16 @@ class Shop extends Model  {
                             'condition_id', 
                             'full_address',
                             'district_id',
-                            'province_id'
+                            'province_id',
+                            'company_id'
                             ];
     public function province()
     {
         return $this->belongsTo('App\Models\Province', 'province_id');
+    }
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company', 'company_id');
     }
     public function district()
     {

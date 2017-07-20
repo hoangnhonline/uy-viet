@@ -17,14 +17,17 @@ use App\Models\SelectCondition;
 use App\Models\Province;
 use App\Models\Account;
 use App\Models\Company;
+use App\Models\District;
+use App\Models\Ward;
+use App\Models\Image;
 
-
-use Helper, Auth, Schema;
+use Helper, Auth, Schema, URL;
 
 class HomeController
 {
 
     public function initPage() {        
+    
         $settingArr = $provinceArr = [];
         $tmpArr = Settings::all();
         foreach($tmpArr as $tmp){
@@ -42,7 +45,9 @@ class HomeController
         }else{
             $listProvince = Province::all();        
         }
-
+        foreach($listProvince as $pro){
+            $provinceDetailArr[$pro->id] = $pro;
+        }
         
         $conditionList = SelectCondition::orderBy('col_order')->get();
         if($loginType > 1){
@@ -59,6 +64,7 @@ class HomeController
             $tmp = explode(",", $location);            
             $provinceArr[$pro->province_id]['location'] = $tmp;
             $provinceArr[$pro->province_id]['total'] = $pro->total;
+            $provinceArr[$pro->province_id]['slug'] = $pro->slug;
 
         }
        
@@ -69,11 +75,163 @@ class HomeController
             'conditionList' => $conditionList,
             'settingArr' => $settingArr,
             'provinceArr' => $provinceArr,
-            'companyList' => $companyList
+            'companyList' => $companyList,
+            'provinceDetailArr' => $provinceDetailArr
         ]);
 
     }
+    public function getImageThumbnail(Request $request){
+        $id = $request->id;
 
+        $firstImage =  config('app.url').'/assets/images/no-image.png';
+
+        $tmp = Image::where('shop_id', $id)->first();
+        if($tmp){
+            $folder = $tmp->url;
+           
+            $path = public_path()."/UY_VIET_DINH_VI/".$folder."/";
+
+            if(is_dir($path)){
+                $i = 0;
+                foreach(glob($path.'*') as $filename){
+                    $i++;
+                    if($i == 1){
+                        $firstImage = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);
+                    }                    
+                }
+            }
+        }
+        return $firstImage;
+    }
+    public function gallery(Request $request){
+        $arr = [];
+        $id = $request->id;
+
+        $tmp = Image::where('shop_id', $id)->first();
+        
+            $folder = $tmp->url;
+           
+            $path = public_path()."/UY_VIET_DINH_VI/".$folder."/";
+
+            if(is_dir($path)){                
+                foreach(glob($path.'*') as $filename){                    
+                    $arr[] = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);                    
+                }
+            }
+        
+        return view('ajax.gallery', [
+            'arr' => $arr
+        ]);
+    }
+    public function districtMarker(Request $request) {        
+        $slug = $request->slug;
+        $province_id = Province::where('slug', $slug)->first()->id;
+        $settingArr = $provinceArr = [];
+        $tmpArr = Settings::all();
+        foreach($tmpArr as $tmp){
+            $settingArr[$tmp->name] = $tmp->value;
+        }
+        if(!Auth::check()){
+            return redirect()->route('login-form');
+        }
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+
+        $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
+        if($loginType > 1){
+            $listProvince = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+        }else{
+            $listProvince = Province::all();        
+        }
+        foreach($listProvince as $pro){
+            $provinceDetailArr[$pro->id] = $pro;
+        }
+        
+        
+        $conditionList = SelectCondition::orderBy('col_order')->get();
+
+            $districtHasShop = Shop::where('status', 1)->where('province_id', $province_id)
+            //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
+            ->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`id`) as total'))->groupBy('district_id')->get();
+        
+        foreach($districtHasShop as $pro){
+            $location = $pro->location;
+            $tmp = explode(",", $location);            
+            $districtArr[$pro->district_id]['location'] = $tmp;
+            $districtArr[$pro->district_id]['total'] = $pro->total;
+            $districtArr[$pro->district_id]['slug'] = $pro->total;
+
+        }        
+        $companyList = Company::all();
+        return view('layouts.district', [
+            'shopType' => $shopType,
+            'listProvince' => $listProvince,            
+            'conditionList' => $conditionList,
+            'settingArr' => $settingArr,
+            'districtArr' => $districtArr,
+            'companyList' => $companyList,
+            'provinceDetailArr' => $provinceDetailArr,
+            'province_id' => $province_id
+        ]);
+
+    }
+    public function wardMarker(Request $request) {        
+        $district_id = $request->district_id;
+        $districtDetail = District::find($district_id);
+        $settingArr = $provinceArr = [];
+        $tmpArr = Settings::all();
+        foreach($tmpArr as $tmp){
+            $settingArr[$tmp->name] = $tmp->value;
+        }
+        if(!Auth::check()){
+            return redirect()->route('login-form');
+        }
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+
+        $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
+        if($loginType > 1){
+            $listProvince = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+        }else{
+            $listProvince = Province::all();        
+        }
+        foreach($listProvince as $pro){
+            $provinceDetailArr[$pro->id] = $pro;
+        }        
+        $province_id = $districtDetail->province_id;
+        $districtList = District::where('province_id', $province_id)->get();
+        $wardList = Ward::where('district_id', $district_id)->get();
+        $conditionList = SelectCondition::orderBy('col_order')->get();
+        
+        $wardHasShop = Shop::where('status', 1)->where('district_id', $district_id)
+        //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
+        ->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`id`) as total'))->groupBy('ward_id')->get();
+        
+        foreach($wardHasShop as $pro){
+            $location = $pro->location;
+            $tmp = explode(",", $location);            
+            $wardArr[$pro->ward_id]['location'] = $tmp;
+            $wardArr[$pro->ward_id]['total'] = $pro->total;
+            $wardArr[$pro->ward_id]['slug'] = $pro->total;
+
+        }        
+        $companyList = Company::all();
+       
+        return view('layouts.ward', [
+            'shopType' => $shopType,
+            'listProvince' => $listProvince,            
+            'conditionList' => $conditionList,
+            'settingArr' => $settingArr,
+            'wardArr' => $wardArr,
+            'companyList' => $companyList,
+            'provinceDetailArr' => $provinceDetailArr,
+            'province_id' => $province_id,
+            'district_id' => $district_id,
+            'districtList' => $districtList,
+            'wardList' => $wardList
+        ]);
+
+    }
     public function loginForm()
     {
         /*User::create(array(
@@ -94,12 +252,9 @@ class HomeController
         $filter = $request->input();        
         $province_id = $request->provinceId ? $request->provinceId : null;
         $district_id = $request->districtId ? $request->districtId : null;
-        if($request->company_id == 0){
-            $company_id = 0;
-        }else{
-            $company_id = $request->companyId ? $request->companyId : null;
-        }
-        $ward_id = $request->ward_id ? $request->ward_id : null; 
+        $company_id = $request->companyId ? $request->companyId : null;        
+ 
+        $ward_id = $request->wardId ? $request->wardId : null; 
   
         $query =  Shop::where('shop.status', 1);
         // not admin
@@ -115,6 +270,9 @@ class HomeController
             }                
             $query->whereIn('user_id', $userIdArr);
         }       
+        if($company_id){       
+            $query->where('shop.company_id', $company_id);
+        }
         if($province_id){
             $query->where('shop.province_id', $province_id);
         }
