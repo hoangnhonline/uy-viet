@@ -72,6 +72,9 @@
        immediately after the control sidebar -->
 <input type="hidden" id="route_update_order" value="{{ route('update-order') }}">
 <input type="hidden" id="route_get_slug" value="{{ route('get-slug') }}">
+<input type="hidden" id="route_delete_image" value="{{ route('delete-image') }}">
+<input type="hidden" id="route_upload_tmp_image_multiple" value="{{ route('image.tmp-upload-multiple') }}">
+<input type="hidden" id="route_upload_tmp_image" value="{{ route('image.tmp-upload') }}">
   <div class="control-sidebar-bg"></div>
 </div>
 <input type="hidden" id="upload_url" value="{{ config('uv.upload_url') }}">

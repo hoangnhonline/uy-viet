@@ -28,15 +28,14 @@ class UploadController extends Controller
         if ($request->ajax())
         {
             $dataArr = $request->all();
-            $date_dir = $dataArr['date_dir'] == 1 ? true : false;
-            
+            $date_dir = $dataArr['date_dir'] == 1 ? true : false;           
             if($dataArr['file']){
                 foreach( $dataArr['file'] as $file ){
-                    $rsUpload[] = Helper::uploadPhoto($file, $dataArr['folder'], $date_dir);
+                    $rsUpload[] = Helper::uploadPhotoShop($file, $dataArr['folder'], $date_dir);
                 }
             }
         }
-        return view('backend.product.upload-image', compact( 'rsUpload' ));
+        return view('backend.shop.upload-image', compact( 'rsUpload' ));
     }
     public function tmpUploadMultipleFE(Request $request){
         $rsUpload = [];
@@ -77,6 +76,10 @@ class UploadController extends Controller
             $arrResult['fileList'] = array();
         }
         echo json_encode($arrResult);
+    }
+    public function deleteImage(Request $request){
+        $path = $request->path;
+        dd(unlink($path));
     }
     
 }

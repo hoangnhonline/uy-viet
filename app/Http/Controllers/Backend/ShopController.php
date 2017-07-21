@@ -18,6 +18,7 @@ use App\Models\Province;
 use App\Models\District;
 use App\Models\Ward;
 use App\Models\SelectCondition;
+use App\Models\ShopSelectCondition;
 use App\Models\Image;
 use App\Models\Company;
 
@@ -187,7 +188,10 @@ class ShopController extends Controller
         
         $companyList = Company::all();
         
-        $detail = Shop::find($id);
+        $detail = Shop::where('shop.id', $id)
+                ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
+                ->first();
+                ;
         
         $districtList = (object)[];
         
@@ -200,6 +204,7 @@ class ShopController extends Controller
         }
         $hinhArr = [];
         $tmp = Image::where('shop_id', $id)->first();
+        $folder = '';
         if($tmp){
             $folder = $tmp->url;
            
@@ -211,7 +216,7 @@ class ShopController extends Controller
                 }
             }
         }
-        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr'));
+        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder'));
     }
 
     /**
@@ -225,17 +230,32 @@ class ShopController extends Controller
     {
         $dataArr = $request->all(); 
         
-        $this->validate($request,[
-            'type' => 'required',
-            'color' => 'required',
+        $this->validate($request,[            
+            'type_id' => 'required',            
+            'province_id' => 'required',
+            'district_id' => 'required',            
+            'ward_id' => 'required',     
+            'shop_name' => 'required'                        
         ],
-        [
-            'type.required' => 'Bạn chưa nhập tên shop',
-            'color.required' => 'Bạn chưa nhập màu'
+        [            
+            'type_id.required' => 'Bạn chưa chọn loại shop',
+            'province_id.required' => 'Bạn chưa chọn tỉnh/thành',
+            'district_id.required' => 'Bạn chưa chọn Quận/Huyện',
+            'ward_id.required' => 'Bạn chưa chọn phường/xã',
+            'shop_name.required' => 'Bạn chưa nhập tên shop'           
         ]);
 
-        $model = Shop::find($dataArr['id']);
+        if(!empty($dataArr['cond'])){
+            $model = ShopSelectCondition::where('shop_id', $dataArr['id'])->first();
+            foreach ($dataArr['cond'] as $column => $value) {
+                
+                $model->$column = $value;
 
+            }
+            $model->save();
+        }
+        $model = Shop::find($dataArr['id']);
+        $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
         $model->update($dataArr);
 
         Session::flash('message', 'Cập nhật shop thành công');

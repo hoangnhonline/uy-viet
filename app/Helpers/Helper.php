@@ -32,6 +32,23 @@ class Helper
         return $url;
 
     }
+    public static function showImageShop($image_url, $type = 'original'){
+
+        //return strpos($image_url, 'http') === false ? config('uv.upload_url') . $type . '/' . $image_url : $image_url;        
+        if(strpos($image_url, 'http') === false){
+            if(strpos($image_url, 'assets') === false){
+                $url = config('uv.upload_url_shop') . $image_url;
+            }else{
+                $url = url('/').'/'.$image_url;
+            }
+            
+        }else{
+            $url = $image_url;   
+        }
+        //return strpos($image_url, 'http') === false ? config('uv.upload_url') . $image_url : $image_url;        
+        return $url;
+
+    }
     public static function showImageThumb($image_url, $object_type = 1, $folder = ''){             
         // type = 1 : original 2 : thumbs
         //object_type = 1 : product, 2 :article  3: project             
@@ -112,7 +129,44 @@ class Helper
 
         return $return;
     }
+    public static function uploadPhotoShop($file, $base_folder = '', $date_dir=false){
+    
+        $return = [];
 
+        $basePath = '';
+
+        $basePath = $base_folder ? $basePath .= $base_folder ."/" : $basePath = $basePath;
+
+        $basePath = $date_dir == true ? $basePath .= date('Y/m/d'). '/'  : $basePath = $basePath;        
+
+        $desPath = config('uv.upload_path_shop'). $basePath; 
+
+        //set name for file
+        $fileName = $file->getClientOriginalName();
+        
+        $tmpArr = explode('.', $fileName);
+
+        // Get image extension
+        $imgExt = array_pop($tmpArr);
+
+        // Get image name exclude extension
+        $imgNameOrigin = preg_replace('/(.*)(_\d+x\d+)/', '$1', implode('.', $tmpArr));        
+
+        $imgName = str_slug($imgNameOrigin, '-');
+        
+        $imgName = $imgName."-".time();
+
+        $newFileName = "{$imgName}.{$imgExt}";
+       //var_dump($desPath, $newFileName);die;
+        if( $file->move($desPath, $newFileName) ){            
+            $imagePath = $basePath.$newFileName;
+            $return['image_name'] = $newFileName;
+            $return['image_path'] = $imagePath;
+            $return['image_dir'] = $desPath.$newFileName;
+        }
+
+        return $return;
+    }
     public static function changeFileName($str) {
         $str = self::stripUnicode($str);
         $str = str_replace("?", "", $str);

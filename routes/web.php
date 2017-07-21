@@ -108,7 +108,10 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'account.update', 'uses' => 'AccountController@update']);
         Route::get('{id}/destroy', ['as' => 'account.destroy', 'uses' => 'AccountController@destroy']);
     });
-    Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']);     
+    Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']);   
+    Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
+    Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);  
+    Route::get('/delete-image', ['as' => 'delete-image', 'uses' => 'UploadController@deleteImage']);  
 });
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@initPage']);
@@ -120,8 +123,8 @@ Route::get('{slug}.html', ['as' => 'district-marker', 'uses' => 'HomeController@
 
 
 Route::post('/getInfoShop', 'HomeController@getInfoShop');
-Route::get('/getdistrict', 'HomeController@getDistrictList');
-Route::get('/getward', 'HomeController@getWardList');
+Route::get('/getdistrict',['as' => 'get-district' , 'uses' => 'HomeController@getDistrictList']);
+Route::get('/getward',['as' => 'get-ward' , 'uses' => 'HomeController@getWardList']);
 Route::post('/login',['as' => 'do-login' , 'uses' => 'HomeController@doLogin']);
 Route::get('/login',['as' => 'login-form' , 'uses' => 'HomeController@loginForm']);
 Route::get('/logout',['as' => 'logout', 'uses' => 'HomeController@doLogout']);

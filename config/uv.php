@@ -11,6 +11,8 @@ return [
 	'upload_thumbs_path' => public_path() . '/uploads/thumbs/', // media_upload_path    
     'upload_url' => $url . '/uploads/', // image path,
     'image_url' => config('app.url'),
+    'upload_path_shop' => public_path() . '/', // media_upload_path   
+    'upload_url_shop' => $url . '/', // image path,
     'max_size_upload' => 8000000    
 ];
 ?>
