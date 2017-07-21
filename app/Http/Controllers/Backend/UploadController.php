@@ -79,7 +79,7 @@ class UploadController extends Controller
     }
     public function deleteImage(Request $request){
         $path = $request->path;
-        dd(unlink($path));
+        unlink($path);
     }
     
 }
