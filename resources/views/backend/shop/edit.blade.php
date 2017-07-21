@@ -303,7 +303,7 @@
          url : "{{ route('delete-image') }}",
          type : "POST",
          data : {
-           path : obj.data('value')
+           path : '123',///obj.data('value')
          },
          success: function(){
            obj.parents('.col-md-3').remove();    
