@@ -283,6 +283,7 @@
    
      var obj = $(this);
      if( confirm ("Bạn có chắc chắn không ?")){
+       obj.parents('.col-md-3').remove(); 
        $.ajax({
          url : "{{ route('delete-image') }}",
          type : "POST",
@@ -290,7 +291,7 @@
            path : obj.data('value')
          },
          success: function(){
-           obj.parents('.col-md-3').remove();    
+              
          }
        });
        
