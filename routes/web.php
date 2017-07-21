@@ -11,14 +11,12 @@
 |
 */
 // Authentication routes...
-Route::get('backend', ['as' => 'backend.login-forms', 'uses' => 'Backend\UserController@loginForm']);
 Route::get('backend/login', ['as' => 'backend.login-form', 'uses' => 'Backend\UserController@loginForm']);
 Route::post('backend/login', ['as' => 'backend.check-login', 'uses' => 'Backend\UserController@checkLogin']);
 Route::get('backend/logout', ['as' => 'backend.logout', 'uses' => 'Backend\UserController@logout']);
-Route::any('backend/upload/delete-image', ['as' => 'delete-image', 'uses' => 'UploadController@deleteImage']);  
+Route::post('backend/delete-image', ['as' => 'delete-image', 'uses' => 'Backend\UploadController@deleteImage']);  
 Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => 'isAdmin'], function()
 {    
-    
     Route::get('dashboard', ['as' => 'dashboard.index', 'uses' => "ShopVonController@dashboard"]);
     Route::post('delete', ['as' => 'delete', 'uses' => "GeneralController@delete"]);
     Route::group(['prefix' => 'shop'], function () {
@@ -93,6 +91,9 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'shop-size.update', 'uses' => 'ShopSizeController@update']);
         Route::get('{id}/destroy', ['as' => 'shop-size.destroy', 'uses' => 'ShopSizeController@destroy']);
     });
+
+    Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
+    Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);
         
     Route::post('/update-order', ['as' => 'update-order', 'uses' => 'GeneralController@updateOrder']);
     Route::post('/ck-upload', ['as' => 'ck-upload', 'uses' => 'UploadController@ckUpload']);
@@ -111,7 +112,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
     Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']);   
     Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
     Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);  
-    
+
 });
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@initPage']);
