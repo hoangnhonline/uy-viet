@@ -16,6 +16,7 @@ Route::post('backend/login', ['as' => 'backend.check-login', 'uses' => 'Backend\
 Route::get('backend/logout', ['as' => 'backend.logout', 'uses' => 'Backend\UserController@logout']);
 Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => 'isAdmin'], function()
 {    
+    Route::post('/upload/delete-image', ['as' => 'delete-image', 'uses' => 'UploadController@deleteImage']);  
     Route::get('dashboard', ['as' => 'dashboard.index', 'uses' => "ShopVonController@dashboard"]);
     Route::post('delete', ['as' => 'delete', 'uses' => "GeneralController@delete"]);
     Route::group(['prefix' => 'shop'], function () {
@@ -108,7 +109,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
     Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']);   
     Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
     Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);  
-    Route::post('/upload/upload/upload/upload/upload/upload/upload/upload/delete-image', ['as' => 'delete-image', 'uses' => 'UploadController@deleteImage']);  
+    
 });
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@initPage']);
