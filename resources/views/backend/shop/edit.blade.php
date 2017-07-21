@@ -301,7 +301,7 @@
      if( confirm ("Bạn có chắc chắn không ?")){
        $.ajax({
          url : "{{ route('delete-image') }}",
-         type : "GET",
+         type : "POST",
          data : {
            path : obj.data('value')
          },
@@ -327,11 +327,12 @@
       
          $('#btnUploadImage').click(function(){        
            $('#file-image').click();
+           $('#btnUploadImage').html('<i class="fa fa-spin fa-spinner"></i>');
          }); 
         
          var files = "";
          $('#file-image').change(function(e){
-            $('#btnUploadImage').html('<i class="fa fa-spin fa-spinner"></i>')
+            
             files = e.target.files;
             
             if(files != ''){
