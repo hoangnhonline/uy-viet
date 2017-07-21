@@ -47,7 +47,7 @@ $(document).on('click', '.view-more', function(){
         success: function(data) {
             $('#content_gallery').html(data);
             $('#myModalGallery').modal('show');
-        },
+        }
 
     });
 });
@@ -57,11 +57,12 @@ $(document).on('click', '.edit-shop', function(){
         type: "GET",
         data : {
             id : obj.data('id'),
+            district_id : $('select#district').val()
         } ,
         url: $('#route_edit_fe').val(),
         success: function(data) {
-            $('#content_edit').html(data);
-            $('#myModalEdit').modal('show');
+            $('#content_edit_shop').html(data);
+            $('#myModalShop').modal('show');
         },
 
     });

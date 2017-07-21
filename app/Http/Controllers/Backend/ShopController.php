@@ -285,7 +285,9 @@ class ShopController extends Controller
         $model->update($dataArr);
 
         Session::flash('message', 'Cập nhật shop thành công');
-
+        if(isset($dataArr['curr_url'])){
+            return redirect($dataArr['curr_url']);
+        }
         return redirect()->route('shop.edit', $dataArr['id']);
     }
 

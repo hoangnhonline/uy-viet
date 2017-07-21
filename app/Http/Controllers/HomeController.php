@@ -20,6 +20,7 @@ use App\Models\Company;
 use App\Models\District;
 use App\Models\Ward;
 use App\Models\Image;
+use App\Models\ShopType;
 
 use Helper, Auth, Schema, URL;
 
@@ -79,6 +80,53 @@ class HomeController
             'provinceDetailArr' => $provinceDetailArr
         ]);
 
+    }
+    public function editShop(Request $request){
+        $id = $request->id;
+        $district_id = $request->district_id;
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+        if($loginType > 1){
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+        }else{
+            $provinceList = Province::all();        
+        }      
+        
+        $shopTypeList = ShopType::where('status', 1)->get();
+
+        $conditionList = SelectCondition::orderBy('col_order')->get();
+        
+        $companyList = Company::all();
+        
+        $detail = Shop::where('shop.id', $id)
+                ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
+                ->first();
+                ;
+        
+        $districtList = (object)[];
+        
+        if($detail->province_id){
+            $districtList = District::where('province_id', $detail->province_id)->get();
+        }
+        $wardList = (object)[];
+        if($detail->district_id){
+            $wardList = Ward::where('district_id', $detail->district_id)->get();
+        }
+        $hinhArr = [];
+        $tmp = Image::where('shop_id', $id)->first();
+        $folder = '';
+        if($tmp){
+            $folder = $tmp->url;
+           
+            $path = public_path()."/UY_VIET_DINH_VI/".$folder."/";
+
+            if(is_dir($path)){                
+                foreach(glob($path.'*') as $filename){                    
+                    $hinhArr[] = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);                    
+                }
+            }
+        }
+        return view('ajax.edit-shop', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder', 'district_id'));
     }
     public function getImageThumbnail(Request $request){
         $id = $request->id;

@@ -412,7 +412,7 @@
 
 		                }
 		                if($('#is_search').val() == 1){
-			                $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
+			                $('#txt_result').html( markerFilter.length + ' kết quả');
 			                $('#div_result').show();
 			                setTimeout(function(){ $('#div_result').hide() }, 3000);
 		            	}
@@ -531,7 +531,7 @@
 
 		                }
 		                if($('#is_search').val() == 1){
-			                $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
+			                $('#txt_result').html( markerFilter.length + ' kết quả');
 			                $('#div_result').show();
 			                setTimeout(function(){ $('#div_result').hide() }, 3000);
 		            	}
@@ -548,29 +548,22 @@
 	</script>
 	<input type="hidden" id="route_get_image_thumbnail" value="{{ route('get-image-thumbnail') }}">
 	<input type="hidden" id="route_gallery" value="{{ route('gallery') }}">
-	<input type="hidden" id="route_edit_fe" value="{{ route('gallery') }}">
+	<input type="hidden" id="route_edit_fe" value="{{ route('edit-shop-fe') }}">
 	
 	<input type="hidden" id="default_image" value="{{ config('app.url').'/assets/images/no-image.png' }}">
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-  Launch demo modal
-</button>
+<!-- Button trigger modal ->
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="myModalShop" tabindex="-1" role="dialog" aria-labelledby="myModalShopLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalShopLabel">Edit shop</h4>
       </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      <div class="modal-body" id="content_edit_shop"> 
+        
+      </div>     
     </div>
   </div>
 </div>
@@ -590,6 +583,14 @@
   </div>
 </div>
 
-
+<script type="text/javascript">
+	$(document).ready(function(){
+		@if(Session::has('message'))     
+			$('#txt_result').html( '{{ Session::get('message') }}' );
+	        $('#div_result').show();
+	        setTimeout(function(){ $('#div_result').hide() }, 3000);
+        @endif
+	});
+</script>
 </body>
 </html>
