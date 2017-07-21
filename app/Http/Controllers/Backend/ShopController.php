@@ -108,21 +108,24 @@ class ShopController extends Controller
     {
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
-
-        $shopTypeList = DB::select('select id,type, icon_url from shop_type where status = 1');
         if($loginType > 1){
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
         }else{
             $provinceList = Province::all();        
         }      
         
+        $shopTypeList = ShopType::where('status', 1)->get();
+
         $conditionList = SelectCondition::orderBy('col_order')->get();
+        $max_id = Shop::max('id');
+        $folder = "UV_".$max_id.time();        
         $companyList = Company::all();
         return view('backend.shop.create', compact(
             'provinceList',
+            'shopTypeList',
             'conditionList',
             'companyList',
-            'shopTypeList'
+            'folder'
             ));
     }
 
@@ -136,19 +139,42 @@ class ShopController extends Controller
     {
         $dataArr = $request->all();
         
-        $this->validate($request,[
-            'type' => 'required',
-            'color' => 'required',
+        $this->validate($request,[            
+            'type_id' => 'required',            
+            'province_id' => 'required',
+            'district_id' => 'required',            
+            'ward_id' => 'required',     
+            'shop_name' => 'required'                        
         ],
-        [
-            'type.required' => 'Bạn chưa nhập tên shop',
-            'color.required' => 'Bạn chưa nhập màu'
-        ]);        
-        $dataArr['col_order'] = Helper::getNextOrder('shop_cap_do_1480213548');
+        [            
+            'type_id.required' => 'Bạn chưa chọn loại shop',
+            'province_id.required' => 'Bạn chưa chọn tỉnh/thành',
+            'district_id.required' => 'Bạn chưa chọn Quận/Huyện',
+            'ward_id.required' => 'Bạn chưa chọn phường/xã',
+            'shop_name.required' => 'Bạn chưa nhập tên shop'           
+        ]);
+        $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
+        $dataArr['user_id'] = Auth::user()->id;
+        $dataArr['add_time'] = date('Y-m-d H:i:s', time());
+        $dataArr['condition_id'] = 0;
+        $rs = Shop::create($dataArr);
+        $id = $rs->id;
+        
+        $arrCond = [];
 
-        unset($dataArr['_token']);
-        Shop::insert($dataArr);      
+        if(!empty($dataArr['cond'])){
+            $arrCond['shop_id'] = $id;
+            foreach ($dataArr['cond'] as $column => $value) {
+                
+                $arrCond[$column] = $value;
 
+            }
+            ShopSelectCondition::create($arrCond);
+        }
+        Image::create([
+            'url' => $dataArr['folder'],
+            'shop_id' => $id
+            ]);
         Session::flash('message', 'Tạo mới shop thành công');
 
         return redirect()->route('shop.index');

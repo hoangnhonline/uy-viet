@@ -167,6 +167,7 @@
                      <h3 class="box-title">Hình ảnh</h3>
                   </div>
                   <div class="box-body">
+                    <input type="hidden" name="folder" value="{{ $folder }}">
                      <div class="form-group" style="margin-top:10px;margin-bottom:10px">
                         <div class="col-md-12" style="text-align:center">
                            <input type="file" id="file-image"  style="display:none" multiple/>
@@ -303,7 +304,7 @@
          url : "{{ route('delete-image') }}",
          type : "POST",
          data : {
-           path : '123',///obj.data('value')
+           path : obj.data('value')
          },
          success: function(){
            obj.parents('.col-md-3').remove();    
@@ -326,8 +327,7 @@
    $(document).ready(function(){
       
          $('#btnUploadImage').click(function(){        
-           $('#file-image').click();
-           $('#btnUploadImage').html('<i class="fa fa-spin fa-spinner"></i>');
+           $('#file-image').click();           
          }); 
         
          var files = "";
@@ -352,8 +352,7 @@
                processData: false,
                contentType: false,
                success: function (response) {
-                   $('#div-image').append(response);  
-                   $('#btnUploadImage').html('<span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload');            
+                   $('#div-image').append(response);             
                }
              });
            }

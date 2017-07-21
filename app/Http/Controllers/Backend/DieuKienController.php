@@ -65,7 +65,7 @@ class DieuKienController extends Controller
 
         $col = $name."_id";
         Schema::table('shop_select_condition', function($table) use ($col) {
-            $table->tinyInteger($col);                 
+            $table->tinyInteger($col)->nullable();                 
         });
         SelectCondition::create($dataArr);   
 
