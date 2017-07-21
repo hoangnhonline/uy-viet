@@ -111,7 +111,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
     Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']);   
     Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
     Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);  
-    Route::post('/delete-image', ['as' => 'delete-image', 'uses' => 'UploadController@deleteImage']);  
+    Route::post('/upload/upload/upload/delete-image', ['as' => 'delete-image', 'uses' => 'UploadController@deleteImage']);  
 });
 
 Route::get('/', ['as' => 'home', 'uses' => 'HomeController@initPage']);
