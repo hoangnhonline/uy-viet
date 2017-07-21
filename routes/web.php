@@ -14,7 +14,7 @@
 Route::get('backend/login', ['as' => 'backend.login-form', 'uses' => 'Backend\UserController@loginForm']);
 Route::post('backend/login', ['as' => 'backend.check-login', 'uses' => 'Backend\UserController@checkLogin']);
 Route::get('backend/logout', ['as' => 'backend.logout', 'uses' => 'Backend\UserController@logout']);
-Route::post('backend/delete-image', ['as' => 'delete-image', 'uses' => 'Backend\UploadController@deleteImage']);  
+Route::post('backend/upload/delete-image', ['as' => 'delete-image', 'uses' => 'Backend\UploadController@deleteImage']);  
 Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => 'isAdmin'], function()
 {    
     Route::get('dashboard', ['as' => 'dashboard.index', 'uses' => "ShopVonController@dashboard"]);
