@@ -1,4 +1,4 @@
-@extends('layout.backend')
+@extends('backend.layout')
 @section('content')
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -70,7 +70,7 @@
                   <label>Type <span class="red-star">*</span></label>
                   <select class="form-control" name="type" id="type">      
                     <option value="" >--Chọn type--</option>                       
-                    @if(Auth::user()->type == 1)
+                    @if($loginType == 1)
                     <option value="2" {{ old('type', $detail->type) == 2 ? "selected" : "" }}>Company</option>                  
                     @endif                    
                     <option value="3" {{ old('type', $detail->type) == 3 ? "selected" : "" }}>Operator</option> 
@@ -133,7 +133,7 @@
         $('#btnSave').hide();
         $('#btnLoading').show();
       });
-      @if(Auth::user()->type == 3)
+      @if($loginType == 3)
       $('#type').change(function(){
         if($(this).val() == 1){
           $('#chon_mod').show();

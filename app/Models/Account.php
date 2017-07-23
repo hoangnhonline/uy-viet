@@ -34,7 +34,11 @@ class Account extends Model  {
                             'company_id',
                             'group_user_id',
                             'created_user',
-                            'updated_user'
+                            'updated_user',
+                            'company_user_id',
+                            'executive_user_id',
+                            'operator_user_id',
+                            'supervisor_user_id'
                             ];
     public function shops()
     {

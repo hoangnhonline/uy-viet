@@ -27,19 +27,29 @@ class AccountController extends Controller
         if(Auth::user()->type > 2){
             return redirect()->route('shop.index');
         }
-        $type = $leader_id = 0;
-        if($request->company_id != 0){
-            $searchArr['company_id'] = $company_id = $request->company_id ? $request->company_id : null;
+        $loginType = $leader_id = 0;
+        
+        $searchArr['company_id'] = $company_id = $request->company_id ? $request->company_id : null;
+        
+        $loginType = Auth::user()->type;
+        if($loginType == 2){
+            $typeArrDefault = [3,4,5,6];
+        }elseif($loginType == 3){
+            $typeArrDefault = [4,5,6];
+        }elseif($loginType == 4){
+            $typeArrDefault = [5,6];
+        }elseif($loginType==5){
+            $typeArrDefault = [6];
         }else{
-            $searchArr['company_id'] = $company_id = 0;
+            $typeArrDefault = [2,3,4,5,6];
         }
-        $type = Auth::user()->type;
+
         $query = Account::where('status', '>', 0);
        
-        if($company_id > -1){            
+        if($company_id){            
             $query->where('company_id', $company_id);
         }
-        if( $type == 2){            
+        if( $loginType == 2){            
             $query->where(['created_user' => Auth::user()->id]);
             $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();
             $companyList = (object)[];
@@ -47,19 +57,20 @@ class AccountController extends Controller
             $groupList = GroupUser::all();
             $companyList = Company::all();
             $type = $request->type ? $request->type : 0;
-            if($type > 0){
-                $query->where('type', $type);
-            }
+            
             $leader_id = $request->leader_id ? $request->leader_id : 0;
             if($leader_id > 0){
                 $query->where('leader_id', $leader_id);
             }
         }
-        $searchArr['type'] = $type = $request->type ? $request->type : null;
+        
+        
+        $searchArr['type'] = $typeArr = $request->type ? $request->type : $typeArrDefault;
+        var_dump($request->type);
         $searchArr['username'] = $username = $request->username ? $request->username : null;
         $searchArr['email'] = $email = $request->email ? $request->email : null;
-        if($type){
-            $query->where('user.type', $type);
+        if($typeArr){
+            $query->whereIn('user.type', $typeArr);
         }
         if( $username != ''){
             $query->where('username', 'LIKE', '%'.$username.'%');
@@ -71,8 +82,9 @@ class AccountController extends Controller
         $modList = Account::where(['type' => 2, 'status' => 1])->get();        
         
         $provinceList = Province::all();        
-        return view('backend.account.index', compact('items', 'type', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList', 'searchArr'));
+        return view('backend.account.index', compact('items', 'typeArr', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList', 'searchArr'));
     }
+    public function ajaxGetAccount
     public function create()
     {        
         if(Auth::user()->type > 2){

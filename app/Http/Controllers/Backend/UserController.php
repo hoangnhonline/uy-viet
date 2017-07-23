@@ -68,7 +68,7 @@ class UserController extends Controller
             return redirect()->route('backend.login-form');
         }
 
-        return redirect()->route('parent-cate.index');
+        return redirect()->route('shop.index');
     }
   
     public function logout()

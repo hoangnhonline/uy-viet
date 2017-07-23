@@ -1,4 +1,4 @@
-@extends('layout.backend')
+@extends('backend.layout')
 @section('content')
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -39,8 +39,8 @@
                       </ul>
                   </div>
               @endif
-                @if(Auth::user()->type == 1)
-                <div class="form-group">
+                @if($loginType == 1)
+                <div class="form-group col-md-12">
                   <label>Company</label>
                   <select class="form-control" name="company_id" id="company_id">      
                     <option value="" >--Chọn company--</option>
@@ -49,47 +49,68 @@
                     @endforeach
                   </select>
                 </div>  <!-- text input -->
-                @else
+                @else                
                 <input type="hidden" name="company_id" value="{{ Auth::user()->company_id }}">
                 @endif
-                <div class="form-group">
-                  <label>Họ tên <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="fullname" id="fullname" value="{{ old('fullname') }}">
-                </div>
-                 <div class="form-group">
-                  <label>Email <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="email" id="email" value="{{ old('email') }}">
-                </div>
-                <div class="form-group">
-                  <label>Điện thoại</label>
-                  <input type="text" class="form-control" name="phone" id="phone" value="{{ old('phone') }}">
-                </div>
-                <div class="form-group">
-                  <label>Username <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="username" id="username" value="{{ old('username') }}">
-                </div>
-                <div class="form-group">
-                  <label>Mật khẩu <span class="red-star">*</span></label>
-                  <input type="password" class="form-control" name="password" id="password" value="{{ old('password') }}">
-                </div> 
-                <div class="form-group">
-                  <label>Nhập lại mật khẩu <span class="red-star">*</span></label>
-                  <input type="password" class="form-control" name="re_password" id="re_password" value="{{ old('re_password') }}">
-                </div>                
-                <div class="form-group">
+                <div class="form-group col-md-6">
                   <label>Type <span class="red-star">*</span></label>
                   <select class="form-control" name="type" id="type">      
                     <option value="" >--Chọn type--</option>                       
-                    @if(Auth::user()->type == 1)
-                    <option value="2" {{ old('type') == 2 ? "selected" : "" }}>Company</option>                  
-                    @endif                    
+                    @if($loginType == 1)
+                    <option value="2" {{ old('type') == 2 ? "selected" : "" }}>Company</option>
+                    @endif              
+                    @if($loginType <= 2)      
                     <option value="3" {{ old('type') == 3 ? "selected" : "" }}>Operator</option> 
+                    @endif
+                    @if($loginType <= 3)
                     <option value="4" {{ old('type') == 4 ? "selected" : "" }}>Executive</option>
+                    @endif
+                    @if($loginType <= 4)
                     <option value="5" {{ old('type') == 5 ? "selected" : "" }}>Supervisor</option>
+                    @endif
+                    @if($loginType <= 5)
                     <option value="6" {{ old('type') == 6 ? "selected" : "" }}>Sale</option>
+                    @endif
                   </select>
                 </div> 
-                <div class="form-group">
+                <div class="form-group col-md-6" id="div_company">
+                  <label>User company <span class="red-star">*</span></label>
+                  <select class="form-control" name="type" id="type">      
+                    <option value="" >--Chọn user company--</option>                      
+                  </select>
+                </div> 
+                <div class="form-group col-md-6">
+                  <label>Họ tên <span class="red-star">*</span></label>
+                  <input type="text" class="form-control" name="fullname" id="fullname" value="{{ old('fullname') }}">
+                </div>
+                 <div class="form-group col-md-6">
+                  <label>Email <span class="red-star">*</span></label>
+                  <input type="text" class="form-control" name="email" id="email" value="{{ old('email') }}">
+                </div>                
+                <div class="form-group col-md-6">
+                  <label>Username <span class="red-star">*</span></label>
+                  <input type="text" class="form-control" name="username" id="username" value="{{ old('username') }}">
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Điện thoại</label>
+                  <input type="text" class="form-control" name="phone" id="phone" value="{{ old('phone') }}">
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Mật khẩu <span class="red-star">*</span></label>
+                  <input type="password" class="form-control" name="password" id="password" value="{{ old('password') }}">
+                </div> 
+                <div class="form-group col-md-6">
+                  <label>Nhập lại mật khẩu <span class="red-star">*</span></label>
+                  <input type="password" class="form-control" name="re_password" id="re_password" value="{{ old('re_password') }}">
+                </div>                
+                <div class="form-group col-md-6">
+                  <label>Trạng thái</label>
+                  <select class="form-control" name="status" id="status">                                      
+                    <option value="1" {{ old('status') == 1 || old('status') == NULL ? "selected" : "" }}>Mở</option>                  
+                    <option value="2" {{ old('status') == 2 ? "selected" : "" }}>Khóa</option>                  
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
                   <label>Khu vực</label>
                   <select class="form-control" name="group_user_id" id="group_user_id">      
                     <option value="" >--Chọn khu vực--</option>
@@ -98,7 +119,7 @@
                     @endforeach
                   </select>
                 </div>       
-                <div class="form-group">
+                <div class="form-group col-md-12">
                     <label>Tỉnh / Thành</label>
                     <select class="form-control select2" name="province_id[]" id="province_id" multiple="multiple">                  
                       @if( $provinceList->count() > 0)
@@ -108,18 +129,14 @@
                       @endif
                     </select>                    
                   </div>         
-                <div class="form-group">
-                  <label>Trạng thái</label>
-                  <select class="form-control" name="status" id="status">                                      
-                    <option value="1" {{ old('status') == 1 || old('status') == NULL ? "selected" : "" }}>Mở</option>                  
-                    <option value="2" {{ old('status') == 2 ? "selected" : "" }}>Khóa</option>                  
-                  </select>
-                </div>
+                
             </div>
             <div class="box-footer">
-              <button type="button" class="btn btn-default btn-sm" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>
-              <button type="submit" class="btn btn-primary btn-sm" id="btnSave">Lưu</button>
-              <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('account.index')}}">Hủy</a>
+              <div class="col-md-12">
+                <button type="button" class="btn btn-default btn-sm" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>
+                <button type="submit" class="btn btn-primary btn-sm" id="btnSave">Lưu</button>
+                <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('account.index')}}">Hủy</a>
+              </div>
             </div>
             
         </div>
@@ -143,7 +160,7 @@
         $('#btnSave').hide();
         $('#btnLoading').show();
       });
-      @if(Auth::user()->type == 3)
+      @if($loginType == 3)
       $('#type').change(function(){
         if($(this).val() == 1){
           $('#chon_mod').show();

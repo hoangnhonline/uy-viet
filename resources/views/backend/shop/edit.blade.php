@@ -1,4 +1,4 @@
-@extends('layout.backend')
+@extends('backend.layout')
 @section('content')
 <div class="content-wrapper">
    <!-- Content Header (Page header) -->
@@ -367,7 +367,7 @@
            $('#btnSave').hide();
            $('#btnLoading').show();
          });
-         @if(Auth::user()->type == 3)
+         @if($loginType == 3)
          $('#type').change(function(){
            if($(this).val() == 1){
              $('#chon_mod').show();

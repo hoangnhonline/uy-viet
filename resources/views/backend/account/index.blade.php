@@ -1,4 +1,4 @@
-@extends('layout.backend')
+@extends('backend.layout')
 @section('content')
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
@@ -13,7 +13,7 @@
   </ol>
 </section>
 <?php 
-$loginType = Auth::user()->type;
+$loginType = $loginType;
 $loginId = Auth::user()->id;
 ?>
 <!-- Main content -->
@@ -31,6 +31,40 @@ $loginId = Auth::user()->id;
         </div>            
       <div class="panel-body">
         <form class="form-inline" role="form" method="GET" action="{{ route('account.index') }}">
+        <div class="form-group">                                          
+          
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="type[]" class="type" value="2" {{ in_array(2, $searchArr['type']) ? "checked" : "" }}>
+              Company
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="type[]" class="type" value="3" {{ in_array(3, $searchArr['type']) ? "checked" : "" }}>
+              Operator
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="type[]" class="type" value="4" {{ in_array(4, $searchArr['type']) ? "checked" : "" }}>
+              Executive
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="type[]" class="type" value="5" {{ in_array(5, $searchArr['type']) ? "checked" : "" }}>
+              Supervisor
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="type[]" class="type" value="6" {{ in_array(6, $searchArr['type']) ? "checked" : "" }}>
+              Sale
+            </label>
+          </div>          
+        </div>     
+        <br> <br>
         @if($loginType == 1)
         <div class="form-group">           
         
@@ -41,19 +75,7 @@ $loginId = Auth::user()->id;
                 @endforeach
             </select>
           </div>
-        @endif
-        <div class="form-group">            
-            <select class="form-control" name="type" id="type">      
-              <option value="" >--Type--</option>              
-              @if(Auth::user()->type == 1)
-              <option value="2" {{ $searchArr['type'] == 2 ? "selected" : "" }}>Company</option>                  
-              @endif                    
-              <option value="3" {{ $searchArr['type'] == 3 ? "selected" : "" }}>Operator</option> 
-              <option value="4" {{ $searchArr['type'] == 4 ? "selected" : "" }}>Executive</option>
-              <option value="5" {{ $searchArr['type'] == 5 ? "selected" : "" }}>Supervisor</option>
-              <option value="6" {{ $searchArr['type'] == 6 ? "selected" : "" }}>Sale</option>
-            </select>
-        </div>
+        @endif       
         <div class="form-group">            
             <input type="text" name="username" value="{{ $searchArr['username'] }}" class="form-control" placeholder="Username">
         </div>
@@ -177,7 +199,7 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
-  $('#company_id, #type').change(function(){
+  $('#company_id, .type').change(function(){
     $(this).parents('form').submit();
   });
   $('#table-list-data tbody').sortable({
