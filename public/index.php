@@ -1,4 +1,13 @@
 <?php
+/*
+$str = 'sadgasdg[ADS:150]dsgasgsdgasdg[ADS:151]dsgsdag';
+
+var_dump(preg_replace('/\[ADS\:([0-9]+)\]/', '<div class="ads" data-value="$1"></div>', $str));
+die;
+
+*/
+
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
