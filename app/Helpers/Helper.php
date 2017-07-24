@@ -1,9 +1,7 @@
 <?php
 namespace App\Helpers;
 use App\Helpers\simple_html_dom;
-use App\Models\City;
-use App\Models\Price;
-use App\Models\Area;
+use App\Models\Account;
 use DB, Image;
 
 class Helper
@@ -14,7 +12,42 @@ class Helper
     {
         return strtoupper($string);
     }
-   
+    public static function getListUserByType($company_id){
+        $listTmp = Account::where('company_id', $company_id)->get();
+        $userList['admin'] = $userList['company'] = $userList['operator'] = $userList['executive'] = $userList['supervisor'] = $userList['sale'] = $userList['admin'] = [];
+        foreach($listTmp as $user){
+            if($user->type == 2){
+                $userList['company'][] = $user;
+            }elseif($user->type == 3){
+                $userList['operator'][] = $user;
+            }elseif($user->type == 4){
+                $userList['executive'][] = $user;
+            }elseif($user->type == 5){
+                $userList['supervisor'][] = $user;
+            }elseif($user->type == 6){
+                $userList['sale'][] = $user;
+            }          
+        }
+        return $userList;
+    }
+    public static function getListUserOwnerByType($user_id, $company_id, $column){
+        $listTmp = Account::where('company_id', $company_id)->where($column, $user_id)->get();
+        $userList['admin'] = $userList['company'] = $userList['operator'] = $userList['executive'] = $userList['supervisor'] = $userList['sale'] = $userList['admin'] = [];
+        foreach($listTmp as $user){
+            if($user->type == 2){
+                $userList['company'][] = $user;
+            }elseif($user->type == 3){
+                $userList['operator'][] = $user;
+            }elseif($user->type == 4){
+                $userList['executive'][] = $user;
+            }elseif($user->type == 5){
+                $userList['supervisor'][] = $user;
+            }elseif($user->type == 6){
+                $userList['sale'][] = $user;
+            }          
+        }
+        return $userList;
+    }
     public static function showImage($image_url, $type = 'original'){
 
         //return strpos($image_url, 'http') === false ? config('uv.upload_url') . $type . '/' . $image_url : $image_url;        

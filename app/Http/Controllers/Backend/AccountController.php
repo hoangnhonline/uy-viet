@@ -84,9 +84,22 @@ class AccountController extends Controller
         $provinceList = Province::all();        
         return view('backend.account.index', compact('items', 'typeArr', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList', 'searchArr'));
     }
-    public function ajaxGetAccount
+    public function ajaxGetAccount(Request $request){
+        $company_id = $request->company_id ? $request->company_id : Auth::user()->company_id;        
+        $userList = Helper::getListUserByType($company_id);
+        return \Response::json($userList);
+
+    }
+    public function ajaxGetAccountOwner(Request $request){
+        $user_id = $request->user_id ? $request->user_id : Auth::user()->id;
+        $column = $request->column;
+        $company_id = $request->company_id ? $request->company_id : Auth::user()->company_id;        
+        $userList = Helper::getListUserOwnerByType($user_id, $company_id, $column);
+        return \Response::json($userList);
+    }
     public function create()
-    {        
+    {       
+        $loginType = Auth::user()->type; 
         if(Auth::user()->type > 2){
             return redirect()->route('shop.index');
         }
@@ -101,8 +114,11 @@ class AccountController extends Controller
         $modList = Account::where(['type' => 2, 'status' => 1])->get();
         
         $companyList = Company::all();
-        
-        return view('backend.account.create', compact('modList', 'groupList', 'companyList', 'provinceList'));
+        $userList = [];
+        if($loginType > 1){
+            $userList = Helper::getListUserByType(Auth::user()->company_id);
+        }        
+        return view('backend.account.create', compact('modList', 'groupList', 'companyList', 'provinceList', 'userList'));
     }
     public function changePass(){
         return view('backend.account.change-pass');   

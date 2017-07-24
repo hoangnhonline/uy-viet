@@ -37,9 +37,15 @@ class ViewComposerServiceProvider extends ServiceProvider
 		
 		view()->composer( '*' , function( $view ){		
 			
-			$view->with([				
-				'loginType' => Auth::user()->type,
-				'loginId'   => Auth::user()->id
+			$loginType = $loginId = 0;
+			if(Auth::check()){
+				$loginType = Auth::user()->type;
+				$loginId = Auth::user()->id;
+			}
+			$view->with(
+				[				
+				'loginType' => $loginType,
+				'loginId'   => $loginId
 			]);
 			
 		});

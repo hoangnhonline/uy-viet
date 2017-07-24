@@ -41,7 +41,7 @@
               @endif
                 @if($loginType == 1)
                 <div class="form-group col-md-12">
-                  <label>Company</label>
+                  <label>Company <span class="red-star">*</span></label>
                   <select class="form-control" name="company_id" id="company_id">      
                     <option value="" >--Chọn company--</option>
                     @foreach($companyList as $com)
@@ -52,7 +52,7 @@
                 @else                
                 <input type="hidden" name="company_id" value="{{ Auth::user()->company_id }}">
                 @endif
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12" id="div_type" style="display:none">
                   <label>Type <span class="red-star">*</span></label>
                   <select class="form-control" name="type" id="type">      
                     <option value="" >--Chọn type--</option>                       
@@ -73,12 +73,33 @@
                     @endif
                   </select>
                 </div> 
-                <div class="form-group col-md-6" id="div_company">
-                  <label>User company <span class="red-star">*</span></label>
-                  <select class="form-control" name="type" id="type">      
-                    <option value="" >--Chọn user company--</option>                      
-                  </select>
-                </div> 
+                  <div class="clearfix"></div>
+                  <div class="form-group col-md-6 role" id="div_company"  style="display:none">
+                    <label>User Company <span class="red-star">*</span></label>
+                    <select class="form-control" name="company_user_id" id="company_user_id">      
+                      <option value="" >--Chọn--</option>                      
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6 role" id="div_operator"  style="display:none">
+                    <label>User Operator <span class="red-star">*</span></label>
+                    <select class="form-control" name="operator_user_id" id="operator_user_id">      
+                      <option value="" >--Chọn--</option>                      
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6 role" id="div_executive"  style="display:none">
+                    <label>User Executive <span class="red-star">*</span></label>
+                    <select class="form-control" name="executive_user_id" id="executive_user_id">      
+                      <option value="" >--Chọn--</option>                      
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6 role" id="div_supervisor"  style="display:none">
+                    <label>User Supervisor<span class="red-star">*</span></label>
+                    <select class="form-control" name="supervisor_user_id" id="supervisor_user_id">      
+                      <option value="" >--Chọn--</option>                      
+                    </select>
+                  </div>
+               
+                  <div class="clearfix"></div>
                 <div class="form-group col-md-6">
                   <label>Họ tên <span class="red-star">*</span></label>
                   <input type="text" class="form-control" name="fullname" id="fullname" value="{{ old('fullname') }}">
@@ -159,6 +180,233 @@
       $('#formData').submit(function(){
         $('#btnSave').hide();
         $('#btnLoading').show();
+      });
+      $('#type').change(function(){
+
+      });
+      $('#company_id').change(function(){
+        var company_id = $(this).val();
+        if(company_id > 0){
+          $('#div_type').show();
+        }else{
+          $('#div_type').hide();
+        }
+        $('#type').val('');
+        $('#div_company, #div_operator, #div_executive, #div_supervisor').hide();
+        $('#company_user_id, #operator_user_id, #executive_user_id, #supervisor_user_id').html('');
+      });
+      $('#type').change(function(){
+        $('div.role').hide().find('select').val('');
+        $('select').each(function(){
+          if($(this).hasClass('required')){
+            $(this).removeClass('required');
+          }
+        });        
+        var company_id = $('#company_id').val();
+        var type = $('#type').val();
+        if(type > 0 && company_id > 0){
+        $.ajax({
+            url : "{{ route('account.get-user-list-by-type') }}",
+            data : {
+              company_id : company_id,
+              type : type
+            },
+            type : "POST",
+            success : function(data){              
+              // company
+              if(type > 2){
+                $('#company_user_id').html('').append($('<option>', {
+                    value: 0,
+                    text: '--chon--',
+
+                }));
+                for (var i = 0; i < data.company.length; i++) {
+                    $('#company_user_id').append($('<option>', {
+                        value: data.company[i].id,
+                        text: data.company[i].fullname,
+                    }));
+                }
+                $('#div_company').show();
+              }
+              if(type > 3){
+                $('#operator_user_id').html('').append($('<option>', {
+                    value: 0,
+                    text: '--chon--',
+
+                }));
+                for (var i = 0; i < data.operator.length; i++) {
+                    $('#operator_user_id').append($('<option>', {
+                        value: data.operator[i].id,
+                        text: data.operator[i].fullname,
+                    }));
+                }
+                $('#div_operator').show();
+              }
+              if(type > 4){
+                $('#executive_user_id').html('').append($('<option>', {
+                    value: 0,
+                    text: '--chon--',
+
+                }));
+                for (var i = 0; i < data.executive.length; i++) {
+                    $('#executive_user_id').append($('<option>', {
+                        value: data.executive[i].id,
+                        text: data.executive[i].fullname,
+                    }));
+                }
+                $('#div_executive').show();
+              }
+              if(type > 5){
+                $('#supervisor_user_id').html('').append($('<option>', {
+                    value: 0,
+                    text: '--chon--',
+
+                }));
+                for (var i = 0; i < data.supervisor.length; i++) {
+                    $('#supervisor_user_id').append($('<option>', {
+                        value: data.supervisor[i].id,
+                        text: data.supervisor[i].fullname,
+                    }));
+                }
+                $('#div_supervisor').show();
+              }
+            }
+          });
+        }else{
+          alert('Vui long chon company!');return false;
+        }
+      });
+      $('#company_user_id').change(function(){
+          if($('#type').val() > 3){
+            $.ajax({
+              url : "{{ route('account.get-user-list-by-owner') }}",
+              data : {
+                company_id : $('#company_id').val(),
+                user_id : $('#company_user_id').val(),
+                column : 'company_user_id'
+              },
+              type : "POST",
+              success : function(data){   
+                var type = $('#type').val();             
+                if(type > 3){
+                  $('#operator_user_id').html('').append($('<option>', {
+                      value: 0,
+                      text: '--chon--',
+
+                  }));
+                  for (var i = 0; i < data.operator.length; i++) {
+                      $('#operator_user_id').append($('<option>', {
+                          value: data.operator[i].id,
+                          text: data.operator[i].fullname,
+                      }));
+                  }
+                  $('#div_operator').show();
+                }
+                if(type > 4){
+                  $('#executive_user_id').html('').append($('<option>', {
+                      value: 0,
+                      text: '--chon--',
+
+                  }));
+                  for (var i = 0; i < data.executive.length; i++) {
+                      $('#executive_user_id').append($('<option>', {
+                          value: data.executive[i].id,
+                          text: data.executive[i].fullname,
+                      }));
+                  }
+                  $('#div_executive').show();
+                }
+                if(type > 5){
+                  $('#supervisor_user_id').html('').append($('<option>', {
+                      value: 0,
+                      text: '--chon--',
+
+                  }));
+                  for (var i = 0; i < data.supervisor.length; i++) {
+                      $('#supervisor_user_id').append($('<option>', {
+                          value: data.supervisor[i].id,
+                          text: data.supervisor[i].fullname,
+                      }));
+                  }
+                  $('#div_supervisor').show();
+                }
+            }
+          });
+          }
+      });
+      $('#operator_user_id').change(function(){
+          if($('#type').val() > 4){
+            $.ajax({
+              url : "{{ route('account.get-user-list-by-owner') }}",
+              data : {
+                company_id : $('#company_id').val(),
+                user_id : $('#operator_user_id').val(),
+                column : 'operator_user_id'
+              },
+              type : "POST",
+              success : function(data){   
+                var type = $('#type').val();
+                if(type > 4){
+                  $('#executive_user_id').html('').append($('<option>', {
+                      value: 0,
+                      text: '--chon--',
+
+                  }));
+                  for (var i = 0; i < data.executive.length; i++) {
+                      $('#executive_user_id').append($('<option>', {
+                          value: data.executive[i].id,
+                          text: data.executive[i].fullname,
+                      }));
+                  }
+                  $('#div_executive').show();
+                }
+                if(type > 5){
+                  $('#supervisor_user_id').html('').append($('<option>', {
+                      value: 0,
+                      text: '--chon--',
+
+                  }));
+                  for (var i = 0; i < data.supervisor.length; i++) {
+                      $('#supervisor_user_id').append($('<option>', {
+                          value: data.supervisor[i].id,
+                          text: data.supervisor[i].fullname,
+                      }));
+                  }
+                  $('#div_supervisor').show();
+                }
+              }
+            });
+          }
+      });
+      $('#executive_user_id').change(function(){
+          if($('#type').val() > 5){
+          $.ajax({
+            url : "{{ route('account.get-user-list-by-owner') }}",
+            data : {
+              company_id : $('#company_id').val(),
+              user_id : $('#executive_user_id').val(),
+              column : 'executive_user_id'
+            },
+            type : "POST",
+            success : function(data){   
+              var type = $('#type').val();              
+              if(type > 5){
+                $('#supervisor_user_id').html('').append($('<option>', {
+                    value: 0,
+                    text: '--chon--',
+
+                }));
+                for (var i = 0; i < data.supervisor.length; i++) {
+                    $('#supervisor_user_id').append($('<option>', {
+                        value: data.supervisor[i].id,
+                        text: data.supervisor[i].fullname,
+                    }));
+                }
+                $('#div_supervisor').show();
+              }
+            }
+          });
+        }
       });
       @if($loginType == 3)
       $('#type').change(function(){

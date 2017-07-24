@@ -108,6 +108,9 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('{id}/edit',   ['as' => 'account.edit', 'uses' => 'AccountController@edit']);
         Route::post('/update', ['as' => 'account.update', 'uses' => 'AccountController@update']);
         Route::get('{id}/destroy', ['as' => 'account.destroy', 'uses' => 'AccountController@destroy']);
+        Route::post('/get-user-list-by-type', ['as' => 'account.get-user-list-by-type', 'uses' => 'AccountController@ajaxGetAccount']);
+        Route::post('/get-user-list-by-owner', ['as' => 'account.get-user-list-by-owner', 'uses' => 'AccountController@ajaxGetAccountOwner']);
+        
     });
     Route::post('/save-col-order', ['as' => 'save-col-order', 'uses' => 'GeneralController@saveColOrder']); 
 });
