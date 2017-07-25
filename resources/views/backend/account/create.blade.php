@@ -42,19 +42,19 @@
                 @if($loginType == 1)
                 <div class="form-group col-md-12">
                   <label>Company <span class="red-star">*</span></label>
-                  <select class="form-control" name="company_id" id="company_id">      
-                    <option value="" >--Chọn company--</option>
+                  <select class="form-control required" name="company_id" id="company_id">      
+                    <option value="" >--Chọn--</option>
                     @foreach($companyList as $com)
                     <option value="{{ $com->id }}" {{ old('company_id') == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option> 
                     @endforeach
                   </select>
                 </div>  <!-- text input -->
                 @else                
-                <input type="hidden" name="company_id" value="{{ Auth::user()->company_id }}">
+                <input type="hidden" class="required" id="company_id" name="company_id" value="{{ Auth::user()->company_id }}">
                 @endif
                 <div class="form-group col-md-12" id="div_type" style="display:none">
                   <label>Type <span class="red-star">*</span></label>
-                  <select class="form-control" name="type" id="type">      
+                  <select class="form-control required" name="type" id="type">      
                     <option value="" >--Chọn type--</option>                       
                     @if($loginType == 1)
                     <option value="2" {{ old('type') == 2 ? "selected" : "" }}>Company</option>
@@ -76,25 +76,25 @@
                   <div class="clearfix"></div>
                   <div class="form-group col-md-6 role" id="div_company"  style="display:none">
                     <label>User Company <span class="red-star">*</span></label>
-                    <select class="form-control" name="company_user_id" id="company_user_id">      
+                    <select class="form-control role no-check-province" name="company_user_id" id="company_user_id">      
                       <option value="" >--Chọn--</option>                      
                     </select>
                   </div>
                   <div class="form-group col-md-6 role" id="div_operator"  style="display:none">
                     <label>User Operator <span class="red-star">*</span></label>
-                    <select class="form-control" name="operator_user_id" id="operator_user_id">      
+                    <select class="form-control role" name="operator_user_id" id="operator_user_id">      
                       <option value="" >--Chọn--</option>                      
                     </select>
                   </div>
                   <div class="form-group col-md-6 role" id="div_executive"  style="display:none">
                     <label>User Executive <span class="red-star">*</span></label>
-                    <select class="form-control" name="executive_user_id" id="executive_user_id">      
+                    <select class="form-control role" name="executive_user_id" id="executive_user_id">      
                       <option value="" >--Chọn--</option>                      
                     </select>
                   </div>
                   <div class="form-group col-md-6 role" id="div_supervisor"  style="display:none">
                     <label>User Supervisor<span class="red-star">*</span></label>
-                    <select class="form-control" name="supervisor_user_id" id="supervisor_user_id">      
+                    <select class="form-control role" name="supervisor_user_id" id="supervisor_user_id">      
                       <option value="" >--Chọn--</option>                      
                     </select>
                   </div>
@@ -102,15 +102,15 @@
                   <div class="clearfix"></div>
                 <div class="form-group col-md-6">
                   <label>Họ tên <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="fullname" id="fullname" value="{{ old('fullname') }}">
+                  <input type="text" class="form-control required" name="fullname" id="fullname" value="{{ old('fullname') }}">
                 </div>
                  <div class="form-group col-md-6">
                   <label>Email <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="email" id="email" value="{{ old('email') }}">
+                  <input type="email" class="form-control required" name="email" id="email" value="{{ old('email') }}">
                 </div>                
                 <div class="form-group col-md-6">
                   <label>Username <span class="red-star">*</span></label>
-                  <input type="text" class="form-control" name="username" id="username" value="{{ old('username') }}">
+                  <input type="text" class="form-control required" name="username" id="username" value="{{ old('username') }}">
                 </div>
                 <div class="form-group col-md-6">
                   <label>Điện thoại</label>
@@ -118,11 +118,11 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label>Mật khẩu <span class="red-star">*</span></label>
-                  <input type="password" class="form-control" name="password" id="password" value="{{ old('password') }}">
+                  <input type="password" class="form-control required" name="password" id="password" value="{{ old('password') }}">
                 </div> 
                 <div class="form-group col-md-6">
                   <label>Nhập lại mật khẩu <span class="red-star">*</span></label>
-                  <input type="password" class="form-control" name="re_password" id="re_password" value="{{ old('re_password') }}">
+                  <input type="password" class="form-control required" name="re_password" id="re_password" value="{{ old('re_password') }}">
                 </div>                
                 <div class="form-group col-md-6">
                   <label>Trạng thái</label>
@@ -172,6 +172,11 @@
     <!-- /.row -->
   </section>
   <!-- /.content -->
+  <style type="text/css">
+    .error{
+      border:1px solid red;
+    }
+  </style>
 </div>
 @stop
 @section('javascript_page')
@@ -183,6 +188,35 @@
       });
       $('#type').change(function(){
 
+      });
+      $('#btnSave').click(function(){
+        var err = err_pass = 0;
+        $('#formData input.required, #formData select.required').each(function(){
+          console.log($.trim($(this).val()));
+          if($(this).val() == ''){
+            $(this).addClass('error');
+            err++;
+          }else{
+            $(this).removeClass('error');
+          }
+        });
+        if($('#password').val() != $('#re_password').val()){
+          err_pass++;
+          $('#re_password').addClass('error');
+        }
+        if(err > 0){          
+          return false;
+        }
+      });
+      $('#formData input.required').blur(function(){
+        if($.trim($(this).val()) != ''){
+          $(this).removeClass('error');
+        }
+      });
+       $('#formData select.required').change(function(){   
+        if($.trim($(this).val()) != ''){
+          $(this).removeClass('error');
+        }
       });
       $('#company_id').change(function(){
         var company_id = $(this).val();
@@ -197,7 +231,7 @@
       });
       $('#type').change(function(){
         $('div.role').hide().find('select').val('');
-        $('select').each(function(){
+        $('select.role').each(function(){
           if($(this).hasClass('required')){
             $(this).removeClass('required');
           }
@@ -216,7 +250,7 @@
               // company
               if(type > 2){
                 $('#company_user_id').html('').append($('<option>', {
-                    value: 0,
+                    value: '',
                     text: '--chon--',
 
                 }));
@@ -227,10 +261,11 @@
                     }));
                 }
                 $('#div_company').show();
+                $('#company_user_id').addClass('required');
               }
               if(type > 3){
                 $('#operator_user_id').html('').append($('<option>', {
-                    value: 0,
+                    value: '',
                     text: '--chon--',
 
                 }));
@@ -240,11 +275,12 @@
                         text: data.operator[i].fullname,
                     }));
                 }
+                $('#operator_user_id').addClass('required');
                 $('#div_operator').show();
               }
               if(type > 4){
                 $('#executive_user_id').html('').append($('<option>', {
-                    value: 0,
+                    value: '',
                     text: '--chon--',
 
                 }));
@@ -255,10 +291,11 @@
                     }));
                 }
                 $('#div_executive').show();
+                $('#executive_user_id').addClass('required');
               }
               if(type > 5){
                 $('#supervisor_user_id').html('').append($('<option>', {
-                    value: 0,
+                    value: '',
                     text: '--chon--',
 
                 }));
@@ -269,6 +306,7 @@
                     }));
                 }
                 $('#div_supervisor').show();
+                $('#supervisor_user_id').addClass('required');
               }
             }
           });
@@ -408,6 +446,11 @@
           });
         }
       });
+      $(document).on('change', 'select.role', function(){
+        if($(this).hasClass('no-check-province') == false){
+          getListProvince($(this).val());
+        }
+      });
       @if($loginType == 3)
       $('#type').change(function(){
         if($(this).val() == 1){
@@ -418,6 +461,17 @@
       });
       @endif
     });
-    
+    function getListProvince(user_id){
+      $.ajax({
+            url : "{{ route('account.get-list-province-user') }}",
+            data : {              
+              user_id : user_id          
+            },
+            type : "POST",
+            success : function(data){   
+              $('#province_id').html(data).select2('refresh');
+            }
+          });
+    }
 </script>
 @stop

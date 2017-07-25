@@ -63,7 +63,7 @@
       </li>
       @endforeach
       @endif
-      @if($loginType <= 2)
+      @if($loginType < 6)
       <li class="treeview {{ in_array(\Request::route()->getName(), ['account.index', 'info-seo.index', 'settings.index', 'settings.noti']) || (in_array(\Request::route()->getName(), ['custom-link.edit', 'custom-link.index', 'custom-link.create']) && isset($block_id) && $block_id == 2 ) ? 'active' : '' }}">
         <a href="#">
           <i class="fa  fa-gears"></i>

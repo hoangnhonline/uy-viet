@@ -12,10 +12,6 @@
     <li class="active">Danh sách</li>
   </ol>
 </section>
-<?php 
-$loginType = $loginType;
-$loginId = Auth::user()->id;
-?>
 <!-- Main content -->
 <section class="content">
   <div class="row">
@@ -24,7 +20,7 @@ $loginId = Auth::user()->id;
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
       <a href="{{ route('account.create') }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
-      @if($loginType < 3)
+
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Bộ lọc</h3>
@@ -32,37 +28,46 @@ $loginId = Auth::user()->id;
       <div class="panel-body">
         <form class="form-inline" role="form" method="GET" action="{{ route('account.index') }}">
         <div class="form-group">                                          
-          
+          @if($loginType < 2)  
           <div class="checkbox">
             <label>
               <input type="checkbox" name="type[]" class="type" value="2" {{ in_array(2, $searchArr['type']) ? "checked" : "" }}>
               Company
             </label>
           </div>
+          @endif
+          @if($loginType < 3)
           <div class="checkbox">
             <label>
               <input type="checkbox" name="type[]" class="type" value="3" {{ in_array(3, $searchArr['type']) ? "checked" : "" }}>
               Operator
             </label>
           </div>
+          @endif
+          @if($loginType < 4)
           <div class="checkbox">
             <label>
               <input type="checkbox" name="type[]" class="type" value="4" {{ in_array(4, $searchArr['type']) ? "checked" : "" }}>
               Executive
             </label>
           </div>
+          @endif
+          @if($loginType < 5)
           <div class="checkbox">
             <label>
               <input type="checkbox" name="type[]" class="type" value="5" {{ in_array(5, $searchArr['type']) ? "checked" : "" }}>
               Supervisor
             </label>
           </div>
+          @endif
+          @if($loginType < 6)
           <div class="checkbox">
             <label>
               <input type="checkbox" name="type[]" class="type" value="6" {{ in_array(6, $searchArr['type']) ? "checked" : "" }}>
               Sale
             </label>
           </div>          
+          @endif
         </div>     
         <br> <br>
         @if($loginType == 1)
@@ -86,8 +91,7 @@ $loginId = Auth::user()->id;
           </form>
       </div>
       </div>
-      @endif
-
+   
       <div class="box">
 
         <div class="box-header with-border">
