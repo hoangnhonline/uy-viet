@@ -52,7 +52,7 @@
                 @else                
                 <input type="hidden" class="required" id="company_id" name="company_id" value="{{ Auth::user()->company_id }}">
                 @endif
-                <div class="form-group col-md-12" id="div_type" style="display:none">
+                <div class="form-group col-md-12" id="div_type" @if($loginType == 1) style="display:none" @endif>
                   <label>Type <span class="red-star">*</span></label>
                   <select class="form-control required" name="type" id="type">      
                     <option value="" >--Chọn type--</option>                       
@@ -248,6 +248,7 @@
             type : "POST",
             success : function(data){              
               // company
+              @if($loginType == 1)
               if(type > 2){
                 $('#company_user_id').html('').append($('<option>', {
                     value: '',
@@ -263,6 +264,7 @@
                 $('#div_company').show();
                 $('#company_user_id').addClass('required');
               }
+              @endif
               if(type > 3){
                 $('#operator_user_id').html('').append($('<option>', {
                     value: '',

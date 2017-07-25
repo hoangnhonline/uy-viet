@@ -64,6 +64,7 @@
                     @endif
                   </select>
                 </div> 
+                @if($detail->type > 3)
                   <div class="clearfix"></div>
                   <div class="form-group col-md-6 role" id="div_company">
                     <label>User Company <span class="red-star">*</span></label>
@@ -103,6 +104,7 @@
                   </div>
                
                   <div class="clearfix"></div>
+                @endif
                 <div class="form-group col-md-6">
                   <label>Họ tên <span class="red-star">*</span></label>
                   <input type="text" class="form-control required" name="fullname" id="fullname" value="{{ old('fullname', $detail->fullname) }}">

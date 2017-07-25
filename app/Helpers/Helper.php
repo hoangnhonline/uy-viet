@@ -2,7 +2,7 @@
 namespace App\Helpers;
 use App\Helpers\simple_html_dom;
 use App\Models\Account;
-use DB, Image;
+use DB, Image, Auth;
 
 class Helper
 {
@@ -13,7 +13,19 @@ class Helper
         return strtoupper($string);
     }
     public static function getListUserByType($company_id){
-        $listTmp = Account::where('company_id', $company_id)->get();
+        $query = Account::where('company_id', $company_id);
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+        if($loginType == 2){         
+            $query->where('company_user_id', $loginId);
+        }elseif($loginType == 3){
+            $query->where('operator_user_id', $loginId);
+        }elseif($loginType == 4){
+            $query->where('executive_user_id', $loginId);
+        }elseif($loginType == 5){
+            $query->where('supervisor_user_id', $loginId);
+        }        
+        $listTmp = $query->get();
         $userList['admin'] = $userList['company'] = $userList['operator'] = $userList['executive'] = $userList['supervisor'] = $userList['sale'] = $userList['admin'] = [];
         foreach($listTmp as $user){
             if($user->type == 2){

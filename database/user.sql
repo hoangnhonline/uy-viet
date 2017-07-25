@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.2
+-- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jul 25, 2017 at 05:28 PM
--- Server version: 5.6.30-1+deb.sury.org~wily+2
--- PHP Version: 5.6.11-1ubuntu3.4
+-- Host: 127.0.0.1
+-- Generation Time: Jul 26, 2017 at 01:46 AM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -70,7 +70,11 @@ INSERT INTO `user` (`id`, `username`, `password`, `fullname`, `email`, `type`, `
 (43, 'uv_supervisor_1', 'e10adc3949ba59abbe56e057f20f883e', 'UV Supervisor 1', 'uv_supervisor_1@gmail.com', 5, '1234556', 1, '2017-07-25 07:30:27', 1, 0, 'oP0pnecJQ20w59tmv87HoQgIm0W8QwUy6AXcFUpUP8qx6h5ora8j0oLAwbRZ', '2017-07-25 07:30:27', '2017-07-25 10:23:31', 1, 1, 39, 41, 42, NULL),
 (44, 'uv_supervisor_2', 'e10adc3949ba59abbe56e057f20f883e', 'UV Supervisor 2', 'uv_supervisor_2@gmail.com', 5, '123', 1, '2017-07-25 07:33:38', 1, 0, NULL, '2017-07-25 07:33:38', '2017-07-25 07:33:38', 1, 1, 39, 41, 42, NULL),
 (45, 'uv_sale_1', 'e10adc3949ba59abbe56e057f20f883e', 'UV Sale 1', 'uv_sale_1@gmail.com', 6, '123', 1, '2017-07-25 07:35:43', 1, 4, NULL, '2017-07-25 07:35:43', '2017-07-25 10:08:27', 1, 1, 39, 41, 42, 43),
-(46, 'uv_sale_2', 'e10adc3949ba59abbe56e057f20f883e', 'UV Sale 2', 'uv_sale_2@gmail.com', 6, '123', 1, '2017-07-25 07:37:13', 1, 0, NULL, '2017-07-25 07:37:13', '2017-07-25 07:37:13', 1, 1, 39, 41, 42, 43);
+(46, 'uv_sale_2', 'e10adc3949ba59abbe56e057f20f883e', 'UV Sale 2', 'uv_sale_2@gmail.com', 6, '123', 1, '2017-07-25 07:37:13', 1, 0, NULL, '2017-07-25 07:37:13', '2017-07-25 07:37:13', 1, 1, 39, 41, 42, 43),
+(47, 'operator_create_by_com', 'e10adc3949ba59abbe56e057f20f883e', 'operator create by com', 'operator_create_by_com@gmail.com', 3, '123', 1, '2017-07-25 14:46:58', 1, 6, NULL, '2017-07-25 14:46:58', '2017-07-25 15:23:05', 39, 39, 39, NULL, NULL, NULL),
+(48, 'executive_create_by_com', 'e10adc3949ba59abbe56e057f20f883e', 'Excutive create by uv company', 'executive_create_by_com@gmail.com', 4, '123', 1, '2017-07-25 14:53:31', 1, 0, NULL, '2017-07-25 14:53:31', '2017-07-25 14:53:31', 39, 39, 39, 47, NULL, NULL),
+(49, 'supervisor_create_by_com', 'e10adc3949ba59abbe56e057f20f883e', 'Supervisor create by com', 'supervisor_create_by_com@gmail.com', 5, '123456', 1, '2017-07-25 15:01:25', 1, 6, NULL, '2017-07-25 15:01:25', '2017-07-25 15:01:25', 39, 39, 39, 47, 48, NULL),
+(50, 'sale_create_by_com', 'e10adc3949ba59abbe56e057f20f883e', 'Sale create by com', 'sale_create_by_com@gmail.com', 6, '123456', 1, '2017-07-25 15:03:22', 1, 0, NULL, '2017-07-25 15:03:22', '2017-07-25 15:03:22', 39, 39, 39, 47, 48, 49);
 
 --
 -- Indexes for dumped tables
@@ -91,7 +95,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
