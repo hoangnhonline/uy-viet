@@ -39,8 +39,36 @@
               @endforeach
             </div>     
             <br> <br> 
+            <div class="form-group">     
+                  <select class="form-control select2" name="company_id" id="company_id">      
+                    <option value="" >--Chọn Company--</option>
+                    @foreach($companyList as $com)
+                    <option value="{{ $com->id }}" {{ $arrSearch['company_id'] == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option> 
+                    @endforeach
+                  </select>
+                </div>  <!-- text input -->
+            <div class="form-group" id="div_type">                
+                <select class="form-control select2" name="user_type" id="user_type" style="width:150px">      
+                  <option value="" >--All User Type--</option>                       
+                  @if($loginType == 1)
+                  <option value="2" {{ $arrSearch['user_type'] == 2 ? "selected" : "" }}>Company</option>
+                  @endif              
+                  @if($loginType <= 2)      
+                  <option value="3" {{ $arrSearch['user_type'] == 3 ? "selected" : "" }}>Operator</option> 
+                  @endif
+                  @if($loginType <= 3)
+                  <option value="4" {{ $arrSearch['user_type'] == 4 ? "selected" : "" }}>Executive</option>
+                  @endif
+                  @if($loginType <= 4)
+                  <option value="5" {{ $arrSearch['user_type'] == 5 ? "selected" : "" }}>Supervisor</option>
+                  @endif
+                  @if($loginType <= 5)
+                  <option value="6" {{ $arrSearch['user_type'] == 6 ? "selected" : "" }}>Sale</option>
+                  @endif
+                </select>
+              </div> 
             <div class="form-group">
-              <select class="form-control" name="user_id" id="user_id" style="width:150px;">
+              <select class="form-control select2" name="user_id" id="user_id" style="width:150px">
                 <option value="">--User  --</option>
                 @foreach( $userList as $value )
                   <option value="{{ $value->id }}"
@@ -51,7 +79,7 @@
               </select>
             </div>       
             <div class="form-group">
-              <select class="form-control" name="province_id" id="province_id" style="width:150px;">
+              <select class="form-control select2" name="province_id" id="province_id" style="width:150px">
                 <option value="">--Tỉnh/Thành  --</option>
                 @foreach( $provinceList as $value )
                   <option value="{{ $value->id }}"
@@ -62,7 +90,7 @@
               </select>
             </div>
             <div class="form-group">              
-              <select class="form-control" name="district_id" id="district_id">
+              <select class="form-control select2" name="district_id" id="district_id" style="width:150px">
                 <option value="">--Quận/Huyện--</option>
                   @foreach( $districtList as $value )
                     <option value="{{ $value->id }}"
@@ -73,7 +101,7 @@
               </select>
             </div>
             <div class="form-group">              
-              <select class="form-control" name="ward_id" id="ward_id" style="width:100px">
+              <select class="form-control select2" name="ward_id" id="ward_id" style="width:160px">
                 <option value="">--Phường/Xã--</option>
                 @foreach( $wardList as $value )
                 <option value="{{ $value->id }}"
@@ -84,7 +112,7 @@
               </select>
             </div>
             <div class="form-group">              
-              <input type="text" placeholder="Tên shop" class="form-control" name="shop_name" value="{{ $arrSearch['shop_name'] }}" style="width:140px">
+              <input type="text" placeholder="Tên shop" class="form-control" name="shop_name" value="{{ $arrSearch['shop_name'] }}" style="width:140px;height:28px;">
             </div>                    
             
             <button type="submit" class="btn btn-primary btn-sm">Lọc</button>
@@ -196,6 +224,9 @@
 #searchForm div{
   margin-right: 7px;
 }
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+  line-height: 24px;  
+}
 </style>
 @stop
 @section('javascript_page')
@@ -225,7 +256,7 @@ $(document).ready(function(){
     obj.parent().parent().parent().submit(); 
   });
   
-  $('#province_id, #type, #district_id, #ward_id').change(function(){    
+  $('#company_id, #user_type, #user_id, #province_id, #type, #district_id, #ward_id').change(function(){    
     $('#searchForm').submit();
   });  
   $('#is_hot').change(function(){

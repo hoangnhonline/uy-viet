@@ -67,7 +67,7 @@
                 <div class="row">
                 	<form class="row form-select">
                         <div class="col-sm-12 group-list-drop-down">
-                        	@if(Auth::user()->type == 1)
+                        	@if($loginType == 1)
                             <div class="form-group col-sm-2 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Công Ty</label>
                                 <div class="col-sm-10">

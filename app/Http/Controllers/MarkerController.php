@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Martin
- * Date: 16/01/2017
- * Time: 11:08 SA
- */
-
 namespace App\Http\Controllers;
 use App\Http\Requests;
 use DB;
