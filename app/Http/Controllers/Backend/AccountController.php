@@ -24,13 +24,23 @@ class AccountController extends Controller
     */
     public function index(Request $request)
     {         
-        if(Auth::user()->type == 6){
-            return redirect()->route('shop.index');
-        }
-        $loginType = $leader_id = 0;
+        if(Auth::user()->type > 2){
+            //return redirect()->route('shop.index');
+        }        
+
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+        
         
         $searchArr['company_id'] = $company_id = $request->company_id ? $request->company_id : null;
-        
+        $searchArr['company_user_id'] = $company_user_id = $request->company_user_id ? $request->company_user_id : null;
+        $searchArr['operator_user_id'] = $operator_user_id = $request->operator_user_id ? $request->operator_user_id : null;
+        $searchArr['executive_user_id'] = $executive_user_id = $request->executive_user_id ? $request->executive_user_id : null;
+        $searchArr['supervisor_user_id'] = $supervisor_user_id = $request->supervisor_user_id ? $request->supervisor_user_id : null;
+
+        if($loginType >= 2){
+            $searchArr['company_id'] = $company_id = Auth::user()->company_id;
+        }
         $loginType = Auth::user()->type;
         if($loginType == 2){
             $typeArrDefault = [3,4,5,6];
@@ -43,6 +53,31 @@ class AccountController extends Controller
         }else{
             $typeArrDefault = [2,3,4,5,6];
         }
+        // get List User
+        $query = Account::where('company_id', $company_id);
+        
+       // var_dump($loginId);
+        if($loginType == 2){    
+            $query->where('company_user_id', $loginId);
+        }
+
+        $listTmp = $query->get();
+        $userList['admin'] = $userList['company'] = $userList['operator'] = $userList['executive'] = $userList['supervisor'] = $userList['sale'] = $userList['admin'] = [];
+        foreach($listTmp as $user){
+            if($user->type == 2){
+                $userList['company'][] = $user;
+            }elseif($user->type == 3){
+                $userList['operator'][] = $user;
+            }elseif($user->type == 4){
+                $userList['executive'][] = $user;
+            }elseif($user->type == 5){
+                $userList['supervisor'][] = $user;
+            }elseif($user->type == 6){
+                $userList['sale'][] = $user;
+            }          
+        }
+
+
 
         $query = Account::where('status', '>', 0);
        
@@ -66,10 +101,29 @@ class AccountController extends Controller
             $query->where(['operator_user_id' => Auth::user()->id]);
             $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();
             $companyList = (object)[];
+
+            $userList['executive'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 4, 
+                                            'operator_user_id' => $loginId
+                                            ])->get();
+            $userList['supervisor'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 5, 
+                                            'operator_user_id' => $loginId
+                                            ])->get();
+
         }elseif( $loginType == 4){
             $query->where(['executive_user_id' => Auth::user()->id]);
             $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();
             $companyList = (object)[];
+          
+            $userList['supervisor'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 5, 
+                                            'executive_user_id' => $loginId
+                                            ])->get();
+
         }elseif( $loginType == 5){
             $query->where(['supervisor_user_id' => Auth::user()->id]);
             $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();
@@ -78,6 +132,7 @@ class AccountController extends Controller
 
         }
         
+
         
         $searchArr['type'] = $typeArr = $request->type ? $request->type : $typeArrDefault;
     
@@ -92,10 +147,54 @@ class AccountController extends Controller
         if( $email != ''){
             $query->where('email', 'LIKE', '%'.$email.'%');
         }
+        if($company_user_id){
+            $query->where('company_user_id', $company_user_id); 
+            $userList['operator'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 3, 
+                                            'company_user_id' => $company_user_id
+                                            ])->get();
+            $userList['executive'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 4, 
+                                            'company_user_id' => $company_user_id
+                                            ])->get();
+            $userList['supervisor'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 5, 
+                                            'company_user_id' => $company_user_id
+                                            ])->get();
+        }
+        if($operator_user_id){
+            $query->where('operator_user_id', $operator_user_id);
+
+            $userList['executive'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 4, 
+                                            'operator_user_id' => $operator_user_id
+                                            ])->get();
+            $userList['supervisor'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 5, 
+                                            'operator_user_id' => $operator_user_id
+                                            ])->get();
+        }
+        if($executive_user_id){
+            $query->where('executive_user_id', $executive_user_id); 
+
+            $userList['supervisor'] = Account::where([
+                                            'company_id' => $company_id, 
+                                            'type' => 5, 
+                                            'executive_user_id' => $executive_user_id
+                                            ])->get();  
+        }
+        if($supervisor_user_id){
+            $query->where('supervisor_user_id', $supervisor_user_id);   
+        }
         $items = $query->orderBy('user.type')->orderBy('id', 'desc')->get();             
-        
+        //var_dump($userList);
         $provinceList = Province::all();        
-        return view('backend.account.index', compact('items', 'typeArr', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList', 'searchArr'));
+        return view('backend.account.index', compact('items', 'typeArr', 'leader_id', 'modList', 'groupList', 'companyList', 'provinceList', 'searchArr', 'userList'));
     }
     public function ajaxGetAccount(Request $request){
         $company_id = $request->company_id ? $request->company_id : Auth::user()->company_id;        
@@ -113,7 +212,9 @@ class AccountController extends Controller
     public function create()
     {       
         $loginType = Auth::user()->type; 
-        
+        if($loginType > 2){
+            return redirect()->route('shop.index');
+        }
         if(Auth::user()->type > 2){
             $groupList = GroupUser::where('company_id', Auth::user()->company_id)->get();         
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.Auth::user()->id.')')->get();
@@ -247,6 +348,10 @@ class AccountController extends Controller
     }
     public function destroy($id)
     {
+        $loginType = Auth::user()->type;
+        if($loginType > 2){
+            return redirect()->route('shop.index');
+        }
         // delete
         $model = Account::find($id);
         $model->delete();
@@ -257,6 +362,10 @@ class AccountController extends Controller
     }
     public function edit($id)
     {
+        $loginType = Auth::user()->type;
+        if($loginType > 2){
+            return redirect()->route('shop.index');
+        }
         $detail = Account::find($id);
         /*
         if($detail->created_user !=  Auth::user()->id && Auth::user()->type == 2){

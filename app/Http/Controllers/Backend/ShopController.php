@@ -35,8 +35,8 @@ class ShopController extends Controller
     {
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
-        
-        $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;         
+        $companyList = Company::all();
+        $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;   
         //$typeIdArr = ShopType::lists('id')->toArray();
         $shopTypeList = ShopType::all();
         
@@ -45,11 +45,24 @@ class ShopController extends Controller
         }        
         $arrSearch['type_id'] = $type_id = isset($request->type_id) ? $request->type_id : $typeIdDefault;     
 
+        $arrSearch['company_id'] = $company_id = $request->company_id ? $request->company_id : null;       
+
+        if($loginType >= 2){
+            $arrSearch['company_id'] = $company_id = Auth::user()->company_id;
+        }
+
         $arrSearch['district_id'] = $district_id = isset($request->district_id) ? $request->district_id : null;
         $arrSearch['ward_id'] = $ward_id = isset($request->ward_id) ? $request->ward_id : null;
         $arrSearch['user_id'] = $user_id = isset($request->user_id) ? $request->user_id : null;
         $arrSearch['condition_id'] = $condition_id = isset($request->condition_id) ? $request->condition_id : null;
         $arrSearch['province_id'] = $province_id = isset($request->province_id) ? $request->province_id : null;
+
+        $arrSearch['user_type'] = $user_type = isset($request->user_type) ? $request->user_type : null;        
+        if($user_type){
+            $userList = $this->getListUser($company_id, $user_type);
+        }else{
+            $userList = Account::where('company_id', $company_id)->get();
+        }
 
         $arrSearch['shop_name'] = $shop_name = isset($request->shop_name) && trim($request->shop_name) != '' ? trim($request->shop_name) : '';
         
@@ -89,16 +102,13 @@ class ShopController extends Controller
         }else{
             $provinceList = Province::whereRaw('province.id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();            
         }
-        $districtList = District::where('province_id', $province_id)->get();
-        
-        if($loginType == 1){
-            $userList = Account::where('type', '>', 1)->get();
-        }else{
-            $userList = Account::where('type', '>', $loginType)->where('created_user', $loginId)->get();
-        }            
-        return view('backend.shop.index', compact( 'items', 'arrSearch', 'provinceList', 'districtList', 'shopTypeList', 'wardList', 'userList'));
+        $districtList = District::where('province_id', $province_id)->get();        
+            
+        return view('backend.shop.index', compact( 'items', 'arrSearch', 'provinceList', 'districtList', 'shopTypeList', 'wardList', 'userList', 'companyList'));
     }
-
+    public function getListUser($company_id, $user_type){
+        return $userList = Account::where(['company_id' => $company_id, 'type' => $user_type])->get();
+    }
     /**
     * Show the form for creating a new resource.
     *
