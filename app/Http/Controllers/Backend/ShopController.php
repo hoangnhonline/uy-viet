@@ -35,6 +35,7 @@ class ShopController extends Controller
     {
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
+        $tmp = Account::getUserIdChild($loginId, $loginType);      
         $companyList = Company::all();
         $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;   
         //$typeIdArr = ShopType::lists('id')->toArray();
@@ -53,16 +54,12 @@ class ShopController extends Controller
 
         $arrSearch['district_id'] = $district_id = isset($request->district_id) ? $request->district_id : null;
         $arrSearch['ward_id'] = $ward_id = isset($request->ward_id) ? $request->ward_id : null;
-        $arrSearch['user_id'] = $user_id = isset($request->user_id) ? $request->user_id : null;
+        $arrSearch['user_id'] = $user_id = isset($request->user_id) ? $request->user_id : [];
         $arrSearch['condition_id'] = $condition_id = isset($request->condition_id) ? $request->condition_id : null;
         $arrSearch['province_id'] = $province_id = isset($request->province_id) ? $request->province_id : null;
 
         $arrSearch['user_type'] = $user_type = isset($request->user_type) ? $request->user_type : null;        
-        if($user_type){
-            $userList = $this->getListUser($company_id, $user_type);
-        }else{
-            $userList = Account::where('company_id', $company_id)->get();
-        }
+        
 
         $arrSearch['shop_name'] = $shop_name = isset($request->shop_name) && trim($request->shop_name) != '' ? trim($request->shop_name) : '';
         
@@ -70,6 +67,8 @@ class ShopController extends Controller
         $wardList = (object) [];
         if( $user_id ){
             $query->where('shop.user_id', $user_id);
+        }else{
+            $query->whereIn('shop.user_id', $tmp['userId']);
         }
         if( $type_id ){
             $query->whereIn('shop.type_id', $type_id);
@@ -78,7 +77,7 @@ class ShopController extends Controller
             $query->where('shop.province_id', $province_id);
         }
         if($loginType != 1){
-            $query->whereRaw('shop.province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')');
+           // $query->whereRaw('shop.province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')');
         }      
         if( $district_id ){
             $query->where('shop.district_id', $district_id);
@@ -94,7 +93,7 @@ class ShopController extends Controller
             $query->where('shop.shop_name', 'LIKE', '%'.$shop_name.'%');            
         }
         
-        $query->orderBy('shop.id', 'desc');   
+        $query->orderBy('shop.id', 'descs');   
         $items = $query->paginate(100);
         $shopTypeList = ShopType::all();
         if($loginType == 1){
@@ -104,7 +103,7 @@ class ShopController extends Controller
         }
         $districtList = District::where('province_id', $province_id)->get();        
             
-        return view('backend.shop.index', compact( 'items', 'arrSearch', 'provinceList', 'districtList', 'shopTypeList', 'wardList', 'userList', 'companyList'));
+        return view('backend.shop.index', compact( 'items', 'arrSearch', 'provinceList', 'districtList', 'shopTypeList', 'wardList', 'companyList'));
     }
     public function getListUser($company_id, $user_type){
         return $userList = Account::where(['company_id' => $company_id, 'type' => $user_type])->get();
@@ -212,6 +211,9 @@ class ShopController extends Controller
         
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
+
+        $user_id_list = Account::getUserIdChild($loginId, $loginType);
+
         if($loginType > 1){
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
         }else{
@@ -228,7 +230,9 @@ class ShopController extends Controller
                 ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
                 ->first();
                 ;
-        
+        if(!in_array($detail->user_id, $user_id_list)){ // ko co quyen truy cap
+            return redirect()->route('shop.index');
+        }
         $districtList = (object)[];
         
         if($detail->province_id){
