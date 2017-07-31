@@ -1,5 +1,28 @@
 @extends('backend.layout')
 @section('content')
+<style type="text/css">
+  fieldset {
+    border: 1px groove #fff !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #fff;
+    box-shadow:  0px 0px 0px 0px #fff;
+    padding-bottom: 5px !important;
+    margin-bottom: 5px !important;
+}
+
+legend {
+    font-size: 14px !important;    
+    text-align: left !important;
+    font-weight: bold;
+    border-bottom: none;
+    width:100px;
+    margin-bottom: 0px;    
+}
+fieldset label{
+  font-size: 14px !important;
+}
+</style>
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -21,100 +44,88 @@
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
       <a href="{{ route('shop.create') }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Bộ lọc</h3>
-        </div>
-        <div class="panel-body">
-          <form class="form-inline" id="searchForm" role="form" method="GET" action="{{ route('shop.index') }}">           
-            
-            <div class="form-group">                                          
-              @foreach($shopTypeList as $shopType)
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="type_id[]" class="type_id" value="{{ $shopType->id }}" {{ in_array($shopType->id, $arrSearch['type_id']) ? "checked" : "" }}>
-                  {{ $shopType->type}}
-                </label>
-              </div>
-              @endforeach
-            </div>     
-            <br> <br> 
-            <div class="form-group">     
+      <div class="panel panel-default">        
+        <div class="panel-body" style="padding-top:0px">
+          <form class="form-inline" id="searchForm" role="form" method="GET" action="{{ route('shop.index') }}"> 
+            <fieldset>
+              <legend>Điều kiện</legend>
+                @if($loginType == 1)
+                <div class="form-group">     
                   <select class="form-control select2" name="company_id" id="company_id">      
                     <option value="" >--Chọn Company--</option>
                     @foreach($companyList as $com)
                     <option value="{{ $com->id }}" {{ $arrSearch['company_id'] == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option> 
                     @endforeach
                   </select>
-                </div>  <!-- text input -->
-            <div class="form-group" id="div_type">                
-                <select class="form-control select2" name="user_type" id="user_type" style="width:150px">      
-                  <option value="" >--All User Type--</option>                       
-                  @if($loginType == 1)
-                  <option value="2" {{ $arrSearch['user_type'] == 2 ? "selected" : "" }}>Company</option>
-                  @endif              
-                  @if($loginType <= 2)      
-                  <option value="3" {{ $arrSearch['user_type'] == 3 ? "selected" : "" }}>Operator</option> 
-                  @endif
-                  @if($loginType <= 3)
-                  <option value="4" {{ $arrSearch['user_type'] == 4 ? "selected" : "" }}>Executive</option>
-                  @endif
-                  @if($loginType <= 4)
-                  <option value="5" {{ $arrSearch['user_type'] == 5 ? "selected" : "" }}>Supervisor</option>
-                  @endif
-                  @if($loginType <= 5)
-                  <option value="6" {{ $arrSearch['user_type'] == 6 ? "selected" : "" }}>Sale</option>
-                  @endif
-                </select>
-              </div> 
-            <div class="form-group">
-              <select class="form-control select2" name="user_id" id="user_id" style="width:150px">
-                <option value="">--User  --</option>
-                @foreach( $userList as $value )
-                  <option value="{{ $value->id }}"
-                  {{ $arrSearch['user_id'] == $value->id ? "selected" : "" }}                          
-
-                  >{{ $value->fullname }}</option>
-                  @endforeach
-              </select>
-            </div>       
-            <div class="form-group">
-              <select class="form-control select2" name="province_id" id="province_id" style="width:150px">
-                <option value="">--Tỉnh/Thành  --</option>
-                @foreach( $provinceList as $value )
-                  <option value="{{ $value->id }}"
-                  {{ $arrSearch['province_id'] == $value->id ? "selected" : "" }}                          
-
-                  >{{ $value->name }}</option>
-                  @endforeach
-              </select>
-            </div>
-            <div class="form-group">              
-              <select class="form-control select2" name="district_id" id="district_id" style="width:150px">
-                <option value="">--Quận/Huyện--</option>
-                  @foreach( $districtList as $value )
+                </div>  <!-- text input -->           
+                @endif
+              <div class="form-group">
+                <select class="form-control select2" name="province_id" id="province_id" style="width:150px">
+                  <option value="">--Tỉnh/Thành  --</option>
+                  @foreach( $provinceList as $value )
                     <option value="{{ $value->id }}"
-                    {{ $arrSearch['district_id'] == $value->id ? "selected" : "" }}                        
+                    {{ $arrSearch['province_id'] == $value->id ? "selected" : "" }}                          
 
                     >{{ $value->name }}</option>
                     @endforeach
-              </select>
-            </div>
-            <div class="form-group">              
-              <select class="form-control select2" name="ward_id" id="ward_id" style="width:160px">
-                <option value="">--Phường/Xã--</option>
-                @foreach( $wardList as $value )
-                <option value="{{ $value->id }}"
-                {{ $arrSearch['ward_id'] == $value->id ? "selected" : "" }}                       
+                </select>
+              </div>
+              <div class="form-group">              
+                <select class="form-control select2" name="district_id" id="district_id" style="width:150px">
+                  <option value="">--Quận/Huyện--</option>
+                    @foreach( $districtList as $value )
+                      <option value="{{ $value->id }}"
+                      {{ $arrSearch['district_id'] == $value->id ? "selected" : "" }}                        
 
-                >{{ $value->name }}</option>
-                @endforeach  
-              </select>
-            </div>
-            <div class="form-group">              
-              <input type="text" placeholder="Tên shop" class="form-control" name="shop_name" value="{{ $arrSearch['shop_name'] }}" style="width:140px;height:28px;">
-            </div>                    
-            
+                      >{{ $value->name }}</option>
+                      @endforeach
+                </select>
+              </div>
+              <div class="form-group">              
+                <select class="form-control select2" name="ward_id" id="ward_id" style="width:160px">
+                  <option value="">--Phường/Xã--</option>
+                  @foreach( $wardList as $value )
+                  <option value="{{ $value->id }}"
+                  {{ $arrSearch['ward_id'] == $value->id ? "selected" : "" }}                       
+
+                  >{{ $value->name }}</option>
+                  @endforeach  
+                </select>
+              </div>
+              <div class="form-group">              
+                <input type="text" placeholder="Tên shop" class="form-control" name="shop_name" value="{{ $arrSearch['shop_name'] }}" style="width:140px;height:28px;">
+              </div>    
+            </fieldset>          
+            <fieldset>
+              <legend>Danh mục</legend>
+               <div class="form-group">                                          
+                @foreach($shopTypeList as $shopType)
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="type_id[]" class="type_id" value="{{ $shopType->id }}" {{ in_array($shopType->id, $arrSearch['type_id']) ? "checked" : "" }}>
+                    {{ $shopType->type}}
+                  </label>
+                </div>
+                @endforeach
+              </div>     
+            </fieldset>
+            @if(!empty($userListLevel))
+            @foreach($userListLevel as $level => $userList)
+                <fieldset>
+                  <legend>{{ ucfirst($level) }}</legend>
+                   <div class="form-group">                                          
+                    @foreach($userList as $user)
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="user_id[]" class="user_id" value="{{ $user->id }}" {{ in_array($user->id, $arrSearch['user_id']) ? "checked" : "" }}>
+                        {{ $user->fullname}}
+                      </label>
+                    </div>
+                    @endforeach
+                  </div>     
+                </fieldset>
+            @endforeach
+            @endif           
             <button type="submit" class="btn btn-primary btn-sm">Lọc</button>
           </form>         
         </div>
@@ -141,7 +152,7 @@
                 <th width="120px">Danh mục</th>                                           
                 <th style="text-align:left">Thông tin shop</th>
                 <th style="text-align:left">Địa chỉ</th>
-                
+                <th style="text-align:center">Người tạo</th>
                 <th width="1%;white-space:nowrap">Thao tác</th>
               </tr>
               <tbody>
@@ -187,7 +198,7 @@
 
                     </p>
                   </td>
-                  
+                  <td>{{ ($item->user_id) ? $userListId[$item->user_id]->fullname : "" }}</td>
                   <td style="white-space:nowrap; text-align:right">
              
                     <a href="{{ route( 'shop.edit', [ 'id' => $item->id ]) }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                 
