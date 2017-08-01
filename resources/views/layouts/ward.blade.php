@@ -71,10 +71,9 @@
                             <div class="form-group col-sm-2 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Công Ty</label>
                                 <div class="col-sm-10">
-									<select id="company" name="company" class="selectpicker custom-select form-control" data-live-search="true">
-										<option value="">Tất cả</option>
+									<select id="company" name="company" class="selectpicker custom-select form-control" data-live-search="true">										
 										@foreach($companyList as $com)
-					                    <option value="{{ $com->id }}">{{ $com->company_name }}</option>
+					                    <option value="{{ $com->id }}" {{ $company_id == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option>
 					                    @endforeach
 									</select>
 								</div>
@@ -295,7 +294,8 @@
 
 	                });
 				markers.push(marker);
-				marker.addListener('click', function() {				
+				marker.addListener('click', function() {
+					$('#ward').val({{ $ward_id}}).selectpicker('refresh');
 		         	$('#search').click();	
 		        });
 				

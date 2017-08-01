@@ -190,7 +190,7 @@ $(function() {
             })(marker, i);
         }
         if($('#is_search').val() == 1){
-            $('#txt_result').html( markerFilter.length + ' cửa hàng được tìm thấy');
+            $('#txt_result').html( markerFilter.length + ' kết quả');
             $('#div_result').show();
             setTimeout(function(){ $('#div_result').hide() }, 2000);
         }
