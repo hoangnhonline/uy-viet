@@ -289,12 +289,29 @@
 				markers.push(marker);
 				marker.addListener('click', function() {				
 		         	$('select#province').val({{$province_id}}).selectpicker('refresh');
-		         	location.href = "{{ route('district-marker', $provinceDetailArr[$province_id]->slug) }}";		         	
+		         	location.href = "{{ route('district-marker', $province_id) }}";		         	
 		        });
 				
 			@endforeach
 			
 		    $("#search").click(function (){
+		    	var company  = $('#company').val();
+		    	var province  = $('#province').val();
+		    	var district  = $('#district').val();
+		    	var ward  = $('#ward').val();
+		    	
+		    	if(company > 0 && province == '' && district == '' && ward == ''){
+		    		location.href = '{{ route('home') }}?company_id=' + company;
+		    	}
+		    	if(company > 0 && province > 0 && district == '' && ward == ''){
+		    		location.href = '{{ route('home') }}/district-' + province + '.html';
+		    	}
+		    	if(company > 0 && province > 0 && district > 0  && ward == ''){
+		    		location.href = '{{ route('home') }}/ward-' + district + '.html';
+		    	}
+		    	if(company > 0 && province > 0 && district > 0  && ward > 0){
+		    		location.href = '{{ route('home') }}/ward-' + district + '.html?ward_id=' + ward;
+		    	}
 		    	setMapOnAll(null);
 		    	$('#is_search').val(1);
 		        markerCluster.clearMarkers();
@@ -541,5 +558,6 @@
 		});
 
 	</script>
+	@include('partials.modal-edit-gallery')
 </body>
 </html>

@@ -15,7 +15,7 @@ use App\Models\Ward;
 use App\Models\Image;
 use App\Models\ShopType;
 
-use Helper, Auth, Schema, URL;
+use Helper, Auth, Schema, URL, Session;
 
 class HomeController
 {
@@ -92,8 +92,8 @@ class HomeController
     }
     
     public function districtMarker(Request $request) {        
-        $slug = $request->slug;
-        $province_id = Province::where('slug', $slug)->first()->id;
+        $province_id = $request->province_id;
+
         $settingArr = $provinceArr = [];
         $tmpArr = Settings::all();
         foreach($tmpArr as $tmp){
@@ -158,7 +158,7 @@ class HomeController
 
     }
     public function wardMarker(Request $request) {        
-        $district_id = $request->district_id;
+        $district_id = $request->district_id;        
         $districtDetail = District::find($district_id);
         $settingArr = $provinceArr = [];
         $tmpArr = Settings::all();
@@ -193,7 +193,7 @@ class HomeController
         $wardHasShop = Shop::where('status', 1)->where('district_id', $district_id)->whereIn('shop.user_id', $tmpUser['userId'])->where('company_id', $company_id)
         //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
         ->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`id`) as total'))->groupBy('ward_id')->get();
-        
+        $wardArr = [];
         foreach($wardHasShop as $pro){
             $location = $pro->location;
             $tmp = explode(",", $location);            
@@ -217,7 +217,7 @@ class HomeController
             'district_id' => $district_id,
             'districtList' => $districtList,
             'wardList' => $wardList,
-            'company_id' => $company_id
+            'company_id' => $company_id            
         ]);
 
     }
@@ -331,23 +331,21 @@ class HomeController
         $filter = $request->input();        
         $province_id = $request->provinceId ? $request->provinceId : null;
         $district_id = $request->districtId ? $request->districtId : null;
-        $company_id = $request->companyId ? $request->companyId : null;        
- 
+        
+        if($loginType == 1){
+            $company_id = $request->company_id ? $request->company_id : Company::first()->id;
+        }else{
+            $company_id = Auth::user()->company_id;
+        }        
+        
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);
+
         $ward_id = $request->wardId ? $request->wardId : null; 
   
         $query =  Shop::where('shop.status', 1);
         // not admin
-        if($loginType > 1){
-            $userIdArr = [];
-            $tmpUserList = Account::where('created_user', $loginId)->get();
-            if($tmpUserList){
-                foreach($tmpUserList as $u){
-                    $userIdArr[] = $u->id;
-                }
-            }else{
-                $userIdArr = [$loginId];
-            }                
-            $query->whereIn('user_id', $userIdArr);
+        if($loginType > 1){                
+            $query->whereIn('user_id', $tmpUser['userId']);
         }       
         if($company_id){       
             $query->where('shop.company_id', $company_id);

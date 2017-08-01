@@ -123,7 +123,7 @@ Route::get('/get-image-thumbnail', ['as' => 'get-image-thumbnail' , 'uses' => 'H
 Route::get('/gallery', ['as' => 'gallery' , 'uses' => 'HomeController@gallery']);
 Route::get('/edit-shop-fe', ['as' => 'edit-shop-fe' , 'uses' => 'HomeController@editShop']);
 Route::get('ward-{district_id}.html', ['as' => 'ward-marker', 'uses' => 'HomeController@wardMarker']);
-Route::get('{slug}.html', ['as' => 'district-marker', 'uses' => 'HomeController@districtMarker']);
+Route::get('district-{province_id}.html', ['as' => 'district-marker', 'uses' => 'HomeController@districtMarker']);
 
 
 Route::post('/getInfoShop', 'HomeController@getInfoShop');

@@ -101,7 +101,7 @@ function getListWard() {
         method: "get",
         url: '/getward',
         data: {
-            districtId : $("select#province").val(),
+            districtId : $("select#district").val(),
         },
         success: function (data) {
             $('#ward').append($('<option>', {

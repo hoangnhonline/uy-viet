@@ -48,8 +48,7 @@
 </head>
 <body class="main">
 	
-	<div class="wrapper">
-		1111111111111111111
+	<div class="wrapper">		
 		<header class="main-header">
 			<a href="{{ route('home') }}" class="logo">
                 <!-- mini logo -->
@@ -251,16 +250,22 @@
 			$('#search').click();
 		});
 	});
+	
 	<?php
-	$firstDistrict = array_values($districtArr)[0];
+
+	$firstDistrict = !empty($districtArr) ? array_values($districtArr)[0] : [];
 
 	?>
 		 //tạo map, tạo marker
 		function initMap() {
+			@if(!empty($firstDistrict))
 		    latLong = new google.maps.LatLng({{ $firstDistrict['location'][0] }}, {{ $firstDistrict['location'][1] }});
+		    @else
+		    latLong = new google.maps.LatLng(15.961533, 107.856976);
+		    @endif
 		    map = new google.maps.Map(document.getElementById('map'), {
-		        zoom: 9,
-		        center: latLong
+		        zoom: @if(!empty($firstDistrict)) 9 @else 6 @endif,		        
+		        center: latLong		       
 		    });
 		    function setMapOnAll(map) {
 		        for (var i = 0; i < markers.length; i++) {
@@ -295,6 +300,23 @@
 			@endforeach
 			
 		    $("#search").click(function (){
+		    	var company  = $('#company').val();
+		    	var province  = $('#province').val();
+		    	var district  = $('#district').val();
+		    	var ward  = $('#ward').val();
+		    	
+		    	if(company > 0 && province == '' && district == '' && ward == ''){
+		    		location.href = '{{ route('home') }}?company_id=' + company;
+		    	}
+		    	if(company > 0 && province > 0 && district == '' && ward == ''){
+		    		location.href = '{{ route('home') }}/district-' + province + '.html';
+		    	}
+		    	if(company > 0 && province > 0 && district > 0  && ward == ''){
+		    		location.href = '{{ route('home') }}/ward-' + district + '.html';
+		    	}
+		    	if(company > 0 && province > 0 && district > 0  && ward > 0){
+		    		location.href = '{{ route('home') }}/ward-' + district + '.html?ward_id=' + ward;
+		    	}
 		    	setMapOnAll(null);
 		    	$('#is_search').val(1);
 		        markerCluster.clearMarkers();
@@ -533,11 +555,18 @@
 		        });
 			}
 		}
-		$(document).ready(function(){
-			
-				
-		});
+		
 
 	</script>
+@include('partials.modal-edit-gallery')
+<script type="text/javascript">
+	$(document).ready(function(){
+		@if(empty($districtArr))     
+			$('#txt_result').html( '0 kết quả' );
+	        $('#div_result').show();
+	        setTimeout(function(){ $('#div_result').hide() }, 5000);
+        @endif
+	});
+</script>
 </body>
 </html>

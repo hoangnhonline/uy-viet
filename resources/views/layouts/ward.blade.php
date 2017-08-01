@@ -258,14 +258,19 @@
 		});
 	});
 	<?php
-	$firstDistrict = array_values($wardArr)[0];
+	$firstDistrict = !empty($wardArr) ? array_values($wardArr)[0] : [];
 
 	?>
 		 //tạo map, tạo marker
 		function initMap() {
+			@if(!empty($wardArr))
 		    latLong = new google.maps.LatLng({{ $firstDistrict['location'][0] }}, {{ $firstDistrict['location'][1] }});
+		    @else
+		    latLong = new google.maps.LatLng(15.961533, 107.856976);
+		    @endif
+
 		    map = new google.maps.Map(document.getElementById('map'), {
-		        zoom: 12,
+		        zoom: @if(!empty($wardArr))  12 @else 6 @endif,
 		        center: latLong
 		    });
 		    function setMapOnAll(map) {
@@ -302,6 +307,21 @@
 			@endforeach
 			
 		    $("#search").click(function (){
+		    	var company  = $('#company').val();
+		    	var province  = $('#province').val();
+		    	var district  = $('#district').val();
+		    	var ward  = $('#ward').val();
+		    	
+		    	if(company > 0 && province == '' && district == '' && ward == ''){
+		    		location.href = '{{ route('home') }}?company_id=' + company;
+		    	}
+		    	if(company > 0 && province > 0 && district == '' && ward == ''){
+		    		location.href = '{{ route('home') }}/district-' + province + '.html';
+		    	}
+		    	if(company > 0 && province > 0 && district > 0  && ward == ''){
+		    		location.href = '{{ route('home') }}/ward-' + district + '.html';
+		    	}
+		    	
 		    	setMapOnAll(null);
 		    	$('#is_search').val(1);
 		        markerCluster.clearMarkers();
@@ -546,42 +566,7 @@
 		});
 
 	</script>
-	<input type="hidden" id="route_get_image_thumbnail" value="{{ route('get-image-thumbnail') }}">
-	<input type="hidden" id="route_gallery" value="{{ route('gallery') }}">
-	<input type="hidden" id="route_edit_fe" value="{{ route('edit-shop-fe') }}">
-	
-	<input type="hidden" id="default_image" value="{{ config('app.url').'/assets/images/no-image.png' }}">
-<!-- Button trigger modal ->
-
-<!-- Modal -->
-<div class="modal fade" id="myModalShop" tabindex="-1" role="dialog" aria-labelledby="myModalShopLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalShopLabel">Edit shop</h4>
-      </div>
-      <div class="modal-body" id="content_edit_shop"> 
-        
-      </div>     
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="myModalGallery" tabindex="-1" role="dialog" aria-labelledby="myModalGalleryLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>        
-      </div>
-      <div class="modal-body" id="content_gallery">
-        	
-      </div>      
-    </div>
-  </div>
-</div>
+	@include('partials.modal-edit-gallery')
 
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -590,6 +575,16 @@
 	        $('#div_result').show();
 	        setTimeout(function(){ $('#div_result').hide() }, 3000);
         @endif
+
+	});
+</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		@if(empty($wardArr))     
+			$('#txt_result').html( '0 kết quả' );
+	        $('#div_result').show();
+	        setTimeout(function(){ $('#div_result').hide() }, 5000);
+        @endif        
 	});
 </script>
 </body>
