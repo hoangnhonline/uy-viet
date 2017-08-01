@@ -51,8 +51,7 @@ fieldset label{
               <legend>Điều kiện</legend>
                 @if($loginType == 1)
                 <div class="form-group">     
-                  <select class="form-control select2" name="company_id" id="company_id">      
-                    <option value="" >--Chọn Company--</option>
+                  <select class="form-control select2" name="company_id" id="company_id">                          
                     @foreach($companyList as $com)
                     <option value="{{ $com->id }}" {{ $arrSearch['company_id'] == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option> 
                     @endforeach
@@ -98,11 +97,17 @@ fieldset label{
             </fieldset>          
             <fieldset>
               <legend>Danh mục</legend>
-               <div class="form-group">                                          
+               <div class="form-group parent">                                                          
+                <div class="checkbox" style="margin-right:30px">
+                  <label>
+                    <input type="checkbox" class="checkbox_all" id="all_type_id" data-child="type_id">
+                    <strong>ALL</strong>
+                  </label>
+                </div>
                 @foreach($shopTypeList as $shopType)
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" name="type_id[]" class="type_id" value="{{ $shopType->id }}" {{ in_array($shopType->id, $arrSearch['type_id']) ? "checked" : "" }}>
+                    <input type="checkbox" name="type_id[]" class="checkbox_child type_id" value="{{ $shopType->id }}" {{ in_array($shopType->id, $arrSearch['type_id']) ? "checked" : "" }}>
                     {{ $shopType->type}}
                   </label>
                 </div>
@@ -113,11 +118,18 @@ fieldset label{
             @foreach($userListLevel as $level => $userList)
                 <fieldset>
                   <legend>{{ ucfirst($level) }}</legend>
-                   <div class="form-group">                                          
+                   <div class="form-group parent" id="div_{{ ucfirst($level) }}">                                          
+                   <div class="checkbox" style="margin-right:30px">
+                      <label>
+                        <input type="checkbox" class="checkbox_all" id="all_{{ ($level) }}" data-child="{{ ($level) }}">
+                        <strong>ALL</strong>
+                      </label>
+                    </div>
+
                     @foreach($userList as $user)
                     <div class="checkbox">
                       <label>
-                        <input type="checkbox" name="user_id[]" class="user_id" value="{{ $user->id }}" {{ in_array($user->id, $arrSearch['user_id']) ? "checked" : "" }}>
+                        <input type="checkbox" name="user_id[]" class="checkbox_child {{ ($level) }}" data-parent='{{ ($level) }}' value="{{ $user->id }}" {{ in_array($user->id, $userIdSelected) ? "checked" : "" }}>
                         {{ $user->fullname}}
                       </label>
                     </div>
@@ -257,6 +269,27 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
+
+  $('.checkbox_all').click(function(){
+    var child = $(this).data('child');
+    $('.' + child).prop('checked', $(this).prop('checked'));
+  });
+  $('.checkbox_child').change(function(){
+    var parent = $(this).parents('div.parent');
+    if(parent.find(".checkbox_child:not(':checked')").length == 0){
+      parent.find('.checkbox_all').prop('checked', true);
+    }else{
+      parent.find('.checkbox_all').prop('checked', false);
+    }
+  });
+  $('div.parent').each(function(){
+    var parent = $(this);
+    if(parent.find(".checkbox_child:not(':checked')").length == 0){
+      parent.find('.checkbox_all').prop('checked', true);
+    }else{
+      parent.find('.checkbox_all').prop('checked', false);
+    }
+  })
   $('input.submitForm').click(function(){
     var obj = $(this);
     if(obj.prop('checked') == true){
@@ -267,7 +300,11 @@ $(document).ready(function(){
     obj.parent().parent().parent().submit(); 
   });
   
-  $('#company_id, #user_type, #user_id, #province_id, #type, #district_id, #ward_id').change(function(){    
+  $('#user_type, #user_id, #province_id, #type, #district_id, #ward_id').change(function(){    
+    $('#searchForm').submit();
+  });
+  $('#company_id').change(function(){
+    $('#searchForm').find('.checkbox_child').prop('checked', false);
     $('#searchForm').submit();
   });  
   $('#is_hot').change(function(){

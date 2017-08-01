@@ -35,7 +35,7 @@ class ShopController extends Controller
     {
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
-        $tmp = Account::getUserIdChild($loginId, $loginType);      
+        
         $companyList = Company::all();
         $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;   
         //$typeIdArr = ShopType::lists('id')->toArray();
@@ -46,15 +46,17 @@ class ShopController extends Controller
         }        
         $arrSearch['type_id'] = $type_id = isset($request->type_id) ? $request->type_id : $typeIdDefault;     
 
-        $arrSearch['company_id'] = $company_id = $request->company_id ? $request->company_id : null;       
+        $arrSearch['company_id'] = $company_id = $request->company_id ? $request->company_id : Company::first()->id;       
 
         if($loginType >= 2){
             $arrSearch['company_id'] = $company_id = Auth::user()->company_id;
         }
+        
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);      
 
         $arrSearch['district_id'] = $district_id = isset($request->district_id) ? $request->district_id : null;
         $arrSearch['ward_id'] = $ward_id = isset($request->ward_id) ? $request->ward_id : null;
-        $arrSearch['user_id'] = $user_id = isset($request->user_id) ? $request->user_id : [];
+        $arrSearch['user_id'] = $userIdSelected = isset($request->user_id) ? $request->user_id : [];
         $arrSearch['condition_id'] = $condition_id = isset($request->condition_id) ? $request->condition_id : null;
         $arrSearch['province_id'] = $province_id = isset($request->province_id) ? $request->province_id : null;
 
@@ -63,12 +65,14 @@ class ShopController extends Controller
 
         $arrSearch['shop_name'] = $shop_name = isset($request->shop_name) && trim($request->shop_name) != '' ? trim($request->shop_name) : '';
         
-        $query = Shop::where('shop.status', $status);
+        $query = Shop::where('shop.status', $status)->where('company_id', $company_id);
+
         $wardList = (object) [];
-        if( $user_id ){
-            $query->where('shop.user_id', $user_id);
+        if( $userIdSelected ){
+            $query->whereIn('shop.user_id', $userIdSelected);
         }else{
-            $query->whereIn('shop.user_id', $tmp['userId']);
+            $userIdSelected = $tmpUser['userId'];
+            $query->whereIn('shop.user_id', $userIdSelected);
         }
         if( $type_id ){
             $query->whereIn('shop.type_id', $type_id);
@@ -102,8 +106,19 @@ class ShopController extends Controller
             $provinceList = Province::whereRaw('province.id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();            
         }
         $districtList = District::where('province_id', $province_id)->get();        
-            
-        return view('backend.shop.index', compact( 'items', 'arrSearch', 'provinceList', 'districtList', 'shopTypeList', 'wardList', 'companyList'));
+        
+        $userListLevel = $tmpUser['userList'];
+
+        return view('backend.shop.index', compact( 
+                                            'items', 
+                                            'arrSearch', 
+                                            'provinceList', 
+                                            'districtList', 
+                                            'shopTypeList', 
+                                            'wardList', 
+                                            'companyList', 
+                                            'userListLevel', 
+                                            'userIdSelected'));
     }
     public function getListUser($company_id, $user_type){
         return $userList = Account::where(['company_id' => $company_id, 'type' => $user_type])->get();
@@ -212,7 +227,7 @@ class ShopController extends Controller
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
 
-        $user_id_list = Account::getUserIdChild($loginId, $loginType);
+        $user_id_list = Account::getUserIdChild($loginId, $loginType, Auth::user()->company_id);
 
         if($loginType > 1){
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
@@ -230,7 +245,8 @@ class ShopController extends Controller
                 ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
                 ->first();
                 ;
-        if(!in_array($detail->user_id, $user_id_list)){ // ko co quyen truy cap
+
+        if(!in_array($detail->user_id, $user_id_list) && $loginType > 1){ // ko co quyen truy cap
             return redirect()->route('shop.index');
         }
         $districtList = (object)[];

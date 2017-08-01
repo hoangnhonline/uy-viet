@@ -12,7 +12,7 @@ use App\Models\GroupUser;
 use App\Models\Company;
 use App\Models\Province;
 use App\Models\UserProvince;
-
+use App\Models\Shop;
 use Helper, File, Session, Auth;
 
 class AccountController extends Controller
@@ -23,15 +23,13 @@ class AccountController extends Controller
     * @return Response
     */
     public function index(Request $request)
-    {         
-        if(Auth::user()->type > 2){
-            //return redirect()->route('shop.index');
-        }        
-
+    {   
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
         
-        
+        if($loginType > 5){
+            return redirect()->route('shop.index');
+        }  
         $searchArr['company_id'] = $company_id = $request->company_id ? $request->company_id : null;
         $searchArr['company_user_id'] = $company_user_id = $request->company_user_id ? $request->company_user_id : null;
         $searchArr['operator_user_id'] = $operator_user_id = $request->operator_user_id ? $request->operator_user_id : null;
@@ -384,7 +382,7 @@ class AccountController extends Controller
         $groupList = GroupUser::all();
         $provinceList = Province::all();
         $userList['company'] = $userList['operator'] = $userList['executive'] = $userList['supervisor'] = [];
-        //get list province
+        //get list province       
         if($detail->type == 6){
             $userList['company'] = Account::where([
                                             'company_id' => $detail->company_id, 
@@ -409,14 +407,34 @@ class AccountController extends Controller
                                             'executive_user_id' => $detail->executive_user_id
                                             ])->get();
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.$detail->supervisor_user_id.')')->get();
-        }elseif($detail->type == 4){
-            
+        }elseif($detail->type == 5){
+            $userList['company'] = Account::where([
+                                            'company_id' => $detail->company_id, 
+                                            'type' => 2
+                                            ])->get();
             $userList['operator'] = Account::where([
                                             'company_id' => $detail->company_id, 
                                             'type' => 3, 
                                             'company_user_id' => $detail->company_user_id
                                             ])->get();
-            
+            $userList['executive'] = Account::where([
+                                            'company_id' => $detail->company_id, 
+                                            'type' => 4, 
+                                            'company_user_id' => $detail->company_user_id, 
+                                            'operator_user_id' => $detail->operator_user_id
+                                            ])->get();          
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.$detail->executive_user_id.')')->get();
+        }elseif($detail->type == 4){
+             $userList['company'] = Account::where([
+                                            'company_id' => $detail->company_id, 
+                                            'type' => 2
+                                            ])->get();
+            $userList['operator'] = Account::where([
+                                            'company_id' => $detail->company_id, 
+                                            'type' => 3, 
+                                            'company_user_id' => $detail->company_user_id
+                                            ])->get();
+           
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.$detail->operator_user_id.')')->get();
         }
         if($detail->type > 2){
@@ -461,10 +479,10 @@ class AccountController extends Controller
         $loginId = Auth::user()->id;
         $detailCurr = Account::find($loginId);
 
-        $dataArr['company_user_id'] = $request->company_user_id ? $request->company_user_id : null;
-        $dataArr['operator_user_id'] = $request->operator_user_id ? $request->operator_user_id : null;
-        $dataArr['executive_user_id'] = $request->executive_user_id ? $request->executive_user_id : null;
-        $dataArr['supervisor_user_id'] = $request->supervisor_user_id ? $request->supervisor_user_id : null;
+        $dataArr['company_user_id'] = $request->company_user_id ? $request->company_user_id : $model->company_user_id;
+        $dataArr['operator_user_id'] = $request->operator_user_id ? $request->operator_user_id : $model->operator_user_id;
+        $dataArr['executive_user_id'] = $request->executive_user_id ? $request->executive_user_id : $model->executive_user_id;
+        $dataArr['supervisor_user_id'] = $request->supervisor_user_id ? $request->supervisor_user_id : $model->supervisor_user_id;
 
         if($loginType == 2){
             $dataArr['company_user_id'] = $loginId;

@@ -40,11 +40,14 @@ class ViewComposerServiceProvider extends ServiceProvider
 		view()->composer( '*' , function( $view ){		
 			$userListId = $userIdChild = $userListLevel = [];
 			$loginType = $loginId = 0;
+
 			if(Auth::check()){
 				$loginType = Auth::user()->type;
 				$loginId = Auth::user()->id;
-				$tmpUser = Account::getUserIdChild($loginId, $loginType);				
-				$userListLevel = $tmpUser['userList'];
+				
+		        $company_id = $loginType == 1 ? Account::first()->id : Auth::user()->company_id;
+		        
+				$tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);				
 				$userIdChild = $tmpUser['userId'];
 			}
 			$tmp = Account::where('status', 1)->get();
@@ -53,8 +56,7 @@ class ViewComposerServiceProvider extends ServiceProvider
 			}			
 
 			$view->with(
-				[		
-				'userListLevel' => $userListLevel,		
+				[						
 				'loginType' => $loginType,
 				'loginId'   => $loginId,
 				'userListId' => $userListId,

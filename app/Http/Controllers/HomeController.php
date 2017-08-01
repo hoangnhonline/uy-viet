@@ -33,7 +33,14 @@ class HomeController
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
 
-        $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, Auth::user()->company_id);
+
+        $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');      
+
+        
+        $company_id = $loginType > 1 ? Auth::user()->company_id : Company::first()->id;
+        $provinceDetailArr = [];
+
         if($loginType > 1){
             $listProvince = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
         }else{
@@ -45,7 +52,7 @@ class HomeController
         
         $conditionList = SelectCondition::orderBy('col_order')->get();
         if($loginType > 1){
-            $provinceHasShop = Shop::where('status', 1)
+            $provinceHasShop = Shop::where('status', 1)->whereIn('shop.user_id', $tmpUser['userId'])->where('company_id', $company_id)
             //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
             ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->groupBy('province_id')->get();
         }else{
@@ -70,7 +77,8 @@ class HomeController
             'settingArr' => $settingArr,
             'provinceArr' => $provinceArr,
             'companyList' => $companyList,
-            'provinceDetailArr' => $provinceDetailArr
+            'provinceDetailArr' => $provinceDetailArr,
+            'company_id' => $company_id
         ]);
 
     }
@@ -179,6 +187,14 @@ class HomeController
         $loginId = Auth::user()->id;
 
         $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
+
+        $company_id = $loginType > 1 ? Auth::user()->company_id : Company::first()->id;
+
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, Auth::user()->company_id);
+
+        $provinceDetailArr = [];
+
+
         if($loginType > 1){
             $listProvince = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
         }else{
@@ -191,7 +207,7 @@ class HomeController
         
         $conditionList = SelectCondition::orderBy('col_order')->get();
 
-            $districtHasShop = Shop::where('status', 1)->where('province_id', $province_id)
+            $districtHasShop = Shop::where('status', 1)->where('province_id', $province_id)->whereIn('shop.user_id', $tmpUser['userId'])->where('company_id', $company_id)
             //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
             ->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`id`) as total'))->groupBy('district_id')->get();
         
@@ -229,6 +245,11 @@ class HomeController
         }
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
+        $company_id = $loginType > 1 ? Auth::user()->company_id : Company::first()->id;
+
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, Auth::user()->company_id);
+        
+        $provinceDetailArr = [];
 
         $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
         if($loginType > 1){
@@ -244,7 +265,7 @@ class HomeController
         $wardList = Ward::where('district_id', $district_id)->get();
         $conditionList = SelectCondition::orderBy('col_order')->get();
         
-        $wardHasShop = Shop::where('status', 1)->where('district_id', $district_id)
+        $wardHasShop = Shop::where('status', 1)->where('district_id', $district_id)->whereIn('shop.user_id', $tmpUser['userId'])->where('company_id', $company_id)
         //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
         ->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`id`) as total'))->groupBy('ward_id')->get();
         

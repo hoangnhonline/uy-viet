@@ -45,8 +45,9 @@ class Account extends Model  {
         return $this->hasMany('App\Models\Shop', 'user_id');
     }
 
-    public static function getUserIdChild($user_id, $user_type){
-        $userId = [$user_id];
+    public static function getUserIdChild($user_id, $user_type, $company_id){
+        $userId = $user_type == 1 ?  [] : [$user_id];
+        $userList = [];
         switch ($user_type) {
               case 2:
                 $column = 'company_user_id';
@@ -64,7 +65,7 @@ class Account extends Model  {
                 $column = null;
                 break;
             }            
-        $query = Account::where('type', '>', $user_type);
+        $query = Account::where('type', '>', $user_type)->where('company_id', $company_id);
         if($column){
             $query->where($column, '=', $user_id);
         }

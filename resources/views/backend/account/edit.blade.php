@@ -39,8 +39,7 @@
                           @endforeach
                       </ul>
                   </div>
-              @endif
-                
+              @endif                
                 <input type="hidden" id="company_id" name="company_id" value="{{ $detail->company_id }}">
                 
                 <div class="form-group col-md-12" id="div_type">
@@ -75,6 +74,7 @@
                       @endforeach
                     </select>
                   </div>
+                  @if($detail->type > 3)
                   <div class="form-group col-md-6 role" id="div_operator">
                     <label>User Operator <span class="red-star">*</span></label>
                     <select class="form-control role" name="operator_user_id" id="operator_user_id">      
@@ -84,6 +84,8 @@
                       @endforeach
                     </select>
                   </div>
+                  @endif
+                  @if($detail->type > 4)
                   <div class="form-group col-md-6 role" id="div_executive">
                     <label>User Executive <span class="red-star">*</span></label>
                     <select class="form-control role" name="executive_user_id" id="executive_user_id">      
@@ -93,6 +95,8 @@
                       @endforeach                    
                     </select>
                   </div>
+                  @endif
+                  @if($detail->type > 5)
                   <div class="form-group col-md-6 role" id="div_supervisor">
                     <label>User Supervisor<span class="red-star">*</span></label>
                     <select class="form-control role" name="supervisor_user_id" id="supervisor_user_id">      
@@ -102,7 +106,7 @@
                       @endforeach                    
                     </select>
                   </div>
-               
+                @endif
                   <div class="clearfix"></div>
                 @endif
                 <div class="form-group col-md-6">
