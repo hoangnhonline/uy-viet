@@ -25,8 +25,8 @@
 	.form-select {
 	    display: block;
 	}
-	nav .form-group:nth-child(1), nav .form-group:nth-child(2), nav .form-group:nth-child(3), nav .form-group:nth-child(4), nav .form-group:nth-child(5) {
-	    width: 19%;
+	nav .form-group:nth-child(1), nav .form-group:nth-child(2), nav .form-group:nth-child(3) {
+	    width: 23%;
 	}
 	.sidebar-mini.sidebar-collapse .main-sidebar {
 	    -webkit-transform: translate(0, 0);

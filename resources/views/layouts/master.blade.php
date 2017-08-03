@@ -107,6 +107,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group col-sm-3 list-drop-down">
+		                        <label class="col-sm-2 control-label" for="">Tên shop</label>
+		                        <div class="col-sm-10" id="ward">
+		                            <input type="text" name="name" value="" placeholder="Tên shop..." class="form-control">
+		                        </div>
+		                    </div><!-- /list-drop-down -->
                             <div class="form-group col-sm-1 btn-search-max">
                                 <button type="button" style="width: 100%;" id="search"><span class="fa fa-search"></span></button>
                             </div>

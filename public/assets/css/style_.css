@@ -653,31 +653,3 @@ img {
     font-size: 26px;
     vertical-align: middle;
 }
-
-.list-drop-down .form-control {
-    border-color: #41adff;
-    border-radius: 0;
-    height: 35px;
-}
-.list-drop-down .form-control:focus {
-    box-shadow: none;
-    color: #333;
-    background-color: transparent;
-    border-color: #ccc;
-    outline: thin dotted #333!important;
-    outline: none !important;
-    outline-offset: -2px;
-}
-.main-sidebar, .left-side {
-  height: calc(100% - 50px);
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
-.sidebar {
-  padding-bottom: 10px;
-  height: 100%;
-  overflow-y: auto;
-}
-.sidebar::-webkit-scrollbar, .sidebar-menu::-webkit-scrollbar {
-  width: 1px;
-}
