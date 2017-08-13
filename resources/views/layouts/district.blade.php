@@ -94,7 +94,10 @@
                                 <label class="col-sm-2 control-label" for="">Quận / Huyện</label>
                                 <div class="col-sm-10">
                                     <select id='district' name='district' class="selectpicker custom-select form-control" data-live-search="true" title="Chọn quận/huyện" onchange="getListWard()">      
-                                    <option value='0'>Tất cả</option>                                 
+                                    <option value='0'>Tất cả</option>
+                                    @foreach($districtList as $district)
+				                    <option value="{{$district->id}}" {{ (isset($district_id) && $district_id == $district->id)  ? "selected"  : "" }}>{{$district->name}}</option>
+				                    @endforeach        
                                     </select>
                                 </div>
                             </div>
@@ -192,10 +195,6 @@
 				
 			</div>
 		</div><!-- /content-wrapper -->
-
-		<footer class="main-footer">
-			<a href="#" title="" class="link"><strong>uv.net.vn</strong></a>
-		</footer>
 
 	</div>
 	<div class="notFound" id="div_result" style="display:none">
@@ -321,7 +320,7 @@
 		    		location.href = '{{ route('home') }}/ward-' + district + '.html';
 		    	}
 		    	if(company > 0 && province > 0 && district > 0  && ward > 0){
-		    		location.href = '{{ route('home') }}/ward-' + district + '.html?ward_id=' + ward;
+		    		location.href = '{{ route('home') }}/ward-' + district + '.html';
 		    	}
 		    	setMapOnAll(null);
 		    	$('#is_search').val(1);

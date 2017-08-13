@@ -143,7 +143,7 @@ class HomeController
 
         }        
         $companyList = Company::all();
-
+        $districtList = District::where('province_id', $province_id)->get();
         return view('layouts.district', [
             'shopType' => $shopType,
             'listProvince' => $listProvince,            
@@ -153,7 +153,8 @@ class HomeController
             'companyList' => $companyList,
             'provinceDetailArr' => $provinceDetailArr,
             'province_id' => $province_id,
-            'company_id' => $company_id
+            'company_id' => $company_id,
+            'districtList' => $districtList
         ]);
 
     }

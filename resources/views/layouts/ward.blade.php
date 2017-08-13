@@ -199,11 +199,6 @@
 				
 			</div>
 		</div><!-- /content-wrapper -->
-
-		<footer class="main-footer">
-			<a href="#" title="" class="link"><strong>uv.net.vn</strong></a>
-		</footer>
-
 	</div>
 	<div class="notFound" id="div_result" style="display:none">
 		<p>
