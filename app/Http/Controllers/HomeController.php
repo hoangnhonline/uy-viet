@@ -24,6 +24,7 @@ class HomeController
         if(!Auth::check()){
             return redirect()->route('login-form');
         }
+        //dd($request->all());
         $settingArr = $provinceArr = [];
         $districtList = $wardList = District::where('province_id', 9999)->get();
         $loginType = Auth::user()->type;
@@ -40,6 +41,20 @@ class HomeController
         }
         
         $typeArr = $request->type ? $request->type : $typeArrDefault;
+
+        // condition 
+         $conditionList = SelectCondition::orderBy('col_order')->get();
+         foreach($conditionList as $cond){
+            $arrConditionName[] = $cond->name."_id";
+         }
+         foreach($arrConditionName as $condition_id){
+            if($request->has($condition_id)){
+                $arrSearchCondition[$condition_id] = $request->$condition_id;
+            }else{
+                $arrSearchCondition[$condition_id] = null;
+            }
+         }
+         //dd($arrSearch);
         if($loginType == 1){
             $company_id = $request->company_id ? $request->company_id : Company::first()->id;
         }else{
@@ -54,22 +69,32 @@ class HomeController
             $view = 'province';
             $conditionList = SelectCondition::orderBy('col_order')->get();
             if($loginType > 1){
-                $markerHasShop = Shop::where('status', 1)
+                $markerHasShop = Shop::where('shop.status', 1)
                                 ->whereIn('shop.user_id', $tmpUser['userId'])
-                                ->where('company_id', $company_id)
+                                ->where('shop.company_id', $company_id)
                                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
                                 ->whereIn('shop.type_id', $typeArr)
-                                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))
+                                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`shop`.`id`) as total'))
                                 ->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')
                                 ->groupBy('province_id')
                                 ->get();
             }else{
-                $markerHasShop = Shop::where('status', 1)->where('company_id', $company_id)
+                $query = Shop::where('status', 1)->where('company_id', $company_id)
                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
-                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))
-                ->whereIn('shop.type_id', $typeArr)
-                ->groupBy('province_id')
-                ->get();
+                ->select(DB::raw('MAX(`location`) as location'), 'shop.province_id', DB::raw('COUNT(`shop`.`id`) as total'))
+                ->whereIn('shop.type_id', $typeArr);
+                
+                    $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
+                    
+
+                        $join->on('shop.id', '=', 'shop_select_condition.shop_id');
+                        foreach($arrSearchCondition as $condition_column => $conditionArrValue){
+                             $join->whereIn($condition_column, $conditionArrValue);
+                        }
+                    });
+                
+                $query->groupBy('province_id');
+                $markerHasShop = $query->get();
             }
             foreach($markerHasShop as $marker){
                 $location = $marker->location;
@@ -172,7 +197,7 @@ class HomeController
             $provinceDetailArr[$pro->id] = $pro;
         }
         
-        $conditionList = SelectCondition::orderBy('col_order')->get();
+       
         $companyList = Company::all();
         return view('layouts.master', [
             'shopType' => $shopType,
@@ -191,7 +216,8 @@ class HomeController
             'ward_id' => $ward_id,
             'districtList' => $districtList,
             'wardList' => $wardList,
-            'typeArrDefault' => $typeArrDefault
+            'typeArrDefault' => $typeArrDefault,
+            'arrSearch' => $arrSearchCondition
         ]);
 
     }

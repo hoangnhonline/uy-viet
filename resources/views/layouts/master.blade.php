@@ -178,10 +178,13 @@
 						$dataList = DB::table('shop_'. $condition->name)->where('status', 1)->get();
 						?>
 						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box filter_{{ $condition->name }}">
-							<li class="active  filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
+							<li class="@if(!$arrSearch[$condition->name."_id"] )active  @endif filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
 							@foreach($dataList as $data)
-								<li class="active filter_{{ $condition->name }} filter" data-value="{{ $data->id }}" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a>
-								<input type="hidden" class="value" name="{{ $condition->name }}_id[]" value="">
+								<?php 
+								$checked = !$arrSearch[$condition->name."_id"] || in_array($data->id, $arrSearch[$condition->name."_id"]) ? true : false;
+								?>
+								<li class="@if($checked) active @endif filter_{{ $condition->name }} filter" data-value="{{ $data->id }}" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a>
+								<input type="hidden" class="value" name="{{ $condition->name }}_id[]" value="@if($checked){{ $data->id }}@endif">
 								</li>
 			                @endforeach
 						</ul>
