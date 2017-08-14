@@ -65,7 +65,7 @@
                     <span class="sr-only">Toggle navigation</span>
                 </a><!-- /.sidebar-toggle -->
                 <div class="row">
-                	<form class="row form-select">
+                	<div class="row form-select">
                         <div class="col-sm-12 group-list-drop-down">
                         	@if(Auth::user()->type == 1)
                             <div class="form-group col-sm-2 list-drop-down">
@@ -122,7 +122,8 @@
                             <div class="form-group col-sm-1 btn-search-max">
                                 <button type="button" style="width: 100%;" id="search"><span class="fa fa-search"></span></button>
                             </div>
-                        </div>                    
+                        </div>
+                    </div>              
                 </div><!-- /.row -->
             </nav><!-- /nav -->
 		</header><!-- /header -->
