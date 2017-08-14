@@ -118,7 +118,7 @@
                      ?>
                   <input type="hidden" name="latt" id="latt" value="{{ $latt }}">
                   <input type="hidden" name="longt" id="longt" value="{{ $longt }}">
-                  <input type="hidden" name="curr_url" value="{{ route('ward-marker', $detail->district_id )}}">
+                  <input type="hidden" name="curr_url" id="current_url_update" value="">
                   <div class="box-footer " style="text-align:right">
                      <div class="col-md-12">                        
                         <button type="submit" class="btn btn-primary">Lưu</button>

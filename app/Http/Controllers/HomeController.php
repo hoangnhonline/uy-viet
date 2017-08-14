@@ -21,8 +21,124 @@ class HomeController
 {
 
     public function initPage(Request $request) {        
-    
+        if(!Auth::check()){
+            return redirect()->route('login-form');
+        }
         $settingArr = $provinceArr = [];
+        $districtList = $wardList = District::where('province_id', 9999)->get();
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+
+        $province_id = $request->province_id ? $request->province_id : null;
+        $district_id = $request->district_id ? $request->district_id : null;        
+        $ward_id = $request->ward_id ? $request->ward_id : null;       
+
+        // get typeArr 
+        $tmpST = ShopType::where('status', 1)->select('id')->get();
+        foreach ($tmpST as $key => $value) {
+            $typeArrDefault[] = $value->id;
+        }
+        
+        $typeArr = $request->type ? $request->type : $typeArrDefault;
+        if($loginType == 1){
+            $company_id = $request->company_id ? $request->company_id : Company::first()->id;
+        }else{
+            $company_id = Auth::user()->company_id;
+        }   
+
+        //get list user
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);
+               
+        $markerArr = [];
+        if(!$province_id && !$district_id && !$ward_id){ // home
+            $view = 'province';
+            $conditionList = SelectCondition::orderBy('col_order')->get();
+            if($loginType > 1){
+                $markerHasShop = Shop::where('status', 1)
+                                ->whereIn('shop.user_id', $tmpUser['userId'])
+                                ->where('company_id', $company_id)
+                                //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
+                                ->whereIn('shop.type_id', $typeArr)
+                                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))
+                                ->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')
+                                ->groupBy('province_id')
+                                ->get();
+            }else{
+                $markerHasShop = Shop::where('status', 1)->where('company_id', $company_id)
+                //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
+                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))->whereIn('shop.type_id', $typeArr)->groupBy('province_id')->get();
+            }
+            foreach($markerHasShop as $marker){
+                $location = $marker->location;
+                $tmp = explode(",", $location);            
+                $markerArr[$marker->province_id]['location'] = $tmp;
+                $markerArr[$marker->province_id]['total'] = $marker->total;
+                $markerArr[$marker->province_id]['slug'] = $marker->slug;
+
+            }
+        }elseif($province_id > 0 && !$district_id && !$ward_id) { // search theo province_id
+           // die('123');
+            $view = 'district';
+            $districtList = District::where('province_id', $province_id)->get();            
+            //district marker
+            $markerHasShop = Shop::where('status', 1)
+                                ->where('province_id', $province_id)
+                                ->whereIn('shop.user_id', $tmpUser['userId'])
+                                ->where('company_id', $company_id)                                
+                                ->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`id`) as total'))
+                                ->groupBy('district_id')
+                                ->get();
+            
+            foreach($markerHasShop as $marker){
+                $location = $marker->location;
+                $tmp = explode(",", $location);            
+                $markerArr[$marker->district_id]['location'] = $tmp;
+                $markerArr[$marker->district_id]['total'] = $marker->total;
+                $markerArr[$marker->district_id]['slug'] = $marker->total;
+
+            }                    
+        }elseif($province_id > 0 && $district_id > 0 && !$ward_id){
+            $view = 'ward';
+            $districtList = District::where('province_id', $province_id)->get();            
+            $wardList = Ward::where('district_id', $district_id)->get();            
+            $markerHasShop = Shop::where('status', 1)->where('district_id', $district_id)->whereIn('shop.user_id', $tmpUser['userId'])->where('company_id', $company_id)
+                //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
+                ->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`id`) as total'))->groupBy('ward_id')->get();            
+            foreach($markerHasShop as $marker){
+                $location = $marker->location;
+                $tmp = explode(",", $location);            
+                $markerArr[$marker->ward_id]['location'] = $tmp;
+                $markerArr[$marker->ward_id]['total'] = $marker->total;
+                $markerArr[$marker->ward_id]['slug'] = $marker->total;
+
+            }  
+        }elseif($province_id > 0 && $district_id > 0 && $ward_id > 0){
+            $view = 'detail';
+            $districtList = District::where('province_id', $province_id)->get();            
+            $wardList = Ward::where('district_id', $district_id)->get();            
+            // not admin
+            $query =  Shop::where('shop.status', 1);
+            
+            $query->whereIn('user_id', $tmpUser['userId']);        
+        
+            $query->where('shop.company_id', $company_id);
+        
+        
+            $query->where('shop.province_id', $province_id);
+        
+            $query->where('shop.district_id', $district_id);            
+            
+            $query->where('shop.ward_id', $ward_id);
+            
+            $query->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id');
+            $query->join('shop_type', 'shop_type.id' , '=', 'shop.type_id');
+            $query->select('shop.*', 'icon_url', 'shop_select_condition.*');
+            $markerArr = $query->get()->toArray();
+        }       
+   
+        $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
+
+        
         $tmpArr = Settings::all();
         foreach($tmpArr as $tmp){
             $settingArr[$tmp->name] = $tmp->value;
@@ -30,15 +146,7 @@ class HomeController
         if(!Auth::check()){
             return redirect()->route('login-form');
         }
-        $loginType = Auth::user()->type;
-        $loginId = Auth::user()->id;
-
-        $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
-        if($loginType == 1){
-            $company_id = $request->company_id ? $request->company_id : Company::first()->id;
-        }else{
-            $company_id = Auth::user()->company_id;
-        }        
+          
         
         $tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);
 
@@ -53,30 +161,9 @@ class HomeController
             $provinceDetailArr[$pro->id] = $pro;
         }
         //dd($company_id);
-        $conditionList = SelectCondition::orderBy('col_order')->get();
-        if($loginType > 1){
-            $provinceHasShop = Shop::where('status', 1)
-                            ->whereIn('shop.user_id', $tmpUser['userId'])
-                            ->where('company_id', $company_id)
-                            //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
-                            ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))
-                            ->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')
-                            ->groupBy('province_id')
-                            ->get();
-        }else{
-            $provinceHasShop = Shop::where('status', 1)->where('company_id', $company_id)
-            //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
-            ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))->groupBy('province_id')->get();
-        }
-        foreach($provinceHasShop as $pro){
-            $location = $pro->location;
-            $tmp = explode(",", $location);            
-            $provinceArr[$pro->province_id]['location'] = $tmp;
-            $provinceArr[$pro->province_id]['total'] = $pro->total;
-            $provinceArr[$pro->province_id]['slug'] = $pro->slug;
-
-        }
-       
+       // var_dump(expression)($typeArr);
+        //var_dump($view);
+       $conditionList = SelectCondition::orderBy('col_order')->get();
         $companyList = Company::all();
         return view('layouts.master', [
             'shopType' => $shopType,
@@ -86,7 +173,15 @@ class HomeController
             'provinceArr' => $provinceArr,
             'companyList' => $companyList,
             'provinceDetailArr' => $provinceDetailArr,
-            'company_id' => $company_id
+            'company_id' => $company_id,
+            'typeArr' => $typeArr,
+            'markerArr' => $markerArr,
+            'view' => $view,
+            'province_id' => $province_id,
+            'district_id' => $district_id,
+            'ward_id' => $ward_id,
+            'districtList' => $districtList,
+            'wardList' => $wardList
         ]);
 
     }

@@ -286,7 +286,7 @@
 		        current_shopId = $(e.relatedTarget).data('id');
 
 		    });
-		
+			
 		    @foreach($wardArr as $ward_id => $pro)
 				marker = new google.maps.Marker({
 	                    position: new google.maps.LatLng({{ $pro['location'][0] }}, {{ $pro['location'][1] }}),
@@ -408,6 +408,7 @@
 		                    markers.push(marker);
 		                    (function(marker, i) {
 		                        google.maps.event.addListener(marker, 'click', function() {
+		                        	console.log(marker.data);
 		                            infowindow = new google.maps.InfoWindow({
 		                                content: getContent(marker.data)
 		                            });
@@ -527,6 +528,7 @@
 		                    markers.push(marker);
 		                    (function(marker, i) {
 		                        google.maps.event.addListener(marker, 'click', function() {
+		                        	console.log(marker.data);
 		                            infowindow = new google.maps.InfoWindow({
 		                                content: getContent(marker.data)
 		                            });

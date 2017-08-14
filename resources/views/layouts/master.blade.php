@@ -49,7 +49,7 @@
 <body class="main">
 	
 	<div class="wrapper">
-		
+		<form action="{{ url()->current() }}"  method="GET" id="searchForm">
 		<header class="main-header">
 			<a href="{{ route('home') }}" class="logo">
                 <!-- mini logo -->
@@ -71,7 +71,7 @@
                             <div class="form-group col-sm-2 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Công Ty</label>
                                 <div class="col-sm-10">
-									<select id="company" name="company" class="selectpicker custom-select form-control" data-live-search="true">										
+									<select id="company" name="company_id" class="selectpicker custom-select form-control" data-live-search="true">										
 										@foreach($companyList as $com)
 					                    <option value="{{ $com->id }}" {{ $company_id == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option>
 					                    @endforeach
@@ -79,12 +79,12 @@
 								</div>
                             </div>
                             @else
-                            <input type="hidden" id="company" value="{{ Auth::user()->company_id }}">
+                            <input type="hidden" id="company" name="company_id" value="{{ Auth::user()->company_id }}">
                             @endif
                             <div class="form-group col-sm-3 list-drop-down">                            
                                 <label class="col-sm-2 control-label" for="">Tỉnh / Thành Phố</label>
                                 <div class="col-sm-10">
-								<select id="province" class="selectpicker custom-select form-control"  title="Chọn tỉnh/thành" data-live-search="true" onchange="getListDistrict()">
+								<select id="province" name="province_id" class="selectpicker custom-select form-control"  title="Chọn tỉnh/thành" data-live-search="true" onchange="getListDistrict()">
 									 @foreach($listProvince as $province)
 				                    <option value="{{$province->id}}" {{ (isset($province_id) && $province_id == $province->id)  ? "selected"  : "" }}>{{$province->name}}</option>
 				                    @endforeach
@@ -94,16 +94,22 @@
                             <div class="form-group col-sm-3 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Quận / Huyện</label>
                                 <div class="col-sm-10">
-                                    <select id='district' name='district' class="selectpicker custom-select form-control" data-live-search="true" title="Chọn quận/huyện" onchange="getListWard()">      
+                                    <select id='district' name='district_id' class="selectpicker custom-select form-control" data-live-search="true" title="Chọn quận/huyện" onchange="getListWard()">      
                                     <option value='0'>Tất cả</option>                                 
+                                    @foreach($districtList as $district)
+				                    <option value="{{$district->id}}" {{ (isset($district_id) && $district_id == $district->id)  ? "selected"  : "" }}>{{$district->name}}</option>
+				                    @endforeach   
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group col-sm-3 list-drop-down">
                                 <label class="col-sm-2 control-label" for="">Xã / Phường</label>
                                 <div class="col-sm-10">
-                                    <select id='ward' name='standard' title="Chọn phường/xã" class="selectpicker custom-select form-control" data-live-search="true">
+                                    <select id='ward' name='ward_id' title="Chọn phường/xã" class="selectpicker custom-select form-control" data-live-search="true">
                                         <option value='0'>Tất cả</option>
+                                        @foreach($wardList as $ward)
+					                    <option value="{{$ward->id}}" {{ (isset($ward_id) && $ward_id == $ward->id)  ? "selected"  : "" }}>{{$ward->name}}</option>
+					                    @endforeach   
                                     </select>
                                 </div>
                             </div>
@@ -116,8 +122,7 @@
                             <div class="form-group col-sm-1 btn-search-max">
                                 <button type="button" style="width: 100%;" id="search"><span class="fa fa-search"></span></button>
                             </div>
-                        </div>
-                    </form>
+                        </div>                    
                 </div><!-- /.row -->
             </nav><!-- /nav -->
 		</header><!-- /header -->
@@ -133,7 +138,8 @@
 						<a href="{{ route('logout') }}" title="Logout" style="color:red"><i class="fa fa-circle text-danger"></i> Logout</a>
 					</div>
 				</div><!-- /.user-panel -->
-				<ul class="sidebar-menu" data-widget="tree">
+				
+				<ul class="sidebar-menu" data-widget="tree">				
 					<li class="active treeview menu-open">
 						<a href="javascript:void(0)" title="">
 							<i class="fa fa-th"></i>
@@ -149,10 +155,12 @@
 								</a>
 							</li>
 							@foreach($shopType as $type)		                        
-		                        <li class="active filter_type" data-filter="filter_type"><a href="javascript:void(0)" title="" value="{{ $type->id }}" data-col="type_id">
+		                        <li class="{{ in_array($type->id, $typeArr) ? "active" : "" }} filter_type filter" data-filter="filter_type" data-value="{{ $type->id }}"><a href="javascript:void(0)" title=""  value="{{ $type->id }}" data-col="type_id">
 									<span><img src="{{ Helper::showImage($type->icon_url) }}" alt="{!! $type->type !!}"></span>
 									{!! $type->type !!}
-								</a></li>
+								</a>
+								<input type="hidden" class="value" name="type[]" value="{{ in_array($type->id, $typeArr) ? $type->id : "" }}">
+								</li>
 		                    @endforeach							
 						</ul>
 					</li><!-- /.treeview -->
@@ -171,7 +179,9 @@
 						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box filter_{{ $condition->name }}">
 							<li class="active  filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
 							@foreach($dataList as $data)
-								<li class="active filter_{{ $condition->name }}" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a></li>
+								<li class="active filter_{{ $condition->name }} filter" data-value="{{ $data->id }}" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a>
+								<input type="hidden" class="value" name="{{ $condition->name }}_id[]" value="">
+								</li>
 			                @endforeach
 						</ul>
 						
@@ -185,9 +195,10 @@
 						
 					</li>			
 				</ul>
+				
 			</section><!-- /.sidebar -->
 		</aside><!-- /main-sidebar -->
-
+		</form>
 		<div class="content-wrapper">
 			<div id="map">
 				
@@ -250,12 +261,51 @@
 			}
 			$('#search').click();
 		});
+		$('li.filter').click(function(){
+			var obj = $(this);
+			if(obj.hasClass('active')){				
+				obj.children('.value').val(obj.data('value'));
+			}else{				
+				obj.children('.value').val('');
+			}
+			obj.parents('form').submit();
+		});
+		$('#company, #province, #district, #ward').change(function(){
+			$(this).parents('form').submit();
+		});
 	});
+		<?php
+	if($view != 'detail' ){
+		$firstMarker = !empty($markerArr) ? array_values($markerArr)[0] : [];
+	}else{
+		$tmpFirstMarker = $markerArr ? $markerArr[0] : [];
+		//var_dump($firstMarker);
+		$firstMarker['location'] = explode(',', $tmpFirstMarker['location']);
+	}
+	if($view == 'province'){
+		$zoom = 6;
+	}elseif($view == 'district'){
+		$zoom = 9;
+	}elseif($view == 'ward'){
+		$zoom = 12;
+	}else{
+		$zoom = 14;
+	}
+	if(empty($markerArr)){
+		$zoom = 6;
+	}
+	?>
 		 //tạo map, tạo marker
 		function initMap() {
-		    latLong = new google.maps.LatLng(parseFloat(updatePosition.split(',')[0]), parseFloat(updatePosition.split(',')[1]));
+			
+			@if(!empty($firstMarker))				
+		    latLong = new google.maps.LatLng({{ $firstMarker['location'][0] }}, {{ $firstMarker['location'][1] }});
+		    @else
+		    latLong = new google.maps.LatLng(15.961533, 107.856976);
+		    @endif
+		    
 		    map = new google.maps.Map(document.getElementById('map'), {
-		        zoom: 6,
+		        zoom: {{ $zoom }},
 		        center: latLong
 		    });
 		    function setMapOnAll(map) {
@@ -275,26 +325,94 @@
 		        getRelateLocation();
 
 		    }
-		    @foreach($provinceArr as $province_id => $pro)
+		    @if($view != 'detail')
+		    @foreach($markerArr as $id => $marker)
+
 				marker = new google.maps.Marker({
-	                    position: new google.maps.LatLng({{ $pro['location'][0] }}, {{ $pro['location'][1] }}),
+	                    position: new google.maps.LatLng({{ $marker['location'][0] }}, {{ $marker['location'][1] }}),
 	                    map: map,
-	                    province_id : {{ $province_id }},
-	                    /*icon: {
-	                        url: markerFilter[i].icon_url,
-	                        size: new google.maps.Size(50, 50)
-	                    },*/
-	                    label: {text: '{{ $pro["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
+	                    province_id : {{ $id }},	                    
+	                    label: {text: '{{ $marker["total"] }}', color: "#FFF", labelClass : 'labels-marker'}
 
 	                });
 				markers.push(marker);
-				marker.addListener('click', function() {				
-		         	$('select#province').val({{$province_id}}).selectpicker('refresh');
-		         	location.href = "{{ route('district-marker', $province_id) }}";		         	
+				marker.addListener('click', function() {
+					@if($view == 'province')			
+		         	$('select#province').val({{ $id }}).selectpicker('refresh');
+		         	@elseif($view == 'district')
+		         	$('select#district').val({{ $id }}).selectpicker('refresh');
+		         	@elseif($view == 'ward')
+		         	$('select#ward').val({{ $id }}).selectpicker('refresh');
+		         	@endif
+		         	$('#searchForm').submit();     	
 		        });
 				
 			@endforeach
-			
+			@else
+			<?php $i = 0; ?>
+			@foreach($markerArr as $marker)
+			<?php $i++; ?>
+			var data = '<?php echo json_encode($marker); ?>';
+				var i = {{ $i }};
+				<?php 
+				$tmpLocation = explode(',', $marker['location']);
+				?>
+                if($('#show_label').val() == 1){
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(parseFloat({{ $tmpLocation[0] }}), parseFloat({{ $tmpLocation[1] }})),
+                        map: map,
+                        title: '{{ $marker['shop_name'] }}',
+                        data: data,
+                        icon: {
+                            url: '{{ $marker['icon_url'] }}',
+                            size: new google.maps.Size(50, 50)
+                        },
+                        label: {text: '{{ $marker['shop_name'] }}', color: "red", labelClass : 'labels-marker'}
+
+                    });
+                }else{
+                	
+                     marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(parseFloat({{ $tmpLocation[0] }}), parseFloat({{ $tmpLocation[1] }})),
+                        map: map,
+                        title: '{{ $marker['shop_name'] }}',
+                        data: data,
+                        icon: {
+                            url: '{{ $marker['icon_url'] }}',
+                            size: new google.maps.Size(50, 50)
+                        }
+
+                    });
+                }
+                markers.push(marker);
+                (function(marker, i) {
+                    google.maps.event.addListener(marker, 'click', function() {
+                    	console.log(marker.data);
+                        infowindow = new google.maps.InfoWindow({
+                            content: getContent(marker.data)
+                        });
+                        if(tempIW)
+                            tempIW.close();
+                        infowindow.open(map, marker);
+                        tempIW = infowindow;
+                        google.maps.event.addListener(infowindow, 'domready', function() {
+                            $("#view-more").on("click", function() {
+                                view_more($(this).attr("data"));
+                            });
+
+                        });
+                    });
+
+                })(marker, i);
+
+          	@endforeach
+          	if(markers.length > 0){
+                markerCluster.addMarkers(markers);
+                
+              //  map.setZoom(12);
+
+            }
+			@endif
 		    $("#search").click(function (){
 		    	var company  = $('#company').val();
 		    	var province  = $('#province').val();
@@ -560,5 +678,6 @@
 
 	</script>
 	@include('partials.modal-edit-gallery')
+	<input type="hidden" id="current_url" value="{{ urlencode(url()->full()) }}">
 </body>
 </html>

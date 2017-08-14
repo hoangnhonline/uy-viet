@@ -6,6 +6,8 @@ var tempIW = '';
 var current_shopId, latLong;
 // lấy thông tin khi click vào marker
 function getContent(data) {
+    data = JSON.parse(data);
+    console.log(data);
     var img_url = '';
     $.ajax({
         url : $('#route_get_image_thumbnail').val(),
@@ -61,8 +63,10 @@ $(document).on('click', '.edit-shop', function(){
         } ,
         url: $('#route_edit_fe').val(),
         success: function(data) {
+
             $('#content_edit_shop').html(data);
             $('#myModalShop').modal('show');
+            $('#current_url_update').val($('#current_url').val());
         },
 
     });
