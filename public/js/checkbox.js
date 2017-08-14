@@ -88,17 +88,30 @@ $(function() {
             
             var col = $(this).data('col');
             if($(this).parent('li').hasClass('active')){
-                $('li.' + flt ).addClass('active');  
-            }else{
-                $('li.' + flt ).removeClass('active');    
                 
+                $('li.' + flt ).each(function(){
+                    var objLi = $(this);
+                    objLi.addClass('active');
+                    objLi.children('.value').val(objLi.data('value'));
+                });
+                $('#searchForm').submit();      
+            }else{
+                
+                $('li.' + flt ).each(function(){
+                    var objLi = $(this);
+                    objLi.removeClass('active');
+                    objLi.children('.value').val('');
+                });
+                $('#searchForm').submit();      
             }
         }else{
             
             if($(this).parent('li').hasClass('active') == false){
                 $(this).parents('ul.' + flt).find('.filter_all').removeClass('active');
             }
+
         }
+
         event.preventDefault();
         
         var selectedArr = colArr = [];

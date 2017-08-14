@@ -150,7 +150,7 @@
 							</span>
 						</a>
 						<ul class="treeview-menu list-group checked-list-box check-list-box filter_type">
-							<li class="active filter_all" data-filter="filter_type">
+							<li class="@if($typeArrDefault == $typeArr ) active @endif filter_all" data-filter="filter_type">
 								<a href="javascript:void(0)" title="" value="" data-col="type_id">							
 									<span><img src="{{ URL::asset('assets/images/all.png') }}" alt="Tất cả"></span>Tất cả
 								</a>
@@ -239,17 +239,7 @@
 	<script>
 	var userId = {{ Auth::user()->id }};
 	</script>
-	@endif
-	@if (!empty($init_location))
-	    <script>
-	        var updatePosition = '{{$init_location->location}}';
-	        var updateShopId = {{$init_location->id}};
-	    </script>
-	@else
-	    <script>
-	        var updatePosition = '15.961533, 107.856976';
-	    </script>
-	@endif
+	@endif	
 	<script src="{{ URL::asset('js/home.js') }}"></script>
 	<script src="{{ URL::asset('js/checkbox.js') }}"></script>
 	<script type="text/javascript">
@@ -269,19 +259,40 @@
 			}else{				
 				obj.children('.value').val('');
 			}
+			
 			obj.parents('form').submit();
+		});		
+		$('#company').change(function(){
+			removeHidden();
+			$('#province, #district, #ward').val('').selectpicker('refresh');
+			$(this).parents('form').submit();
 		});
-		$('#company, #province, #district, #ward').change(function(){
+		$('#province').change(function(){			
+			$('#district, #ward').val('').selectpicker('refresh');
+			$(this).parents('form').submit();
+		});
+		$('#district').change(function(){			
+			$('#ward').val('').selectpicker('refresh');
+			$(this).parents('form').submit();
+		});
+		$('#ward').change(function(){			
 			$(this).parents('form').submit();
 		});
 	});
+	function removeHidden(){
+		$('input.value[value=""]').remove();
+	}
+
+
+
 		<?php
 	if($view != 'detail' ){
 		$firstMarker = !empty($markerArr) ? array_values($markerArr)[0] : [];
-	}else{
-		$tmpFirstMarker = $markerArr ? $markerArr[0] : [];
-		//var_dump($firstMarker);
-		$firstMarker['location'] = explode(',', $tmpFirstMarker['location']);
+	}else{		
+		$tmpFirstMarker = $markerArr ? $markerArr[0] : [];		
+		if(!empty($tmpFirstMarker)){
+			$firstMarker['location'] = explode(',', $tmpFirstMarker['location']);
+		}
 	}
 	if($view == 'province'){
 		$zoom = 6;

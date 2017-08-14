@@ -66,7 +66,10 @@ class HomeController
             }else{
                 $markerHasShop = Shop::where('status', 1)->where('company_id', $company_id)
                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
-                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))->whereIn('shop.type_id', $typeArr)->groupBy('province_id')->get();
+                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`id`) as total'))
+                ->whereIn('shop.type_id', $typeArr)
+                ->groupBy('province_id')
+                ->get();
             }
             foreach($markerHasShop as $marker){
                 $location = $marker->location;
@@ -84,7 +87,8 @@ class HomeController
             $markerHasShop = Shop::where('status', 1)
                                 ->where('province_id', $province_id)
                                 ->whereIn('shop.user_id', $tmpUser['userId'])
-                                ->where('company_id', $company_id)                                
+                                ->where('company_id', $company_id)
+                                ->whereIn('shop.type_id', $typeArr)                              
                                 ->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`id`) as total'))
                                 ->groupBy('district_id')
                                 ->get();
@@ -101,9 +105,15 @@ class HomeController
             $view = 'ward';
             $districtList = District::where('province_id', $province_id)->get();            
             $wardList = Ward::where('district_id', $district_id)->get();            
-            $markerHasShop = Shop::where('status', 1)->where('district_id', $district_id)->whereIn('shop.user_id', $tmpUser['userId'])->where('company_id', $company_id)
-                //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
-                ->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`id`) as total'))->groupBy('ward_id')->get();            
+            $markerHasShop = Shop::where('status', 1)
+                        ->where('district_id', $district_id)
+                        ->whereIn('shop.user_id', $tmpUser['userId'])
+                        ->where('company_id', $company_id)
+                        ->whereIn('shop.type_id', $typeArr)
+                        //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
+                        ->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`id`) as total'))
+                        ->groupBy('ward_id')
+                        ->get();            
             foreach($markerHasShop as $marker){
                 $location = $marker->location;
                 $tmp = explode(",", $location);            
@@ -121,14 +131,15 @@ class HomeController
             
             $query->whereIn('user_id', $tmpUser['userId']);        
         
-            $query->where('shop.company_id', $company_id);
-        
+            $query->where('shop.company_id', $company_id);        
         
             $query->where('shop.province_id', $province_id);
         
             $query->where('shop.district_id', $district_id);            
             
             $query->where('shop.ward_id', $ward_id);
+
+            $query->whereIn('shop.type_id', $typeArr);
             
             $query->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id');
             $query->join('shop_type', 'shop_type.id' , '=', 'shop.type_id');
@@ -160,10 +171,8 @@ class HomeController
         foreach($listProvince as $pro){
             $provinceDetailArr[$pro->id] = $pro;
         }
-        //dd($company_id);
-       // var_dump(expression)($typeArr);
-        //var_dump($view);
-       $conditionList = SelectCondition::orderBy('col_order')->get();
+        
+        $conditionList = SelectCondition::orderBy('col_order')->get();
         $companyList = Company::all();
         return view('layouts.master', [
             'shopType' => $shopType,
@@ -181,7 +190,8 @@ class HomeController
             'district_id' => $district_id,
             'ward_id' => $ward_id,
             'districtList' => $districtList,
-            'wardList' => $wardList
+            'wardList' => $wardList,
+            'typeArrDefault' => $typeArrDefault
         ]);
 
     }
