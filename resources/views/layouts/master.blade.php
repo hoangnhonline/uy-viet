@@ -194,12 +194,12 @@
 					<li style="padding-left:10px;padding-top:20px">
 						
 						<label style="color:red">
-							<input type="checkbox" id="check_show_label" {{ $settingArr['show_label'] == 1 ? "checked" : "" }}> Hiển thị tên shop
+							<input type="checkbox" id="check_show_label" {{  $show_label == 1 ? "checked" : "" }}> Hiển thị tên shop
 						</label>
 						
 					</li>			
 				</ul>
-				
+				<input type="hidden" id="show_label" name="show_label" value="{{ $show_label }}">
 			</section><!-- /.sidebar -->
 		</aside><!-- /main-sidebar -->
 		</form>
@@ -215,12 +215,10 @@
 			<span id="txt_result"></span>
 		</p>
 	</div>
-	@foreach($conditionList as $cond)
-		<input type="hidden" id="{{ $cond->name }}_id" value="" class="checked_value">
-	@endforeach
-		<input type="hidden" id="type_id" value="" class="checked_value">	
-		<input type="hidden" id="show_label" value="{{ $settingArr['show_label'] }}">
-		<input type="hidden" id="is_search" value="0">
+	
+		
+		
+		
 	<!-- /.wrapper -->
 
 	<!-- ===== JS ===== -->
@@ -253,7 +251,7 @@
 			}else{
 				$('#show_label').val(0);
 			}
-			$('#search').click();
+			$('#searchForm').submit();
 		});
 		$('li.filter').click(function(){
 			var obj = $(this);

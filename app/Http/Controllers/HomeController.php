@@ -47,6 +47,7 @@ class HomeController
          foreach($conditionList as $cond){
             $arrConditionName[] = $cond->name."_id";
          }
+
          foreach($arrConditionName as $condition_id){
             if($request->has($condition_id)){
                 $arrSearchCondition[$condition_id] = $request->$condition_id;
@@ -69,29 +70,47 @@ class HomeController
             $view = 'province';
             $conditionList = SelectCondition::orderBy('col_order')->get();
             if($loginType > 1){
-                $markerHasShop = Shop::where('shop.status', 1)
+                $query = Shop::where('shop.status', 1)
                                 ->whereIn('shop.user_id', $tmpUser['userId'])
                                 ->where('shop.company_id', $company_id)
                                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
-                                ->whereIn('shop.type_id', $typeArr)
-                                ->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`shop`.`id`) as total'))
+                                ->whereIn('shop.type_id', $typeArr);
+                    $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
+                
+
+                        $join->on('shop.id', '=', 'shop_select_condition.shop_id');
+                        
+                        foreach($arrSearchCondition as $condition_column => $conditionArrValue){                             
+                             if($conditionArrValue){
+                                 $join->whereIn($condition_column, $conditionArrValue);
+                            }
+                        }
+
+                    });
+
+                                $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`shop`.`id`) as total'))
                                 ->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')
                                 ->groupBy('province_id')
                                 ->get();
             }else{
+                
                 $query = Shop::where('status', 1)->where('company_id', $company_id)
                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
                 ->select(DB::raw('MAX(`location`) as location'), 'shop.province_id', DB::raw('COUNT(`shop`.`id`) as total'))
                 ->whereIn('shop.type_id', $typeArr);
                 
-                    $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
-                    
+                $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
+                
 
-                        $join->on('shop.id', '=', 'shop_select_condition.shop_id');
-                        foreach($arrSearchCondition as $condition_column => $conditionArrValue){
+                    $join->on('shop.id', '=', 'shop_select_condition.shop_id');
+                    
+                    foreach($arrSearchCondition as $condition_column => $conditionArrValue){                             
+                         if($conditionArrValue){
                              $join->whereIn($condition_column, $conditionArrValue);
                         }
-                    });
+                    }
+
+                });
                 
                 $query->groupBy('province_id');
                 $markerHasShop = $query->get();
@@ -109,12 +128,24 @@ class HomeController
             $view = 'district';
             $districtList = District::where('province_id', $province_id)->get();            
             //district marker
-            $markerHasShop = Shop::where('status', 1)
+            $query = Shop::where('status', 1)
                                 ->where('province_id', $province_id)
                                 ->whereIn('shop.user_id', $tmpUser['userId'])
                                 ->where('company_id', $company_id)
-                                ->whereIn('shop.type_id', $typeArr)                              
-                                ->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`id`) as total'))
+                                ->whereIn('shop.type_id', $typeArr);
+                                $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
+                
+
+                        $join->on('shop.id', '=', 'shop_select_condition.shop_id');
+                        
+                        foreach($arrSearchCondition as $condition_column => $conditionArrValue){                             
+                             if($conditionArrValue){
+                                 $join->whereIn($condition_column, $conditionArrValue);
+                            }
+                        }
+
+                    });                              
+                       $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`shop`.`id`) as total'))
                                 ->groupBy('district_id')
                                 ->get();
             
@@ -130,13 +161,26 @@ class HomeController
             $view = 'ward';
             $districtList = District::where('province_id', $province_id)->get();            
             $wardList = Ward::where('district_id', $district_id)->get();            
-            $markerHasShop = Shop::where('status', 1)
+            $query = Shop::where('status', 1)
                         ->where('district_id', $district_id)
                         ->whereIn('shop.user_id', $tmpUser['userId'])
                         ->where('company_id', $company_id)
-                        ->whereIn('shop.type_id', $typeArr)
+                        ->whereIn('shop.type_id', $typeArr);
+                         $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
+                
+
+                        $join->on('shop.id', '=', 'shop_select_condition.shop_id');
+                        
+                        foreach($arrSearchCondition as $condition_column => $conditionArrValue){                             
+                             if($conditionArrValue){
+                                 $join->whereIn($condition_column, $conditionArrValue);
+                            }
+                        }
+
+                    });   
+
                         //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
-                        ->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`id`) as total'))
+                     $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`shop`.`id`) as total'))
                         ->groupBy('ward_id')
                         ->get();            
             foreach($markerHasShop as $marker){
@@ -165,8 +209,20 @@ class HomeController
             $query->where('shop.ward_id', $ward_id);
 
             $query->whereIn('shop.type_id', $typeArr);
-            
-            $query->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id');
+
+            $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
+                
+
+                    $join->on('shop.id', '=', 'shop_select_condition.shop_id');
+                    
+                    foreach($arrSearchCondition as $condition_column => $conditionArrValue){                             
+                         if($conditionArrValue){
+                             $join->whereIn($condition_column, $conditionArrValue);
+                        }
+                    }
+
+                });           
+          
             $query->join('shop_type', 'shop_type.id' , '=', 'shop.type_id');
             $query->select('shop.*', 'icon_url', 'shop_select_condition.*');
             $markerArr = $query->get()->toArray();
@@ -199,6 +255,9 @@ class HomeController
         
        
         $companyList = Company::all();
+
+        $show_label = $request->show_label;
+       
         return view('layouts.master', [
             'shopType' => $shopType,
             'listProvince' => $listProvince,            
@@ -217,7 +276,8 @@ class HomeController
             'districtList' => $districtList,
             'wardList' => $wardList,
             'typeArrDefault' => $typeArrDefault,
-            'arrSearch' => $arrSearchCondition
+            'arrSearch' => $arrSearchCondition,
+            'show_label' => $show_label
         ]);
 
     }
