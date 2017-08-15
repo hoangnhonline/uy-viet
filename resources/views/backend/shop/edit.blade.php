@@ -17,6 +17,7 @@
       <a class="btn btn-default btn-sm" href="{{ route('shop.index') }}" style="margin-bottom:5px">Quay lại</a>
       <form role="form" method="POST" action="{{ route('shop.update') }}" id="formData">
          <input type="hidden" name="id" value="{{ $detail->id }}">
+         <input type="hidden" name="update_maps" value="0">
          <div class="row">
             <!-- left column -->
             <div class="col-md-6">

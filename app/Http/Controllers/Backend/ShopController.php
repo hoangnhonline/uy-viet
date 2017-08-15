@@ -274,6 +274,33 @@ class ShopController extends Controller
         }
         return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder'));
     }
+    public function editMaps($id)
+    {       
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;    
+        
+
+        $detail = Shop::find($id);
+
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, $detail->company_id);
+        // not admin
+        $query =  Shop::where('shop.status', 1);
+        
+        $query->whereIn('user_id', $tmpUser['userId']);        
+    
+        $query->where('shop.company_id', $detail->company_id);        
+    
+        $query->where('shop.province_id', $detail->province_id);
+    
+        $query->where('shop.district_id', $detail->district_id);            
+        
+        $query->where('shop.ward_id', $detail->ward_id);
+        $query->where('shop.id', '<>', $id);
+        $query->join('shop_type', 'shop_type.id' , '=', 'shop.type_id');
+            $query->select('shop.*', 'icon_url');
+        $markerArr = $query->get()->toArray();
+        return view('backend.shop.edit-maps', compact( 'detail', 'markerArr'));
+    }
 
     /**
     * Update the specified resource in storage.
@@ -285,41 +312,46 @@ class ShopController extends Controller
     public function update(Request $request)
     {
         $dataArr = $request->all(); 
-        
-        $this->validate($request,[            
-            'type_id' => 'required',            
-            'province_id' => 'required',
-            'district_id' => 'required',            
-            'ward_id' => 'required',     
-            'shop_name' => 'required'                        
-        ],
-        [            
-            'type_id.required' => 'Bạn chưa chọn loại shop',
-            'province_id.required' => 'Bạn chưa chọn tỉnh/thành',
-            'district_id.required' => 'Bạn chưa chọn Quận/Huyện',
-            'ward_id.required' => 'Bạn chưa chọn phường/xã',
-            'shop_name.required' => 'Bạn chưa nhập tên shop'           
-        ]);
+        if($dataArr['update_maps'] == 0){
+            $this->validate($request,[            
+                'type_id' => 'required',            
+                'province_id' => 'required',
+                'district_id' => 'required',            
+                'ward_id' => 'required',     
+                'shop_name' => 'required'                        
+            ],
+            [            
+                'type_id.required' => 'Bạn chưa chọn loại shop',
+                'province_id.required' => 'Bạn chưa chọn tỉnh/thành',
+                'district_id.required' => 'Bạn chưa chọn Quận/Huyện',
+                'ward_id.required' => 'Bạn chưa chọn phường/xã',
+                'shop_name.required' => 'Bạn chưa nhập tên shop'           
+            ]);
 
-        if(!empty($dataArr['cond'])){
-            $model = ShopSelectCondition::where('shop_id', $dataArr['id'])->first();
-            foreach ($dataArr['cond'] as $column => $value) {
-                
-                $model->$column = $value;
+            if(!empty($dataArr['cond'])){
+                $model = ShopSelectCondition::where('shop_id', $dataArr['id'])->first();
+                foreach ($dataArr['cond'] as $column => $value) {
+                    
+                    $model->$column = $value;
 
+                }
+                $model->save();
             }
-            $model->save();
         }
         $model = Shop::find($dataArr['id']);
         $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
         $model->update($dataArr);
-
+        
         Session::flash('message', 'Cập nhật shop thành công');
         if(isset($dataArr['curr_url'])){
             return redirect(urldecode($dataArr['curr_url']));
         }
-        return redirect()->route('shop.edit', $dataArr['id']);
-    }
+        if($dataArr['update_maps'] == 0){
+            return redirect()->route('shop.edit', $dataArr['id']);
+        }else{
+            return redirect()->route('shop.edit-maps', $dataArr['id']);
+        }
+    }    
 
     /**
     * Remove the specified resource from storage.

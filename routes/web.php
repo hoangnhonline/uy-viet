@@ -24,6 +24,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('/create', ['as' => 'shop.create', 'uses' => 'ShopController@create']);
         Route::post('/store', ['as' => 'shop.store', 'uses' => 'ShopController@store']);
         Route::get('{id}/edit',   ['as' => 'shop.edit', 'uses' => 'ShopController@edit']);
+        Route::get('{id}/edit-maps',   ['as' => 'shop.edit-maps', 'uses' => 'ShopController@editMaps']);
         Route::post('/update', ['as' => 'shop.update', 'uses' => 'ShopController@update']);
         Route::get('{id}/destroy', ['as' => 'shop.destroy', 'uses' => 'ShopController@destroy']);
     });
