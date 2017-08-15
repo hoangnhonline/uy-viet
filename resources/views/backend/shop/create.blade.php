@@ -90,11 +90,7 @@
                      <div class="form-group col-md-6">
                         <label>Đường phố </label>
                         <input type="text" class="form-control" name="street" id="street"  value="{{ old('street') }}">
-                     </div>
-                     <div class="form-group col-md-12">
-                        <label>Địa chỉ đầy đủ </label>
-                        <input type="text" class="form-control" name="full_address" id="full_address" value="{{ old('full_address') }}">
-                     </div>
+                     </div>                     
                      <div class="form-group col-md-6">
                         <label>Người liên hệ </label>
                         <input type="text" class="form-control" name="namer" id="namer"  value="{{ old('namer') }}">

@@ -181,6 +181,12 @@ class ShopController extends Controller
         $dataArr['user_id'] = Auth::user()->id;
         $dataArr['add_time'] = date('Y-m-d H:i:s', time());
         $dataArr['condition_id'] = 0;
+        $wardDetail = Ward::find($dataArr['ward_id']);
+        $districtDetail = District::find($dataArr['district_id']);
+        $provinceDetail = Province::find($dataArr['province_id']);
+        $dataArr['full_address'] = $dataArr['address']. ", ". $dataArr['street']. ", ". $wardDetail->name. ", ". $districtDetail->name. ", ". $provinceDetail->name ;
+
+        $dataArr['full_address'] = 
         $rs = Shop::create($dataArr);
         $id = $rs->id;
         
@@ -244,7 +250,7 @@ class ShopController extends Controller
         $detail = Shop::where('shop.id', $id)
                 ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
                 ->first();
-                ;
+                ;                
 
         if(!in_array($detail->user_id, $user_id_list) && $loginType > 1){ // ko co quyen truy cap
             return redirect()->route('shop.index');
@@ -338,6 +344,11 @@ class ShopController extends Controller
                 $model->save();
             }
         }
+        $wardDetail = Ward::find($dataArr['ward_id']);
+        $districtDetail = District::find($dataArr['district_id']);
+        $provinceDetail = Province::find($dataArr['province_id']);
+        $dataArr['full_address'] = $dataArr['address']. ", ". $dataArr['street']. ", ". $wardDetail->name. ", ". $districtDetail->name. ", ". $provinceDetail->name ;
+
         $model = Shop::find($dataArr['id']);
         $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
         $model->update($dataArr);

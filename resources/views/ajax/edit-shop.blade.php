@@ -56,6 +56,7 @@
                            @endforeach
                         </select>
                      </div>
+                     <input type="hidden" name="update_maps" value="0">
                      <div class="form-group col-md-4">
                         <label> Phường/Xã <span class="red-star">*</span></label>
                         <select class="form-control" name="ward_id" id="ward_id">
@@ -77,9 +78,10 @@
                         <label>Đường phố </label>
                         <input type="text" class="form-control" name="street" id="street"  value="{{ old('street', $detail->street) }}">
                      </div>
-                     <div class="form-group col-md-12">
+                     <div class="form-group col-md-12">                        
                         <label>Địa chỉ đầy đủ </label>
-                        <input type="text" class="form-control" name="full_address" id="full_address" value="{{ old('full_address', $detail->full_address) }}">
+                        <?php $full_address = $detail->address. ", ". $detail->street. ", ". $detail->ward->name. ", ". $detail->district->name. ", ". $detail->province->name ; ?>
+                        <input type="text" class="form-control" name="full_address" id="full_address" value="{{ $full_address }}" readonly="readonly">
                      </div>
                      <div class="form-group col-md-6">
                         <label>Người liên hệ </label>
