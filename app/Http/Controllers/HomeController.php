@@ -464,7 +464,7 @@ class HomeController
         $id = $request->id;
 
         $firstImage =  config('app.url').'/assets/images/no-image.png';
-
+        $have_image = 0;
         $tmp = Image::where('shop_id', $id)->first();
         if($tmp){
             $folder = $tmp->url;
@@ -477,11 +477,18 @@ class HomeController
                     $i++;
                     if($i == 1){
                         $firstImage = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);
+                        $have_image = 1;
                     }                    
                 }
             }
         }
-        return $firstImage;
+        $conditionList = SelectCondition::orderBy('col_order')->get();
+        $detail = Shop::where('shop.id', $id)
+                ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
+                ->first();
+                ;
+
+        return view('ajax.show-detail', compact('firstImage', 'detail', 'have_image', 'conditionList'));
     }
     public function gallery(Request $request){
         $arr = [];

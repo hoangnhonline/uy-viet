@@ -6,9 +6,8 @@ var tempIW = '';
 var current_shopId, latLong;
 // lấy thông tin khi click vào marker
 function getContent(data) {
-    data = JSON.parse(data);
-    console.log(data);
-    var img_url = '';
+    data = JSON.parse(data);    
+    var html = '';
     $.ajax({
         url : $('#route_get_image_thumbnail').val(),
         type : 'GET',
@@ -17,25 +16,10 @@ function getContent(data) {
         },
         async: false,
         success : function (response){
-            img_url = response;
+            html = response;
         }
     });
-    var html =  '<div class="info-box-wrap" style="padding-top:10px">     ' +
-        '       <div class="col-sm-4" style="padding:0px;position:relative">      ' +
-        '           <img src="' + img_url + '" class="img-responsive" style="width:100%" />        ';
-        if(img_url != $('#default_image').val() ){
-               html+='<a class="btn btn-info btn-sm view-more" data-id="'+ data.id + '" style="padding: 4px 10px; margin-top:2px;position:absolute;bottom:0;width:100%" data="' + data.shop_id + '">More</a>';
-        }
-        html +='</div>    ' +
-        '       <div class="info-box-text-wrap col-sm-8">           ' +
-        '           <h6 class="address" style="font-size:17px;color:#0e609e;margin-bottom:10px">' + data.shop_name + '</h6>         ' +
-        '               <div class="action-btns" style="line-height:25px;">           ' +
-        '                   <i class="fa fa-volume-control-phone"></i>  ' +
-        '                   <strong>  ' + data.namer + ": " + data.phone + '</strong> <br><i class="fa fa-user"></i>  <strong>' + data.fullname + '</strong>                   ' +
-        '                   <br><i class="fa fa-map-marker"></i>  ' +
-        '                   <strong>' + data.full_address + '</strong><br></div>' +
-                            (edit_link != "" ? '<div class="row">' +
-                            '<a data-toggle="modal" data-target="#modal-edit" class="pull-right edit-shop" data-id="'+ data.id + '"><i class="fa fa-pencil-square-o"></i></a></div>' : '') + '</div>    </div>';
+   
     return html;
 }   
 $(document).on('click', '.view-more', function(){
