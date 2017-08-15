@@ -34,6 +34,7 @@ class HomeController
         $province_id = $request->province_id ? $request->province_id : null;
         $district_id = $request->district_id ? $request->district_id : null;        
         $ward_id = $request->ward_id ? $request->ward_id : null;       
+        $keyword = $request->name ? $request->name : null;
 
         // get typeArr 
         $tmpST = ShopType::where('status', 1)->select('id')->get();
@@ -76,6 +77,9 @@ class HomeController
                                 ->where('shop.company_id', $company_id)
                                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
                                 ->whereIn('shop.type_id', $typeArr);
+                                if($keyword){
+                                    $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
+                                }
                     $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
                 
 
@@ -99,7 +103,9 @@ class HomeController
                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
                 ->select(DB::raw('MAX(`location`) as location'), 'shop.province_id', DB::raw('COUNT(`shop`.`id`) as total'))
                 ->whereIn('shop.type_id', $typeArr);
-                
+                if($keyword){
+                        $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
+                    }
                 $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
                 
 
@@ -134,6 +140,9 @@ class HomeController
                                 ->whereIn('shop.user_id', $tmpUser['userId'])
                                 ->where('company_id', $company_id)
                                 ->whereIn('shop.type_id', $typeArr);
+                                if($keyword){
+                                    $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
+                                }
                                 $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
                 
 
@@ -167,6 +176,9 @@ class HomeController
                         ->whereIn('shop.user_id', $tmpUser['userId'])
                         ->where('company_id', $company_id)
                         ->whereIn('shop.type_id', $typeArr);
+                        if($keyword){
+                                    $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
+                                }
                          $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
                 
 
@@ -210,7 +222,9 @@ class HomeController
             $query->where('shop.ward_id', $ward_id);
 
             $query->whereIn('shop.type_id', $typeArr);
-
+            if($keyword){
+                                    $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
+                                }
             $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
                 
 
@@ -280,7 +294,8 @@ class HomeController
             'typeArrDefault' => $typeArrDefault,
             'arrSearch' => $arrSearchCondition,
             'show_label' => $show_label,
-            'total' => $total
+            'total' => $total,
+            'keyword' => $keyword
         ]);
 
     }
