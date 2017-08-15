@@ -343,11 +343,12 @@ class ShopController extends Controller
                 }
                 $model->save();
             }
+            $wardDetail = Ward::find($dataArr['ward_id']);
+            $districtDetail = District::find($dataArr['district_id']);
+            $provinceDetail = Province::find($dataArr['province_id']);
+            $dataArr['full_address'] = $dataArr['address']. ", ". $dataArr['street']. ", ". $wardDetail->name. ", ". $districtDetail->name. ", ". $provinceDetail->name ;
+
         }
-        $wardDetail = Ward::find($dataArr['ward_id']);
-        $districtDetail = District::find($dataArr['district_id']);
-        $provinceDetail = Province::find($dataArr['province_id']);
-        $dataArr['full_address'] = $dataArr['address']. ", ". $dataArr['street']. ", ". $wardDetail->name. ", ". $districtDetail->name. ", ". $provinceDetail->name ;
 
         $model = Shop::find($dataArr['id']);
         $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
