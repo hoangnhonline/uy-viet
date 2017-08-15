@@ -181,7 +181,7 @@
    function initAutocomplete() {
      var map = new google.maps.Map(document.getElementById('map-abc'), {
        center: {lat: {{ $latt }}, lng: {{ $longt }} },
-       zoom: 14,
+       zoom: 19,
        mapTypeId: 'roadmap'
      });
     @if(!empty($markerArr))
