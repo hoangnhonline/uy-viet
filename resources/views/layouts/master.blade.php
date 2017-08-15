@@ -51,12 +51,15 @@
 	<div class="wrapper">
 		<form action="{{ url()->current() }}"  method="GET" id="searchForm">
 		<header class="main-header">
-			<a href="{{ route('home') }}" class="logo">
-                <!-- mini logo -->
-                <span class="logo-mini"><b>U</b>V</span>
-                <!-- logo -->
-                <span class="logo-lg"> <center><img src="{{ URL::asset('assets/images/logo.png') }}" width="100px"></center></span>
-            </a><!-- /.logo -->
+			<div class="user-panel-top">
+				<div class="pull-left image">
+					<img src="{{ URL::asset('assets/images/logo_small.png') }}" class="" alt="{{ Auth::user()->fullname }}">
+				</div>
+				<div class="info">
+					<p>Hi , {{ Auth::user()->fullname }}</p>
+					<a href="{{ route('logout') }}" title="Logout" style="color:red"><i class="fa fa-circle text-danger"></i> Logout</a>
+				</div>
+			</div><!-- /.user-panel -->			
             <div id="search_icon">
             	<button type="button" class="btn btn-primary"><span class="fa fa-search"></span></button>
             </div><!-- /#search -->
@@ -129,16 +132,7 @@
 		</header><!-- /header -->
 
 		<aside class="main-sidebar">
-			<section class="sidebar">
-				<div class="user-panel">
-					<div class="pull-left image">
-						<img src="{{ URL::asset('assets/images/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
-					</div>
-					<div class="pull-left info">
-						<p>Hi , {{ Auth::user()->fullname }}</p>
-						<a href="{{ route('logout') }}" title="Logout" style="color:red"><i class="fa fa-circle text-danger"></i> Logout</a>
-					</div>
-				</div><!-- /.user-panel -->
+			<section class="sidebar">			
 				
 				<ul class="sidebar-menu" data-widget="tree">				
 					<li class="active treeview menu-open">
