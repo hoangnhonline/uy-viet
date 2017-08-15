@@ -25,6 +25,7 @@ class HomeController
             return redirect()->route('login-form');
         }
         //dd($request->all());
+        $total = 0;
         $settingArr = $provinceArr = [];
         $districtList = $wardList = District::where('province_id', 9999)->get();
         $loginType = Auth::user()->type;
@@ -226,6 +227,7 @@ class HomeController
             $query->join('shop_type', 'shop_type.id' , '=', 'shop.type_id');
             $query->select('shop.*', 'icon_url', 'shop_select_condition.*');
             $markerArr = $query->get()->toArray();
+            $total = count($markerArr);
         }       
    
         $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
@@ -277,7 +279,8 @@ class HomeController
             'wardList' => $wardList,
             'typeArrDefault' => $typeArrDefault,
             'arrSearch' => $arrSearchCondition,
-            'show_label' => $show_label
+            'show_label' => $show_label,
+            'total' => $total
         ]);
 
     }

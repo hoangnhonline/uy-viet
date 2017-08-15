@@ -340,7 +340,7 @@
 		    }
 		    @if($view != 'detail')
 		    @foreach($markerArr as $id => $marker)
-
+		    	<?php $total+= $marker["total"];?>
 				marker = new google.maps.Marker({
 	                    position: new google.maps.LatLng({{ $marker['location'][0] }}, {{ $marker['location'][1] }}),
 	                    map: map,
@@ -433,5 +433,19 @@
 	</script>
 	@include('partials.modal-edit-gallery')
 	<input type="hidden" id="current_url" value="{{ urlencode(url()->full()) }}">
+	<div class="notFound" id="div_result" style="display:none">
+		<p>
+			<i class="fa fa-exclamation-circle"></i>
+			<span id="txt_result"></span>
+		</p>
+	</div>
+	<script type="text/javascript">
+		<?php $total = isset($total) ? $total : 0 ; ?>
+		$(document).ready(function(){
+			$('#txt_result').html( '{{ $total }} &nbsp; kết quả' );
+	        $('#div_result').show();
+	        setTimeout(function(){ $('#div_result').hide() }, 4000);
+		});
+	</script>
 </body>
 </html>
