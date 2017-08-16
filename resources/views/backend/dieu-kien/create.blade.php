@@ -49,6 +49,13 @@
                   <label>Tên hiển thị <span class="red-star">*</span></label>
                   <input type="text" class="form-control"  max-length="20" name="display_name"  id="display_name" value="{{ old('display_name') }}">
                 </div>
+                 <div class="form-group">
+                  <label>Ẩn/hiện</label>
+                  <select class="form-control" name="status" id="status">                  
+                    <option value="0" {{ old('status') == 0 ? "selected" : "" }}>Ẩn</option>
+                    <option value="1" {{ old('status') == 1 || old('status') == NULL ? "selected" : "" }}>Hiện</option>                  
+                  </select>
+                </div>
             </div>                        
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>

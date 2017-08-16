@@ -96,7 +96,7 @@
 	    position: absolute;
 	}
 	.main-sidebar, .left-side {
-	    padding-top: 100px;
+	    padding-top: 50px;
 	}
 	.main-sidebar, .left-side {
 	    -webkit-transform: translate(-230px, 0);
@@ -158,5 +158,20 @@
 		float: right;
 		margin-top: 10px;
 		margin-right: 10px;
+	}
+	.main-header .logo {
+		display: block;
+	}
+	.user-panel-top {
+		display: none;
+	}
+	.logo .logo-lg img {
+		max-width: 45px;
+	}
+	.user-panel-logo {
+		display: none;
+	}
+	.user-panel-user {
+		display: block;
 	}
 }

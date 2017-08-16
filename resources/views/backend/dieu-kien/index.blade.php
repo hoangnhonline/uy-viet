@@ -42,6 +42,7 @@
               <th style="width: 1%;white-space:nowrap">Thứ tự</th>               
               <th style="white-space:nowrap">Tên hiển thị</th>
               <th>Table</th>
+              <th>Status</th>
               <th width="1%" style="white-space:nowrap">Thao tác</th>
             </tr>
             <tbody>
@@ -59,7 +60,8 @@
                 </td>
                 <td>                  
                   <a href="{{ route( 'dieu-kien.edit', [ 'id' => $item->id ]) }}">{{ $item->name }}</a>
-                </td>                                 
+                </td>      
+                <td>{{ $item->status == 1 ? "Hiện"  : "Ẩn" }}</td>                           
                 <td style="white-space:nowrap">
                   <a href="{{ route( 'dieu-kien.edit', [ 'id' => $item->id ]) }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                                  
                   

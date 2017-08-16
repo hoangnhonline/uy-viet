@@ -26,7 +26,8 @@ class SelectCondition extends Model  {
     protected $fillable = [
                             'name', 
                             'display_name',
-                            'col_order'                           
+                            'col_order',
+                            'status'                          
                             ];
    
 }

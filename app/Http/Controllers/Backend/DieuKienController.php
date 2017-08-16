@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\SelectCondition;
-use Helper, File, Session, Auth, Schema;
+use Helper, File, Session, Auth, Schema, DB;
 
 class DieuKienController extends Controller
 {
@@ -67,6 +67,8 @@ class DieuKienController extends Controller
         Schema::table('shop_select_condition', function($table) use ($col) {
             $table->tinyInteger($col)->nullable();                 
         });
+        DB::table('shop_select_condition')->whereRaw('1')->update([$col => 1]);
+       
         SelectCondition::create($dataArr);   
 
         Session::flash('message', 'Tạo mới Điều kiện thành công');

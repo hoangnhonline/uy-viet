@@ -53,13 +53,13 @@
 		<header class="main-header">
 			<div class="user-panel-top">
 				<div class="pull-left image">
-					<img src="{{ URL::asset('assets/images/logo_small.png') }}" class="" alt="{{ Auth::user()->fullname }}">
+					<a href="{{ route('home') }}"><img src="{{ URL::asset('assets/images/logo_small.png') }}" class="" alt="{{ Auth::user()->fullname }}"></a>
 				</div>
 				<div class="info">
 					<p>Hi , {{ Auth::user()->fullname }}</p>
 					<a href="{{ route('logout') }}" title="Logout" style="color:red"><i class="fa fa-circle text-danger"></i> Logout</a>
 				</div>
-			</div><!-- /.user-panel -->			
+			</div><!-- /.user-panel -->					
             <div id="search_icon">
             	<button type="button" class="btn btn-primary"><span class="fa fa-search"></span></button>
             </div><!-- /#search -->
@@ -87,7 +87,8 @@
                             <div class="form-group col-sm-3 list-drop-down">                            
                                 <label class="col-sm-2 control-label" for="">Tỉnh / Thành Phố</label>
                                 <div class="col-sm-10">
-								<select id="province" name="province_id" class="selectpicker custom-select form-control"  title="Chọn tỉnh/thành" data-live-search="true" onchange="getListDistrict()">
+								<select id="province" name="province_id" class="selectpicker custom-select form-control"  title="Chọn tỉnh/thành" data-live-search="true">
+									<option value='0'>Tất cả</option>
 									 @foreach($listProvince as $province)
 				                    <option value="{{$province->id}}" {{ (isset($province_id) && $province_id == $province->id)  ? "selected"  : "" }}>{{$province->name}}</option>
 				                    @endforeach
@@ -95,9 +96,9 @@
 							</div>
                             </div>
                             <div class="form-group col-sm-3 list-drop-down">
-                                <label class="col-sm-2 control-label" for="">Quận / Huyện</label>
+                                <label class="col-sm-2 control-label" for="district">Quận / Huyện</label>
                                 <div class="col-sm-10">
-                                    <select id='district' name='district_id' class="selectpicker custom-select form-control" data-live-search="true" title="Chọn quận/huyện" onchange="getListWard()">      
+                                    <select id='district' name='district_id' class="selectpicker custom-select form-control" data-live-search="true" title="Chọn quận/huyện">      
                                     <option value='0'>Tất cả</option>                                 
                                     @foreach($districtList as $district)
 				                    <option value="{{$district->id}}" {{ (isset($district_id) && $district_id == $district->id)  ? "selected"  : "" }}>{{$district->name}}</option>
@@ -132,8 +133,16 @@
 		</header><!-- /header -->
 
 		<aside class="main-sidebar">
-			<section class="sidebar">			
-				
+			<section class="sidebar">
+			 	<div class="user-panel user-panel-user">
+					<div class="pull-left image">
+						<a href="{{ route('home') }}"><img src="{{ URL::asset('assets/images/logo_small.png') }}" class="img-circle" alt="User Image"></a>
+					</div>
+					<div class="pull-left info">
+						<p>Hi , {{ Auth::user()->fullname }}</p>
+						<a href="{{ route('logout') }}" title="Logout" style="color:red"><i class="fa fa-circle text-danger"></i> Logout</a>
+					</div>
+				</div><!-- /.user-panel -->
 				<ul class="sidebar-menu" data-widget="tree">				
 					<li class="active treeview menu-open">
 						<a href="javascript:void(0)" title="">
@@ -371,7 +380,7 @@
                         title: '{{ $marker['shop_name'] }}',
                         data: data,
                         icon: {
-                            url: '{{ $marker['icon_url'] }}',
+                            url: '{{ Helper::showImage($marker['icon_url']) }}',
                             size: new google.maps.Size(50, 50)
                         },
                         label: {text: '{{ $marker['shop_name'] }}', color: "red", labelClass : 'labels-marker'}
@@ -385,7 +394,7 @@
                         title: '{{ $marker['shop_name'] }}',
                         data: data,
                         icon: {
-                            url: '{{ $marker['icon_url'] }}',
+                            url: '{{ Helper::showImage($marker['icon_url']) }}',
                             size: new google.maps.Size(50, 50)
                         }
 

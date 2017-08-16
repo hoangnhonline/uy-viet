@@ -52,7 +52,14 @@
              <div class="form-group">
                 <label>Tên hiển thị <span class="red-star">*</span></label>
                 <input type="text" class="form-control"  max-length="10" name="display_name"  id="display_name" value="{{ $detail->display_name }}" maxlength="20">
-              </div>             
+              </div>      
+              <div class="form-group">
+                  <label>Ẩn/hiện</label>
+                  <select class="form-control" name="status" id="status">                  
+                    <option value="0" {{ $detail->status == 0 ? "selected" : "" }}>Ẩn</option>
+                    <option value="1" {{ $detail->status == 1 ? "selected" : "" }}>Hiện</option>                  
+                  </select>
+                </div>       
             </div>                    
             <div class="box-footer">
               <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
