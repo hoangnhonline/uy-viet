@@ -69,9 +69,15 @@ class ShopController extends Controller
 
         $wardList = (object) [];
         if( $userIdSelected ){
+            if($loginType == 1){
+                $userIdSelected[] = $loginId;
+            }
             $query->whereIn('shop.user_id', $userIdSelected);
         }else{
             $userIdSelected = $tmpUser['userId'];
+            if($loginType == 1){
+                $userIdSelected[] = $loginId;
+            }          
             $query->whereIn('shop.user_id', $userIdSelected);
         }
         if( $type_id ){
@@ -97,15 +103,15 @@ class ShopController extends Controller
             $query->where('shop.shop_name', 'LIKE', '%'.$shop_name.'%');            
         }
         
-        $query->orderBy('shop.id', 'descs');   
+        $query->orderBy('shop.id', 'desc');   
         $items = $query->paginate(100);
         $shopTypeList = ShopType::all();
         if($loginType == 1){
-            $provinceList = Province::all();
+            $provinceList = Province::orderBy('name')->get();
         }else{
-            $provinceList = Province::whereRaw('province.id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();            
+            $provinceList = Province::whereRaw('province.id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();            
         }
-        $districtList = District::where('province_id', $province_id)->get();        
+        $districtList = District::where('province_id', $province_id)->orderBy('name')->get();        
         
         $userListLevel = $tmpUser['userList'];
 
@@ -133,9 +139,9 @@ class ShopController extends Controller
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
         if($loginType > 1){
-            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();
         }else{
-            $provinceList = Province::all();        
+            $provinceList = Province::orderBy('name')->get();        
         }      
         
         $shopTypeList = ShopType::where('status', 1)->get();
@@ -236,9 +242,9 @@ class ShopController extends Controller
         $user_id_list = Account::getUserIdChild($loginId, $loginType, Auth::user()->company_id);
 
         if($loginType > 1){
-            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();
         }else{
-            $provinceList = Province::all();        
+            $provinceList = Province::orderBy('name')->get();        
         }      
         
         $shopTypeList = ShopType::where('status', 1)->get();
@@ -258,11 +264,11 @@ class ShopController extends Controller
         $districtList = (object)[];
         
         if($detail->province_id){
-            $districtList = District::where('province_id', $detail->province_id)->get();
+            $districtList = District::where('province_id', $detail->province_id)->orderBy('name')->get();
         }
         $wardList = (object)[];
         if($detail->district_id){
-            $wardList = Ward::where('district_id', $detail->district_id)->get();
+            $wardList = Ward::where('district_id', $detail->district_id)->orderBy('name')->get();
         }
         $hinhArr = [];
         $tmp = Image::where('shop_id', $id)->first();
@@ -283,8 +289,7 @@ class ShopController extends Controller
     public function editMaps($id)
     {       
         $loginType = Auth::user()->type;
-        $loginId = Auth::user()->id;    
-        
+        $loginId = Auth::user()->id;
 
         $detail = Shop::find($id);
 

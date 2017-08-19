@@ -305,9 +305,9 @@ class HomeController
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
         if($loginType > 1){
-            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();
         }else{
-            $provinceList = Province::all();        
+            $provinceList = Province::orderBy('name')->get();        
         }      
         
         $shopTypeList = ShopType::where('status', 1)->get();
@@ -324,11 +324,11 @@ class HomeController
         $districtList = (object)[];
         
         if($detail->province_id){
-            $districtList = District::where('province_id', $detail->province_id)->get();
+            $districtList = District::where('province_id', $detail->province_id)->orderBy('name')->get();
         }
         $wardList = (object)[];
         if($detail->district_id){
-            $wardList = Ward::where('district_id', $detail->district_id)->get();
+            $wardList = Ward::where('district_id', $detail->district_id)->orderBy('name')->get();
         }
         $hinhArr = [];
         $tmp = Image::where('shop_id', $id)->first();

@@ -17,20 +17,24 @@
                            @endforeach
                         </ul>
                      </div>
-                     @endif            
+                     @endif   
+                     @if($loginType == 1)         
                      <div class="form-group col-md-6">
                         <label>Company <span class="red-star">*</span></label>
-                        <select class="form-control" name="company_id" id="company_id">
+                        <select class="form-control req" name="company_id" id="company_id">
                            <option value="" >--Chọn--</option>
                            @foreach($companyList as $com)
                            <option value="{{ $com->id }}" {{ $com->id == $detail->company_id ? "selected" : "" }}>{{ $com->company_name }}</option>
                            @endforeach
                         </select>
                      </div>
+                     @else
+                     <input type="hidden" name="company_id" value="{{ $detail->company_id}}" />
+                     @endif
                      <!-- text input -->
                      <div class="form-group col-md-6">
                         <label>Loại shop <span class="red-star">*</span></label>
-                        <select class="form-control" name=" type_id" id=" type_id">
+                        <select class="form-control req" name=" type_id" id=" type_id">
                            <option value="" >--Chọn--</option>
                            @foreach($shopTypeList as $com)
                            <option value="{{ $com->id }}" {{ $com->id == $detail->type_id ? "selected" : "" }}>{{ $com->type }}</option>
@@ -40,7 +44,7 @@
                      <!-- text input -->
                      <div class="form-group col-md-4">
                         <label> Tỉnh/Thành <span class="red-star">*</span></label>
-                        <select class="form-control" name="province_id" id="province_id">
+                        <select class="form-control req" name="province_id" id="province_id">
                            <option value="" >--Chọn--</option>
                            @foreach($provinceList as $province)
                            <option value="{{$province->id}}" {{ $province->id == $detail->province_id ? "selected" : "" }}>{{$province->name}}</option>
@@ -49,7 +53,7 @@
                      </div>
                      <div class="form-group col-md-4">
                         <label> Quận/Huyện <span class="red-star">*</span></label>
-                        <select class="form-control" name="district_id" id="district_id">
+                        <select class="form-control req" name="district_id" id="district_id">
                            <option value="" >--Chọn--</option>
                            @foreach($districtList as $district)
                            <option value="{{$district->id}}" {{ $district->id == $detail->district_id ? "selected" : "" }}>{{$district->name}}</option>
@@ -59,7 +63,7 @@
                      <input type="hidden" name="update_maps" value="0">
                      <div class="form-group col-md-4">
                         <label> Phường/Xã <span class="red-star">*</span></label>
-                        <select class="form-control" name="ward_id" id="ward_id">
+                        <select class="form-control req" name="ward_id" id="ward_id">
                            <option value="" >--Chọn--</option>
                            @foreach($wardList as $ward)
                            <option value="{{$ward->id}}" {{ $ward->id == $detail->ward_id ? "selected" : "" }}>{{$ward->name}}</option>
@@ -68,15 +72,15 @@
                      </div>
                      <div class="form-group col-md-12">
                         <label>Tên shop <span class="red-star">*</span></label>
-                        <input type="text" class="form-control" name="shop_name" id="shop_name" value="{{ old('shop_name', $detail->shop_name) }}">
+                        <input type="text" class="form-control req" name="shop_name" id="shop_name" value="{{ old('shop_name', $detail->shop_name) }}">
                      </div>
                      <div class="form-group col-md-6">
                         <label>Địa chỉ <span class="red-star">*</span></label>
-                        <input type="text" class="form-control" name="address" id="address" value="{{ old('address', $detail->address) }}">
+                        <input type="text" class="form-control req" name="address" id="address" value="{{ old('address', $detail->address) }}">
                      </div>
                      <div class="form-group col-md-6">
                         <label>Đường phố </label>
-                        <input type="text" class="form-control" name="street" id="street"  value="{{ old('street', $detail->street) }}">
+                        <input type="text" class="form-control req" name="street" id="street"  value="{{ old('street', $detail->street) }}">
                      </div>
                      <div class="form-group col-md-12">                        
                         <label>Địa chỉ đầy đủ </label>
@@ -123,7 +127,7 @@
                   <input type="hidden" name="curr_url" id="current_url_update" value="">
                   <div class="box-footer " style="text-align:right">
                      <div class="col-md-12">                        
-                        <button type="submit" class="btn btn-primary">Lưu</button>
+                        <button type="button" class="btn btn-primary" id="btnEditShop">Lưu</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                      </div>
                   </div>
@@ -142,3 +146,71 @@
    }
 
 </style>
+<script type="text/javascript">
+   $(document).ready(function(){
+      $('#btnEditShop').click(function(){
+         var cntError = 0;
+         $('#formData .req').each(function(){
+            var obj = $(this);
+            if($.trim(obj.val()) == '' || obj.val() == 0){
+               cntError++;
+            }
+         });        
+         if(cntError > 0){
+            alert('Vui lòng nhập đầy đủ thông tin.');
+            return false;
+         }else{
+            $('#formData').submit();
+         }
+      });
+      $('#province_id').change(function(){
+            $('#district_id').empty();
+            $('#ward_id').empty();
+             $.ajax({
+                 method: "get",
+                 url: "{{ route('get-district') }}",
+                 data: {
+                     provinceId : $("select#province_id").val(),
+                 },
+                 success: function (data) {
+                     $('#district_id').append($('<option>', {
+                         value: 0,
+                         text: '--Chọn--',
+   
+                     }));
+                     for (var i = 0; i < data.length; i++) {
+                         $('#district_id').append($('<option>', {
+                             value: data[i].id,
+                             text: data[i].name,
+   
+                         }));
+                     }               
+                 }
+             });
+       });
+       $('#district_id').change(function(){
+            $('#ward_id').empty();
+             $.ajax({
+                 method: "get",
+                 url: "{{ route('get-ward') }}",
+                 data: {
+                     districtId : $("select#district_id").val(),
+                 },
+                 success: function (data) {
+                     $('#ward_id').append($('<option>', {
+                         value: 0,
+                         text: '--Chọn--',
+   
+                     }));
+                     for (var i = 0; i < data.length; i++) {
+                         $('#ward_id').append($('<option>', {
+                             value: data[i].id,
+                             text: data[i].name,
+   
+                         }));
+                     }               
+                 }
+             });
+       });
+   });
+</script>
