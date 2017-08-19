@@ -20,7 +20,7 @@
          <input type="hidden" name="update_maps" value="0">
          <div class="row">
             <!-- left column -->
-            <div class="col-md-6">
+            <div class="col-md-7">
                <!-- general form elements -->
                <div class="box box-primary">
                   <div class="box-header with-border">
@@ -141,7 +141,7 @@
                </div>
                <!-- /.box -->     
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                <div class="box box-primary">
                   <div class="box-header with-border">
                      <h3 class="box-title">Điều kiện</h3>
