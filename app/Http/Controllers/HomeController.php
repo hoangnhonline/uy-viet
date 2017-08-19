@@ -28,7 +28,7 @@ class HomeController
         $total = 0;
         $arrMau = [];
         $is_color = 0;
-        $column_mau = '';
+        $column_mau = $request->column_mau ? $request->column_mau : null;
         $settingArr = $provinceArr = [];
         $districtList = $wardList = District::where('province_id', 9999)->get();
         $loginType = Auth::user()->type;
@@ -212,16 +212,14 @@ class HomeController
             }  
         }elseif($province_id > 0 && $district_id > 0 && $ward_id > 0){
             $view = 'detail';
-            
-            if(isset($arrSearchCondition) && count($arrSearchCondition) == 1){
-                $column_mau = array_keys($arrSearchCondition)[0];
+            if($column_mau){
                 $table_mau = str_replace('_id', '', $column_mau);
                 $mauList = DB::table("shop_".$table_mau)->select('id', 'color')->get();
                 foreach($mauList as $tmpMau){
                     $arrMau[$tmpMau->id] = str_replace("#", "", $tmpMau->color);
                 }          
                 $is_color = 1;  
-            }
+            }            
 
             $districtList = District::where('province_id', $province_id)->orderBy('name')->get();            
             $wardList = Ward::where('district_id', $district_id)->orderBy('name')->get();            

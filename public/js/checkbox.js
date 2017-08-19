@@ -78,10 +78,8 @@ $(function() {
           markers[i].setMap(map);
         }
       }
-    $('.check-list-box li a').on('click', function(event) {
-        if($('#is_search').val() == 1){
-            setMapOnAll(null);
-        }
+    $('.check-list-box li a.is_flt').on('click', function(event) {
+       
         $(this).parent().toggleClass('active');
         var flt = $(this).parent('li').data('filter');
         if($(this).parent('li').hasClass('filter_all')){            
@@ -119,7 +117,7 @@ $(function() {
 
         checkedItems = [], counter = 0;
         $('.checked_value').val('');
-        $(".check-list-box li.active a").each(function(idx, li) {            
+        $(".check-list-box li.active a.is_flt").each(function(idx, li) {            
             var col = $(this).data('col');    
             var val = $(this).attr('value');
             var tmp = $('#' + col).val();
@@ -152,7 +150,7 @@ $(function() {
             }               
         }
 
-        if($(".check-list-box li.active a").length==0){
+        if($(".check-list-box li.active a.is_flt").length==0){
             markerFilter = [];
         }
         
