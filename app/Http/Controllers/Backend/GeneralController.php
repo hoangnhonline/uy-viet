@@ -30,6 +30,17 @@ class GeneralController extends Controller
             }
         }        
     }
+    public function changeValue(Request $request){
+        $value = $request->value;
+        $column = $request->column;
+        $table = $request->table;     
+        $id = $request->id;
+        
+            DB::table($table)->where('id', $id)->update([$column => $value]);       
+        
+        
+        
+    }
     public function delete(Request $request){
         $table = $request->table;
         $id = $request->id;

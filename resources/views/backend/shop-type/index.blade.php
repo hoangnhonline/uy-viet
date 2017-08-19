@@ -61,13 +61,9 @@
                 <td style="text-align:center">
                   <img src="{{ Helper::showImage($item->icon_url) }}" />
                 </td>  
-                <td style="text-align:center">
-                  @if($item->status == 0)
-                  <span class="label label-danger">Ẩn</span>
-                  @else
-                  <span class="label label-success">Hiện</span>
-                  @endif
-                </td>              
+               <td style="text-align:center">
+                  <input type="checkbox" data-id="{{ $item->id }}" data-col="status" data-table="shop_type" class="change-value" value="1" {{ $item->status == 1  ? "checked" : "" }}>
+                </td>             
                 <td style="white-space:nowrap">
                   <a href="{{ route( 'shop-type.edit', [ 'id' => $item->id ]) }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                                  
                   @if($item->shops()->count() == 0)

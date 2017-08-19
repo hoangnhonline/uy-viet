@@ -42,7 +42,7 @@
               <th style="width: 1%;white-space:nowrap">Thứ tự</th>               
               <th style="white-space:nowrap">Tên hiển thị</th>
               <th>Table</th>
-              <th>Status</th>
+              <th class="text-center">HIỆN</th>
               <th width="1%" style="white-space:nowrap">Thao tác</th>
             </tr>
             <tbody>
@@ -61,7 +61,11 @@
                 <td>                  
                   <a href="{{ route( 'dieu-kien.edit', [ 'id' => $item->id ]) }}">{{ $item->name }}</a>
                 </td>      
-                <td>{{ $item->status == 1 ? "Hiện"  : "Ẩn" }}</td>                           
+                
+                <td style="text-align:center">
+                  <input type="checkbox" data-id="{{ $item->id }}" data-col="status" data-table="select_condition" class="change-value" value="1" {{ $item->status == 1  ? "checked" : "" }}>
+                </td>
+                                          
                 <td style="white-space:nowrap">
                   <a href="{{ route( 'dieu-kien.edit', [ 'id' => $item->id ]) }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                                  
                   

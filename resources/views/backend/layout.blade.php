@@ -112,6 +112,26 @@ $(document).ready(function(){
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
   });
+  $('.change-value').change(function(){
+    var obj = $(this);
+    var val = 0;
+    if(obj.prop('checked') == true){
+      var val = 1;
+    }
+    $.ajax({
+      url : "{{ route('change-value') }}",
+      type :'POST',
+      data : {
+        id : obj.data('id'),
+        value : val,
+        column : obj.data('col'),
+        table : obj.data('table')
+      },
+      success : function(data){
+        console.log(data);
+      }
+    });
+  });
 });
 </script>
 <style type="text/css">
