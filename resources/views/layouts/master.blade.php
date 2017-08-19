@@ -377,7 +377,7 @@
 			@endforeach
 			@else
 			<?php $i = 0; ?>
-			@foreach($markerArr as $marker)
+			@foreach($markerArr as $marker)			
 			<?php $i++; ?>
 			var data = '<?php echo json_encode($marker); ?>';
 				var i = {{ $i }};
@@ -391,7 +391,11 @@
                         title: '{{ $marker['shop_name'] }}',
                         data: data,
                         icon: {
+                            @if($is_color == 1)
+                        	url: 'image.php?source={{ Helper::showImage($marker['icon_url']) }}&colour={{ $arrMau[$marker[$column_mau]] }}',
+                        	@else
                             url: '{{ Helper::showImage($marker['icon_url']) }}',
+                            @endif
                             size: new google.maps.Size(50, 50)
                         },
                         label: {text: '{{ $marker['shop_name'] }}', color: "red", labelClass : 'labels-marker'}
@@ -405,7 +409,11 @@
                         title: '{{ $marker['shop_name'] }}',
                         data: data,
                         icon: {
+                        	@if($is_color == 1)
+                        	url: 'image.php?source={{ Helper::showImage($marker['icon_url']) }}&colour={{ $arrMau[$marker[$column_mau]] }}',
+                        	@else
                             url: '{{ Helper::showImage($marker['icon_url']) }}',
+                            @endif
                             size: new google.maps.Size(50, 50)
                         }
 
