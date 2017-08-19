@@ -213,7 +213,7 @@ fieldset label{
                   <td>{{ ($item->user_id) ? $userListId[$item->user_id]->fullname : "" }}</td>
                   <td style="white-space:nowrap; text-align:right">
              
-                    <a href="{{ route( 'shop.edit', [ 'id' => $item->id ]) }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                 
+                    <a href="{{ route( 'shop.edit', [ 'id' => $item->id ]) }}?url_return=<?php echo urlencode(url()->full()); ?>" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>                 
 
                     <a onclick="return callDelete('{{ $item->name }}','{{ route( 'shop.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
 

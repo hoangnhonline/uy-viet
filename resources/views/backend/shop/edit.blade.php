@@ -16,7 +16,7 @@
    <section class="content">
       <a class="btn btn-default btn-sm" href="{{ route('shop.index') }}" style="margin-bottom:5px">Quay lại</a>
       <form role="form" method="POST" action="{{ route('shop.update') }}" id="formData">
-         <input type="hidden" name="id" value="{{ $detail->id }}">
+         <input type="hidden" name="id" id="id" value="{{ $detail->id }}">         
          <input type="hidden" name="update_maps" value="0">
          <div class="row">
             <!-- left column -->
@@ -198,6 +198,7 @@
                </div>
             </div>
          </div>
+         <input type="hidden" name="url_return" value="{{ urlencode(URL::previous()) }}">
          <!--/.col (left) -->      
 </div>
 </form>

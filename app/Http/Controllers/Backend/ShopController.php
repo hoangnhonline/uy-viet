@@ -231,8 +231,7 @@ class ShopController extends Controller
     * @return Response
     */
     public function edit($id)
-    {
-        
+    {       
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
 
@@ -281,6 +280,7 @@ class ShopController extends Controller
                 }
             }
         }
+        
         return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder'));
     }
     public function editMaps($id)
@@ -320,6 +320,7 @@ class ShopController extends Controller
     public function update(Request $request)
     {
         $dataArr = $request->all(); 
+
         if($dataArr['update_maps'] == 0){
             $this->validate($request,[            
                 'type_id' => 'required',            
@@ -351,7 +352,7 @@ class ShopController extends Controller
             $dataArr['full_address'] = $dataArr['address']. ", ". $dataArr['street']. ", ". $wardDetail->name. ", ". $districtDetail->name. ", ". $provinceDetail->name ;
 
         }
-
+        
         $model = Shop::find($dataArr['id']);
         $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
         $model->update($dataArr);
@@ -359,6 +360,9 @@ class ShopController extends Controller
         Session::flash('message', 'Cập nhật shop thành công');
         if(isset($dataArr['curr_url'])){
             return redirect(urldecode($dataArr['curr_url']));
+        }
+        if(isset($dataArr['url_return'])){
+            return redirect(urldecode($dataArr['url_return']));   
         }
         if($dataArr['update_maps'] == 0){
             return redirect()->route('shop.edit', $dataArr['id']);
