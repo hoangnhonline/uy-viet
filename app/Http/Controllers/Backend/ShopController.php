@@ -69,15 +69,15 @@ class ShopController extends Controller
 
         $wardList = (object) [];
         if( $userIdSelected ){
-            if($loginType == 1){
-                $userIdSelected[] = $loginId;
-            }
+            
+            $userIdSelected[] = $loginId;
+            
             $query->whereIn('shop.user_id', $userIdSelected);
         }else{
             $userIdSelected = $tmpUser['userId'];
-            if($loginType == 1){
-                $userIdSelected[] = $loginId;
-            }          
+            
+            $userIdSelected[] = $loginId;
+            
             $query->whereIn('shop.user_id', $userIdSelected);
         }
         if( $type_id ){

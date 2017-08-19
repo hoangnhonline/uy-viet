@@ -36,7 +36,8 @@
                            @endforeach
                         </ul>
                      </div>
-                     @endif            
+                     @endif     
+                     @if($loginType == 1)       
                      <div class="form-group col-md-6">
                         <label>Company <span class="red-star">*</span></label>
                         <select class="form-control" name="company_id" id="company_id">
@@ -46,6 +47,7 @@
                            @endforeach
                         </select>
                      </div>
+                     @endif
                      <!-- text input -->
                      <div class="form-group col-md-6">
                         <label>Loại shop <span class="red-star">*</span></label>
@@ -56,6 +58,7 @@
                            @endforeach
                         </select>
                      </div>
+                     <div style="clear:both"></div>
                      <!-- text input -->
                      <div class="form-group col-md-4">
                         <label> Tỉnh/Thành <span class="red-star">*</span></label>
