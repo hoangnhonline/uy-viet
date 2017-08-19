@@ -14,8 +14,11 @@
    </section>
    <!-- Main content -->
    <section class="content">
-      <a class="btn btn-default btn-sm" href="{{ route('shop.index') }}" style="margin-bottom:5px">Quay lại</a>
+      
       <form role="form" method="POST" action="{{ route('shop.update') }}" id="formData">
+<button type="submit" class="btn btn-primary btn-sm" id="btnSave" style="margin-top:-5px">Lưu</button>
+      <a class="btn btn-default btn-sm" href="{{ route('shop.index') }}" style="margin-bottom:5px">Quay lại</a>
+
          <input type="hidden" name="id" value="{{ $detail->id }}">
          <input type="hidden" name="update_maps" value="1">
          <div class="row">
@@ -166,7 +169,13 @@
          $('#btnSave').hide();
          $('#btnLoading').show();
        });         
+       @if(Session::has('message'))
+       setTimeout(function(){
+          window.top.close();
+        }, 2000);
+       @endif
      });
+
    
 </script>
 <script>

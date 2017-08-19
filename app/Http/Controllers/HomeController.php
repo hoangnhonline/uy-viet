@@ -57,6 +57,7 @@ class HomeController
                 $arrSearchCondition[$condition_id] = null;
             }
          }
+         //dd($arrSearchCondition);
          //dd($arrSearch);
         if($loginType == 1){
             $company_id = $request->company_id ? $request->company_id : Company::first()->id;
@@ -66,7 +67,7 @@ class HomeController
 
         //get list user
         $tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);
-               
+      //  dd($tmpUser);
         $markerArr = [];
         if(!$province_id && !$district_id && !$ward_id){ // home
             $view = 'province';            
@@ -92,12 +93,11 @@ class HomeController
 
                     });
 
-                                $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`shop`.`id`) as total'))
-                                ->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')
-                                ->groupBy('province_id')
-                                ->get();
-            }else{
-                
+                    $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`shop`.`id`) as total'))
+                    ->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')
+                    ->groupBy('province_id')
+                    ->get();
+            }else{                
                 $query = Shop::where('status', 1)->where('company_id', $company_id)
                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
                 ->select(DB::raw('MAX(`location`) as location'), 'shop.province_id', DB::raw('COUNT(`shop`.`id`) as total'))
@@ -130,14 +130,16 @@ class HomeController
 
             }
         }elseif($province_id > 0 && !$district_id && !$ward_id) { // search theo province_id
-           // die('123');
+            //dd($company_id);
             $view = 'district';
-            $districtList = District::where('province_id', $province_id)->get();            
+            $districtList = District::where('province_id', $province_id)->orderBy('name')->get();            
             //district marker
             $query = Shop::where('status', 1)
-                                ->where('province_id', $province_id)
-                                ->whereIn('shop.user_id', $tmpUser['userId'])
-                                ->where('company_id', $company_id)
+                                ->where('province_id', $province_id);
+                                if($loginType > 1){
+                                    $query->whereIn('shop.user_id', $tmpUser['userId']);
+                                }
+                                $query->where('company_id', $company_id)
                                 ->whereIn('shop.type_id', $typeArr);
                                 if($keyword){
                                     $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
@@ -168,12 +170,14 @@ class HomeController
             }                    
         }elseif($province_id > 0 && $district_id > 0 && !$ward_id){
             $view = 'ward';
-            $districtList = District::where('province_id', $province_id)->get();            
-            $wardList = Ward::where('district_id', $district_id)->get();            
+            $districtList = District::where('province_id', $province_id)->orderBy('name')->get();            
+            $wardList = Ward::where('district_id', $district_id)->orderBy('name')->get();            
             $query = Shop::where('status', 1)
-                        ->where('district_id', $district_id)
-                        ->whereIn('shop.user_id', $tmpUser['userId'])
-                        ->where('company_id', $company_id)
+                        ->where('district_id', $district_id);
+                        if($loginType > 1){
+                            $query->whereIn('shop.user_id', $tmpUser['userId']);
+                        }
+                        $query->where('company_id', $company_id)
                         ->whereIn('shop.type_id', $typeArr);
                         if($keyword){
                                     $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
@@ -194,7 +198,8 @@ class HomeController
                         //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
                      $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'ward_id', DB::raw('COUNT(`shop`.`id`) as total'))
                         ->groupBy('ward_id')
-                        ->get();            
+                        ->get();  
+                        //dd($markerHasShop);          
             foreach($markerHasShop as $marker){
                 $location = $marker->location;
                 $tmp = explode(",", $location);            
@@ -205,12 +210,13 @@ class HomeController
             }  
         }elseif($province_id > 0 && $district_id > 0 && $ward_id > 0){
             $view = 'detail';
-            $districtList = District::where('province_id', $province_id)->get();            
-            $wardList = Ward::where('district_id', $district_id)->get();            
+            $districtList = District::where('province_id', $province_id)->orderBy('name')->get();            
+            $wardList = Ward::where('district_id', $district_id)->orderBy('name')->get();            
             // not admin
             $query =  Shop::where('shop.status', 1);
-            
-            $query->whereIn('user_id', $tmpUser['userId']);        
+            if($loginType > 1){
+                $query->whereIn('user_id', $tmpUser['userId']);        
+            }
         
             $query->where('shop.company_id', $company_id);        
         
@@ -222,20 +228,18 @@ class HomeController
 
             $query->whereIn('shop.type_id', $typeArr);
             if($keyword){
-                                    $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
-                                }
-            $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){
-                
+                $query->where('shop.shop_name', 'LIKE', '%'.$keyword."%");
+            }
+            $query->join('shop_select_condition', function ($join) use ($arrSearchCondition){                
 
-                    $join->on('shop.id', '=', 'shop_select_condition.shop_id');
+                $join->on('shop.id', '=', 'shop_select_condition.shop_id');
                     
-                    foreach($arrSearchCondition as $condition_column => $conditionArrValue){                             
-                         if($conditionArrValue){
-                             $join->whereIn($condition_column, $conditionArrValue);
-                        }
+                foreach($arrSearchCondition as $condition_column => $conditionArrValue){                             
+                     if($conditionArrValue){
+                         $join->whereIn($condition_column, $conditionArrValue);
                     }
-
-                });           
+                }
+            });           
           
             $query->join('shop_type', 'shop_type.id' , '=', 'shop.type_id');
             $query->select('shop.*', 'icon_url', 'shop_select_condition.*');
@@ -244,25 +248,21 @@ class HomeController
         }       
    
         $shopType = DB::select('select id,type, icon_url from shop_type where status = 1');
-
         
         $tmpArr = Settings::all();
+
         foreach($tmpArr as $tmp){
             $settingArr[$tmp->name] = $tmp->value;
         }
-        if(!Auth::check()){
-            return redirect()->route('login-form');
-        }
-          
         
         $tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);
 
         $provinceDetailArr = [];
 
         if($loginType > 1){
-            $listProvince = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->get();
+            $listProvince = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();
         }else{
-            $listProvince = Province::all();        
+            $listProvince = Province::orderBy('name')->get();        
         }
         foreach($listProvince as $pro){
             $provinceDetailArr[$pro->id] = $pro;

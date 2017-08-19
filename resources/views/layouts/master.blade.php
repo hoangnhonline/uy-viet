@@ -180,7 +180,7 @@
 						<?php 
 						$dataList = DB::table('shop_'. $condition->name)->where('status', 1)->get();
 						?>
-						<ul class="list-group checked-list-box treeview-menu treeview-border check-list-box filter_{{ $condition->name }}">
+						<ul class="ul-condition list-group checked-list-box treeview-menu treeview-border check-list-box filter_{{ $condition->name }}">
 							<li class="@if(!$arrSearch[$condition->name."_id"] )active  @endif filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
 							@foreach($dataList as $data)
 								<?php 
@@ -219,7 +219,7 @@
 		</p>
 	</div>
 	
-		
+
 		
 		
 	<!-- /.wrapper -->
@@ -248,6 +248,15 @@
 	<script src="{{ URL::asset('js/checkbox.js') }}"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
+		$('ul.ul-condition').each(function(){
+			var obj = $(this);
+			var not = obj.find('li.filter').not('.active').length;
+			if(not == 0){
+				obj.find('.filter_all').addClass('active');
+			}else{
+				obj.find('.filter_all').removeClass('active');
+			}
+		});
 		$('#check_show_label').click(function(){
 			if($(this).prop('checked') == true){
 				$('#show_label').val(1);				
@@ -262,9 +271,11 @@
 				obj.children('.value').val(obj.data('value'));
 			}else{				
 				obj.children('.value').val('');
-			}
+			}			
+			setTimeout(function(){
+				obj.parents('form').submit();
+			}, 2000);
 			
-			obj.parents('form').submit();
 		});		
 		$('#company').change(function(){
 			removeHidden();
@@ -424,9 +435,6 @@
           	@endforeach
           	if(markers.length > 0){
                 markerCluster.addMarkers(markers);
-                
-              //  map.setZoom(12);
-
             }
 			@endif
 		   
