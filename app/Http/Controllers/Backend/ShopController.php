@@ -85,10 +85,7 @@ class ShopController extends Controller
         }
         if( $province_id ){
             $query->where('shop.province_id', $province_id);
-        }
-        if($loginType != 1){
-           // $query->whereRaw('shop.province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')');
-        }      
+        }            
         if( $district_id ){
             $query->where('shop.district_id', $district_id);
             $wardList = Ward::where('district_id', $district_id)->get();
@@ -191,9 +188,9 @@ class ShopController extends Controller
         $districtDetail = District::find($dataArr['district_id']);
         $provinceDetail = Province::find($dataArr['province_id']);
         $dataArr['full_address'] = $dataArr['address']. ", ". $dataArr['street']. ", ". $wardDetail->name. ", ". $districtDetail->name. ", ". $provinceDetail->name ;
-
-        $dataArr['full_address'] = 
+        $dataArr['company_id'] = isset($dataArr['company_id']) ? $dataArr['company_id'] : Auth::user()->company_id;
         $rs = Shop::create($dataArr);
+
         $id = $rs->id;
         
         $arrCond = [];

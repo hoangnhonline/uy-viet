@@ -145,7 +145,7 @@
             <tr>
               <th style="width: 1%">#</th>              
               <th>Họ Tên</th>
-              <th>Email</th>
+              <th>Username</th>            
               <th style="text-align:center">Role</th>
               <th style="text-align:center">Trạng thái</th>
               <th style="text-align:center">Shop</th> 
@@ -198,9 +198,10 @@
                   <td><span class="order">{{ $i }}</span></td>
                  
                   <td>                  
-                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->fullname }}</a>                                
+                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}">{{ $item->fullname }}</a>
+                    <br>    {{ $item->email }}                            
                   </td>
-                  <td>{{ $item->email }}</td>
+                  <td>{{ $item->username }}</td>                  
                   <td style="text-align:center">
                   <?php                  
                   switch ($item->type) {
