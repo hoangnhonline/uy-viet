@@ -181,16 +181,16 @@
 						$dataList = DB::table('shop_'. $condition->name)->where('status', 1)->get();
 						?>
 						<ul class="ul-condition list-group checked-list-box treeview-menu treeview-border check-list-box filter_{{ $condition->name }}">
-							<li><a href="#" title="" value="" style="margin-bottom:-10px">
+							<p><a href="#" title="" value="" style="padding:10px">
 								<label><input class="column_mau" type="radio" name="column_mau" value="{{ $condition->name."_id" }}" {{ $column_mau == $condition->name."_id" ? "checked" : "" }}> 
 								Hiển thị màu</label>
-							</a></li>
-							<li class="is_flt @if(!$arrSearch[$condition->name."_id"] )active  @endif filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
+							</a></p>
+							<li class="@if(!$arrSearch[$condition->name."_id"] )active  @endif filter_all" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="" data-col="{{ $condition->name }}_id" style="border-color: #41ADFF">Tất cả</a></li>
 							@foreach($dataList as $data)
 								<?php 
 								$checked = !$arrSearch[$condition->name."_id"] || in_array($data->id, $arrSearch[$condition->name."_id"]) ? true : false;
 								?>
-								<li class="is_flt @if($checked) active @endif filter_{{ $condition->name }} filter" data-value="{{ $data->id }}" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a>
+								<li class="@if($checked) active @endif filter_{{ $condition->name }} filter" data-value="{{ $data->id }}" data-filter="filter_{{ $condition->name }}"><a href="#" title="" value="{{ $data->id }}" data-col="{{ $condition->name }}_id" style="border-color: {{ $data->color }};">{{ $data->type }}</a>
 								<input type="hidden" class="value" name="{{ $condition->name }}_id[]" value="@if($checked){{ $data->id }}@endif">
 								</li>
 			                @endforeach

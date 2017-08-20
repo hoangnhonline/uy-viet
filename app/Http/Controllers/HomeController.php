@@ -74,7 +74,7 @@ class HomeController
         if(!$province_id && !$district_id && !$ward_id){ // home
             $view = 'province';            
             if($loginType > 1){
-                $query = Shop::where('shop.status', 1)
+                $query = Shop::where('shop.statuss', 1)
                                 ->whereIn('shop.user_id', $tmpUser['userId'])
                                 ->where('shop.company_id', $company_id)
                                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')

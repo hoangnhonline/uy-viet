@@ -74,11 +74,13 @@ class ShopController extends Controller
             
             $query->whereIn('shop.user_id', $userIdSelected);
         }else{
-            $userIdSelected = $tmpUser['userId'];
+            if($loginType > 1){
+                $userIdSelected = $tmpUser['userId'];
             
-            $userIdSelected[] = $loginId;
+                $userIdSelected[] = $loginId;
             
-            $query->whereIn('shop.user_id', $userIdSelected);
+                $query->whereIn('shop.user_id', $userIdSelected);
+            }
         }
         if( $type_id ){
             $query->whereIn('shop.type_id', $type_id);
