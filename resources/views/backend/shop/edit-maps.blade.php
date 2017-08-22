@@ -17,7 +17,7 @@
       
       <form role="form" method="POST" action="{{ route('shop.update') }}" id="formData">
 <button type="submit" class="btn btn-primary btn-sm" id="btnSave" style="margin-top:-5px">Lưu</button>
-      <a class="btn btn-default btn-sm" href="{{ route('shop.index') }}" style="margin-bottom:5px">Quay lại</a>
+      <a class="btn btn-default btn-sm btnBack" href="javascript:void(0)" style="margin-bottom:5px">Quay lại</a>
 
          <input type="hidden" name="id" value="{{ $detail->id }}">
          <input type="hidden" name="update_maps" value="1">
@@ -54,7 +54,7 @@
                      <div class="col-md-12">
                         <button type="button" class="btn btn-default btn-sm" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>
                         <button type="submit" class="btn btn-primary btn-sm" id="btnSave">Lưu</button>
-                        <a class="btn btn-default btn-sm" class="btn btn-primary btn-sm" href="{{ route('shop.index')}}">Hủy</a>
+                        <a class="btn btn-default btn-sm btnBack"  href="javascript:void(0)">Hủy</a>
                      </div>
                   </div>
                </div>
@@ -168,12 +168,15 @@
        $('#formData').submit(function(){
          $('#btnSave').hide();
          $('#btnLoading').show();
-       });         
+       });      
+       $('.btnBack').click(function(){
+        //window.opener.location.reload(false);
+        window.top.close();
+       });
        @if(Session::has('message'))
        window.opener.location.reload(false);
-       setTimeout(function(){
-          window.top.close();
-        }, 2000);
+
+       window.top.close();       
 
        @endif
      });
