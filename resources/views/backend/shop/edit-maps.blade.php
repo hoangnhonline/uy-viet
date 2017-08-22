@@ -170,9 +170,11 @@
          $('#btnLoading').show();
        });         
        @if(Session::has('message'))
+       window.opener.location.reload(false);
        setTimeout(function(){
           window.top.close();
         }, 2000);
+
        @endif
      });
 
