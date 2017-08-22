@@ -256,7 +256,7 @@ class HomeController
             });           
           
             $query->join('shop_type', 'shop_type.id' , '=', 'shop.type_id');
-            $query->select('shop.*', 'icon_url', 'shop_select_condition.*');
+            $query->select('shop.*', 'icon_url', 'shop_select_condition.*', 'shop.id as shop_id');
             $markerArr = $query->get()->toArray();
             $total = count($markerArr);
         }       

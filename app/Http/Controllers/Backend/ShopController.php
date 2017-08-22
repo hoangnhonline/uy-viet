@@ -238,8 +238,8 @@ class ShopController extends Controller
         $loginId = Auth::user()->id;
 
         $user_id_list = Account::getUserIdChild($loginId, $loginType, Auth::user()->company_id);
-
-        if($loginType > 1){
+        $user_id_list['userId'][] = $loginId;
+        if($loginType > 2){
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();
         }else{
             $provinceList = Province::orderBy('name')->get();        
@@ -255,8 +255,8 @@ class ShopController extends Controller
                 ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
                 ->first();
                 ;                
-
-        if(!in_array($detail->user_id, $user_id_list) && $loginType > 1){ // ko co quyen truy cap
+        
+        if(!in_array($detail->user_id, $user_id_list['userId']) && $loginType > 1){ // ko co quyen truy cap
             return redirect()->route('shop.index');
         }
         $districtList = (object)[];
@@ -289,8 +289,8 @@ class ShopController extends Controller
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
 
-        $detail = Shop::find($id);
-
+        $detail = Shop::where('id', $id)->first();
+        
         $tmpUser = Account::getUserIdChild($loginId, $loginType, $detail->company_id);
         // not admin
         $query =  Shop::where('shop.status', 1);
