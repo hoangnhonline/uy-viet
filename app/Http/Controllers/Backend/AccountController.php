@@ -409,7 +409,10 @@ class AccountController extends Controller
                                             'operator_user_id' => $detail->operator_user_id, 
                                             'executive_user_id' => $detail->executive_user_id
                                             ])->get();
-            $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.$detail->supervisor_user_id.')')->get();
+            
+            if($detail->supervisor_user_id){
+                $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id='.$detail->supervisor_user_id.')')->get();
+            }
         }elseif($detail->type == 5){
             $userList['company'] = Account::where([
                                             'company_id' => $detail->company_id, 

@@ -291,8 +291,9 @@
                     @endif
                     >{{ $item->status == 1 ? "Khóa TK" : "Mở khóa TK" }}</a>                
                     <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}?url_return=<?php echo urlencode(url()->full()); ?>" class=" btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>                 
-                    
+                    @if($item->shops()->count() == 0)
                     <a onclick="return callDelete('{{ $item->name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    @endif
                     @endif
                   </td>
                   @endif

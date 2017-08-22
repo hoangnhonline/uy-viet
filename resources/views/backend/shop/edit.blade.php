@@ -16,7 +16,7 @@
    <section class="content">
       <a class="btn btn-default btn-sm" href="{{ route('shop.index') }}" style="margin-bottom:5px">Quay lại</a>
       <form role="form" method="POST" action="{{ route('shop.update') }}" id="formData">
-         <input type="hidden" name="id" id="id" value="{{ $detail->id }}">         
+         <input type="hidden" name="id" id="id" value="{{ $id }}">         
          <input type="hidden" name="update_maps" value="0">
          <div class="row">
             <!-- left column -->
@@ -155,6 +155,7 @@
                         $key = $condition->name."_id";
                         ?>
                         <select class="form-control" name="cond[{{ $key }}]" id="{{ $condition->name }}_id">                                      
+                        <option value="0" >--Chọn--</option>
                         @foreach($dataList as $data)
                         <option value="{{ $data->id }}" {{ old('cond[$key]', $detail->$key ) == $data->id ? "selected" : "" }}>{{ $data->type }} </option>                  
                         @endforeach

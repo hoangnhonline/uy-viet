@@ -105,7 +105,7 @@ class ShopController extends Controller
         $query->orderBy('shop.id', 'desc');   
         $items = $query->paginate(100);
         $shopTypeList = ShopType::all();
-        if($loginType == 1){
+        if($loginType < 3){
             $provinceList = Province::orderBy('name')->get();
         }else{
             $provinceList = Province::whereRaw('province.id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();            
@@ -281,9 +281,8 @@ class ShopController extends Controller
                     $hinhArr[] = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);                    
                 }
             }
-        }
-        
-        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder'));
+        }        
+        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder', 'id'));
     }
     public function editMaps($id)
     {       
@@ -356,6 +355,7 @@ class ShopController extends Controller
         }
         
         $model = Shop::find($dataArr['id']);
+       
         $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
         $model->update($dataArr);
         

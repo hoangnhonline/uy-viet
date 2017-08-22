@@ -95,10 +95,12 @@ class HomeController
 
                     });
 
-                    $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`shop`.`id`) as total'))
-                    ->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')
-                    ->groupBy('province_id')
-                    ->get();
+                    $query->select(DB::raw('MAX(`location`) as location'), 'province_id', DB::raw('COUNT(`shop`.`id`) as total'));
+                    if($loginType > 2){
+                    $query->whereRaw('province_id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')');
+                    }
+                    $query->groupBy('province_id');
+                    $markerHasShop =  $query->get();
             }else{                
                 $query = Shop::where('status', 1)->where('company_id', $company_id)
                 //->whereRaw(' shop.type_id IN ( SELECT id FROM shop_type WHERE status = 1) ')
@@ -134,6 +136,7 @@ class HomeController
         }elseif($province_id > 0 && !$district_id && !$ward_id) { // search theo province_id
             //dd($company_id);
             $view = 'district';
+            //dd($company_id);
             $districtList = District::where('province_id', $province_id)->orderBy('name')->get();            
             //district marker
             $query = Shop::where('status', 1)
@@ -158,7 +161,7 @@ class HomeController
                         }
 
                     });                              
-                       $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`shop`.`id`) as total'))
+                    $markerHasShop = $query->select(DB::raw('MAX(`location`) as location'), 'district_id', DB::raw('COUNT(`shop`.`id`) as total'))
                                 ->groupBy('district_id')
                                 ->get();
             
@@ -270,7 +273,7 @@ class HomeController
 
         $provinceDetailArr = [];
 
-        if($loginType > 1){
+        if($loginType > 2){
             $listProvince = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();
         }else{
             $listProvince = Province::orderBy('name')->get();        
