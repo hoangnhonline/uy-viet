@@ -65,7 +65,7 @@ class DieuKienController extends Controller
 
         $col = $name."_id";
         Schema::table('shop_select_condition', function($table) use ($col) {
-            $table->tinyInteger($col)->nullable();                 
+            $table->tinyInteger($col)->nullable()->default(1);                 
         });
         DB::table('shop_select_condition')->whereRaw('1')->update([$col => 1]);
        
