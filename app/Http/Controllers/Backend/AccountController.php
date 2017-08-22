@@ -207,8 +207,9 @@ class AccountController extends Controller
         $userList = Helper::getListUserOwnerByType($user_id, $company_id, $column);
         return \Response::json($userList);
     }
-    public function create()
+    public function create(Request $request)
     {       
+        $url_return = $request->url_return;
         $loginType = Auth::user()->type; 
         if($loginType > 2){
             return redirect()->route('shop.index');
@@ -228,7 +229,7 @@ class AccountController extends Controller
         if($loginType > 1){
             $userList = Helper::getListUserByType(Auth::user()->company_id);
         }        
-        return view('backend.account.create', compact('modList', 'groupList', 'companyList', 'provinceList', 'userList'));
+        return view('backend.account.create', compact('modList', 'groupList', 'companyList', 'provinceList', 'userList', 'url_return'));
     }
     public function changePass(){
         return view('backend.account.change-pass');   
@@ -339,7 +340,9 @@ class AccountController extends Controller
                 $message->to( $request->email, $request->full_name )->subject('Mật khẩu đăng nhập hệ thống');
             });   
         }*/
-
+        if($request->url_return){
+            return redirect(urldecode($request->url_return));
+        }
         Session::flash('message', 'Tạo mới tài khoản thành công.');
 
         return redirect()->route('account.index');
@@ -358,7 +361,7 @@ class AccountController extends Controller
         Session::flash('message', 'Xóa tài khoản thành công');
         return redirect()->route('account.index');
     }
-    public function edit($id)
+    public function edit($id, Request $request)
     {
         $loginType = Auth::user()->type;
         if($loginType > 2){
@@ -444,8 +447,9 @@ class AccountController extends Controller
                 $provinceSelected[] = $tmp->id;
             }
         }
+        $url_return = $request->url_return;
         return view('backend.account.edit', compact( 'detail', 'groupList', 'companyList', 'provinceList', 'provinceSelected',
-            'userList'));
+            'userList', 'url_return'));
     }
     public function ajaxGetListProvinceUser(Request $request){
         $user_id = $request->user_id;
@@ -515,7 +519,9 @@ class AccountController extends Controller
         }
 
         Session::flash('message', 'Cập nhật tài khoản thành công');
-
+        if($request->url_return){
+            return redirect(urldecode($request->url_return));
+        }
         return redirect()->route('account.index');
     }
     public function updateStatus(Request $request)

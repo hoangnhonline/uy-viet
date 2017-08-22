@@ -152,6 +152,7 @@
                   </div>         
                 
             </div>
+            <input type="hidden" name="url_return" value="{{ $url_return }}">
             <div class="box-footer">
               <div class="col-md-12">
                 <button type="button" class="btn btn-default btn-sm" id="btnLoading" style="display:none"><i class="fa fa-spin fa-spinner"></i></button>

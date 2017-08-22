@@ -20,7 +20,7 @@
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
       @endif
       @if($loginType <= 2)
-      <a href="{{ route('account.create') }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
+      <a href="{{ route('account.create') }}?url_return=<?php echo urlencode(url()->full()); ?>" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
       @endif
 
       <div class="panel panel-default">
@@ -290,7 +290,7 @@
                     onclick="return confirm('Bạn chắc chắn muốn KHÓA tài khoản này? '); "
                     @endif
                     >{{ $item->status == 1 ? "Khóa TK" : "Mở khóa TK" }}</a>                
-                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}" class=" btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>                 
+                    <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}?url_return=<?php echo urlencode(url()->full()); ?>" class=" btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>                 
                     
                     <a onclick="return callDelete('{{ $item->name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                     @endif
