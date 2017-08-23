@@ -1,6 +1,6 @@
 <header class="main-header">
   <!-- Logo -->
-  <a href="{{ route('dashboard.index')}}" class="logo">
+  <a href="{{ route('shop.index')}}" class="logo">
     <!-- mini logo for sidebar mini 50x50 pixels -->
     <span class="logo-mini"><b>Uy Việt</b></span>
     <!-- logo for regular state and mobile devices -->
