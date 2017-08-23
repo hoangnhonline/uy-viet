@@ -293,7 +293,7 @@ class AccountController extends Controller
         $dataArr['created_user'] = Auth::user()->id;
 
         $dataArr['updated_user'] = Auth::user()->id;
-        $dataArr['group_user_id'] = (int) $dataArr['group_user_id'];
+        $dataArr['group_user_id'] = 0;
         
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
@@ -480,7 +480,7 @@ class AccountController extends Controller
         $model = Account::find($dataArr['id']);
 
         $dataArr['updated_user'] = Auth::user()->id;
-        $dataArr['group_user_id'] = (int) $dataArr['group_user_id'];
+        $dataArr['group_user_id'] = 0;
         
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;

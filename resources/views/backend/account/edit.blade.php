@@ -131,16 +131,7 @@
                     <option value="1" {{ old('status', $detail->type) == 1 ? "selected" : "" }}>Mở</option>                  
                     <option value="2" {{ old('status', $detail->status) == 2 ? "selected" : "" }}>Khóa</option>                  
                   </select>
-                </div>
-                <div class="form-group col-md-6">
-                  <label>Khu vực</label>
-                  <select class="form-control" name="group_user_id" id="group_user_id">      
-                    <option value="" >--Chọn khu vực--</option>
-                    @foreach($groupList as $group)
-                    <option value="{{ $group->id }}" {{ old('group_user_id', $detail->group_user_id) == $group->id ? "selected" : "" }}>{{ $group->name }}</option> 
-                    @endforeach
-                  </select>
-                </div>       
+                </div>                      
                 <div class="form-group col-md-12">
                     <label>Tỉnh / Thành</label>
                     <select class="form-control select2" name="province_id[]" id="province_id" multiple="multiple">                  

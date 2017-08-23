@@ -231,7 +231,15 @@
                   ?>
                   </td>
                   <td style="text-align:center">{{ $item->status == 1 ? "Mở"  : "Khóa" }}</td>
-                  <td style="text-align:center">{{ $item->shops()->count()}}</td>                  
+                  <td style="text-align:center">
+                  <?php 
+                  $tmpUser = App\Models\Account::getUserIdChild($item->id, $item->type, $item->company_id);
+                  $userIdArr = $tmpUser['userId'];
+                  $shopNo = DB::table('shop')->whereIn('user_id', $userIdArr)->count();
+                  ?>
+                  <strong style="font-size:20px;color:#dd4b39">{{ $shopNo }}</strong>
+
+                  </td>
                   @if($loginType < 2)
                   <td style="text-align:center">
                   
@@ -291,7 +299,7 @@
                     @endif
                     >{{ $item->status == 1 ? "Khóa TK" : "Mở khóa TK" }}</a>                
                     <a href="{{ route( 'account.edit', [ 'id' => $item->id ]) }}?url_return=<?php echo urlencode(url()->full()); ?>" class=" btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>                 
-                    @if($item->shops()->count() == 0)
+                    @if($shopNo == 0)
                     <a onclick="return callDelete('{{ $item->name }}','{{ route( 'account.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                     @endif
                     @endif
