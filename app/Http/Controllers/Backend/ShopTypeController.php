@@ -60,7 +60,7 @@ class ShopTypeController extends Controller
             }
 
             $destionation = date('Y/m/d'). '/'. end($tmp);
-            
+           
             File::move(config('uv.upload_path').$dataArr['icon_url'], config('uv.upload_path').$destionation);
             
             $dataArr['icon_url'] = $destionation;
@@ -133,7 +133,7 @@ class ShopTypeController extends Controller
             }
 
             $destionation = date('Y/m/d'). '/'. end($tmp);
-            
+            // dd(config('uv.upload_path').$dataArr['icon_url'], config('uv.upload_path').$destionation);
             File::move(config('uv.upload_path').$dataArr['icon_url'], config('uv.upload_path').$destionation);
             
             $dataArr['icon_url'] = $destionation;

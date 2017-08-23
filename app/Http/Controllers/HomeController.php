@@ -379,7 +379,7 @@ class HomeController
                 foreach(glob($path.'*') as $filename){
                     $i++;
                     if($i == 1){
-                        $firstImage = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);
+                        $firstImage = config('app.url')."/public/UY_VIET_DINH_VI/".$folder."/".basename($filename);
                         $have_image = 1;
                     }                    
                 }
@@ -405,7 +405,7 @@ class HomeController
 
             if(is_dir($path)){                
                 foreach(glob($path.'*') as $filename){                    
-                    $arr[] = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);                    
+                    $arr[] = config('app.url')."/public/UY_VIET_DINH_VI/".$folder."/".basename($filename);                    
                 }
             }
         

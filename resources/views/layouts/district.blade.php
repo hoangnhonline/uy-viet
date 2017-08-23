@@ -18,17 +18,17 @@
 	<meta name="description" content="">
 	<meta name="keywords" content="">
 	<meta name="robots" content="index,follow" />
-	<link rel="shortcut icon" href="{{ URL::asset('assets/images/favicon.ico') }}" type="image/x-icon">
-	<link rel="icon" href="{{ URL::asset('assets/images/favicon.ico') }}" type="image/x-icon">
+	<link rel="shortcut icon" href="{{ URL::asset('public/assets/images/favicon.ico') }}" type="image/x-icon">
+	<link rel="icon" href="{{ URL::asset('public/assets/images/favicon.ico') }}" type="image/x-icon">
 	<!-- ===== Style CSS ===== -->
-	<link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/css/style.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ URL::asset('css/home.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/css/responsive.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ URL::asset('public/assets/css/style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ URL::asset('public/css/home.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ URL::asset('public/assets/css/responsive.css') }}">
     
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn"t work if you view the page via file:// -->
 	<!--[if lt IE 9]>
-		<link href="{{ URL::asset('assets/css/animations-ie-fix.css') }}" rel="stylesheet">
+		<link href="{{ URL::asset('public/assets/css/animations-ie-fix.css') }}" rel="stylesheet">
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond/js/1.4.2/respond.min.js"></script>
 	<![endif]-->
@@ -54,7 +54,7 @@
                 <!-- mini logo -->
                 <span class="logo-mini"><b>U</b>V</span>
                 <!-- logo -->
-                <span class="logo-lg"> <center><img src="{{ URL::asset('assets/images/logo.png') }}" width="100px"></center></span>
+                <span class="logo-lg"> <center><img src="{{ URL::asset('public/assets/images/logo.png') }}" width="100px"></center></span>
             </a><!-- /.logo -->
             <div id="search_icon">
             	<button type="button" class="btn btn-primary"><span class="fa fa-search"></span></button>
@@ -128,7 +128,7 @@
 			<section class="sidebar">
 				<div class="user-panel">
 					<div class="pull-left image">
-						<img src="{{ URL::asset('assets/images/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+						<img src="{{ URL::asset('public/assets/images/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
 					</div>
 					<div class="pull-left info">
 						<p>Hi , {{ Auth::user()->fullname }}</p>
@@ -147,7 +147,7 @@
 						<ul class="treeview-menu list-group checked-list-box check-list-box filter_type">
 							<li class="active filter_all" data-filter="filter_type">
 								<a href="javascript:void(0)" title="" value="" data-col="type_id">							
-									<span><img src="{{ URL::asset('assets/images/all.png') }}" alt="Tất cả"></span>Tất cả
+									<span><img src="{{ URL::asset('public/assets/images/all.png') }}" alt="Tất cả"></span>Tất cả
 								</a>
 							</li>
 							@foreach($shopType as $type)		                        
@@ -213,17 +213,17 @@
 	<!-- /.wrapper -->
 
 	<!-- ===== JS ===== -->
-	<script src="{{ URL::asset('assets/js/jquery.min.js') }}"></script>
+	<script src="{{ URL::asset('public/assets/js/jquery.min.js') }}"></script>
 	<!-- ===== JS Bootstrap ===== -->
-	<script src="{{ URL::asset('assets/path/bootstrap/bootstrap.min.js') }}"></script>
+	<script src="{{ URL::asset('public/assets/path/bootstrap/bootstrap.min.js') }}"></script>
 	<!-- sticky -->
-	<script src="{{ URL::asset('assets/path/sticky/jquery.sticky.js') }}"></script>
+	<script src="{{ URL::asset('public/assets/path/sticky/jquery.sticky.js') }}"></script>
 	<!-- sticky -->
-	<script src="{{ URL::asset('assets/path/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
+	<script src="{{ URL::asset('public/assets/path/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
 	<!-- Js Common -->
-	<script src="{{ URL::asset('assets/js/aaaa.js') }}"></script>
+	<script src="{{ URL::asset('public/assets/js/aaaa.js') }}"></script>
 	<!-- Js Common -->
-	<script src="{{ URL::asset('assets/js/common.js') }}"></script>
+	<script src="{{ URL::asset('public/assets/js/common.js') }}"></script>
 
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo3ykqb8xloOHX36rgPXSd1zBQilLqy98&callback=initMap"></script>  
@@ -242,8 +242,8 @@
 	        var updatePosition = '15.961533, 107.856976';
 	    </script>
 	@endif
-	<script src="{{ URL::asset('js/home.js') }}"></script>
-	<script src="{{ URL::asset('js/checkbox.js') }}"></script>
+	<script src="{{ URL::asset('public/js/home.js') }}"></script>
+	<script src="{{ URL::asset('public/js/checkbox.js') }}"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('#check_show_label').click(function(){

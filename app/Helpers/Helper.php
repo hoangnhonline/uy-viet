@@ -67,7 +67,7 @@ class Helper
             if(strpos($image_url, 'assets') === false){
                 $url = config('uv.upload_url') . $image_url;
             }else{
-                $url = url('/').'/'.$image_url;
+                $url = url('/').'/public/'.$image_url;
             }
             
         }else{
@@ -147,8 +147,8 @@ class Helper
 
         $basePath = $date_dir == true ? $basePath .= date('Y/m/d'). '/'  : $basePath = $basePath;        
         
-        $desPath = config('uv.upload_path'). $basePath;
-        
+        $desPath = config('uv.upload_path').''. $basePath;
+        dd($desPath);
         //set name for file
         $fileName = $file->getClientOriginalName();
         

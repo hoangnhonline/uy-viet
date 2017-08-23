@@ -3,7 +3,7 @@
         <!-- mini logo -->
         <span class="logo-mini"><b>U</b>V</span>
         <!-- logo -->
-        <span class="logo-lg"> <center><img src="{{ URL::asset('assets/images/logo.png') }}" width="100px"></center></span>
+        <span class="logo-lg"> <center><img src="{{ URL::asset('public/assets/images/logo.png') }}" width="100px"></center></span>
     </a><!-- /.logo -->
     <div id="search_icon">
     	<button type="button" class="btn btn-primary"><span class="fa fa-search"></span></button>

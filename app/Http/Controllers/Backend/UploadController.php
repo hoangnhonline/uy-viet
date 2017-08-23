@@ -65,7 +65,7 @@ class UploadController extends Controller
             foreach( $dataArr['myfile'] as $file ){
                 $count++;
                 $tmp = Helper::uploadPhoto($file, 'post', true);
-                $hinh = $url ."/". $tmp['image_path'];
+                $hinh = $url ."/public/". $tmp['image_path'];
                 $arrReturn[]['filename'] = $hinh;  
             }
         }
