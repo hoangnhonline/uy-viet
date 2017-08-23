@@ -318,6 +318,8 @@
 	}
 	if($view == 'province'){
 		$zoom = 6;
+		$firstMarker['location'][0] = 16.4205457;
+		$firstMarker['location'][1] = 107.5562376;
 	}elseif($view == 'district'){
 		$zoom = 9;
 	}elseif($view == 'ward'){
