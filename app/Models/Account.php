@@ -69,7 +69,7 @@ class Account extends Model  {
         if($column){
             $query->where($column, '=', $user_id);
         }
-        $lists = $query->get();
+        $lists = $query->orderBy('type', 'asc')->get();
         if($lists->count() > 0){
             foreach($lists as $user){
                 if($user->type == 6){

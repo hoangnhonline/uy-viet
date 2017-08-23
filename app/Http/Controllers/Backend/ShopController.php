@@ -113,7 +113,7 @@ class ShopController extends Controller
         $districtList = District::where('province_id', $province_id)->orderBy('name')->get();        
         
         $userListLevel = $tmpUser['userList'];
-
+        //dd("<pre>",$userListLevel,"</pre>");
         return view('backend.shop.index', compact( 
                                             'items', 
                                             'arrSearch', 
