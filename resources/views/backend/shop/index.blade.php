@@ -51,7 +51,7 @@ fieldset label{
               <legend>Điều kiện</legend>
                 @if($loginType == 1)
                 <div class="form-group">     
-                  <select class="form-control select2" name="company_id" id="company_id">                          
+                  <select class="form-control select2" name="company_id" id="company_id">                     
                     @foreach($companyList as $com)
                     <option value="{{ $com->id }}" {{ $arrSearch['company_id'] == $com->id ? "selected" : "" }}>{{ $com->company_name }}</option> 
                     @endforeach
@@ -151,7 +151,7 @@ fieldset label{
         <?php 
         $page = \Request::get('page') ? \Request::get('page') : 1;
         ?>
-        
+        <button class="btn btn-danger btn-sm" style="clear:both;margin:5px" type="button" id="btnExport" data-url="{{ route('shop.export') }}">Export Excel</button>
         <!-- /.box-header -->
         <div class="box-body">
           <div style="text-align:center">
@@ -269,7 +269,11 @@ function callDelete(name, url){
   return flag;
 }
 $(document).ready(function(){
-
+  $('#btnExport').click(function(){
+    var url = $(this).data('url');
+    $('#searchForm').attr('action', url).submit();
+    $('#searchForm').attr('action', '{{ route('shop.index') }}');
+  });
   $('.checkbox_all').click(function(){
     var child = $(this).data('child');
     $('.' + child).prop('checked', $(this).prop('checked'));
