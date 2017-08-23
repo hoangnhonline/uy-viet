@@ -21,6 +21,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
     Route::post('delete', ['as' => 'delete', 'uses' => "GeneralController@delete"]);
     Route::group(['prefix' => 'shop'], function () {
         Route::get('/', ['as' => 'shop.index', 'uses' => 'ShopController@index']);
+        Route::get('/export', ['as' => 'shop.export', 'uses' => 'ShopController@export']);
         Route::get('/create', ['as' => 'shop.create', 'uses' => 'ShopController@create']);
         Route::post('/store', ['as' => 'shop.store', 'uses' => 'ShopController@store']);
         Route::get('{id}/edit',   ['as' => 'shop.edit', 'uses' => 'ShopController@edit']);
@@ -43,23 +44,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::get('{id}/edit',   ['as' => 'condition.edit', 'uses' => 'ConditionController@edit']);
         Route::post('/update', ['as' => 'condition.update', 'uses' => 'ConditionController@update']);
         Route::get('{id}/destroy', ['as' => 'condition.destroy', 'uses' => 'ConditionController@destroy']);
-    });
-    Route::group(['prefix' => 'shop-tiem-nang'], function () {
-        Route::get('/', ['as' => 'shop-tiem-nang.index', 'uses' => 'ShopTiemNangController@index']);
-        Route::get('/create', ['as' => 'shop-tiem-nang.create', 'uses' => 'ShopTiemNangController@create']);
-        Route::post('/store', ['as' => 'shop-tiem-nang.store', 'uses' => 'ShopTiemNangController@store']);
-        Route::get('{id}/edit',   ['as' => 'shop-tiem-nang.edit', 'uses' => 'ShopTiemNangController@edit']);
-        Route::post('/update', ['as' => 'shop-tiem-nang.update', 'uses' => 'ShopTiemNangController@update']);
-        Route::get('{id}/destroy', ['as' => 'shop-tiem-nang.destroy', 'uses' => 'ShopTiemNangController@destroy']);
-    });
-    Route::group(['prefix' => 'shop-von'], function () {
-        Route::get('/', ['as' => 'shop-von.index', 'uses' => 'ShopVonController@index']);
-        Route::get('/create', ['as' => 'shop-von.create', 'uses' => 'ShopVonController@create']);
-        Route::post('/store', ['as' => 'shop-von.store', 'uses' => 'ShopVonController@store']);
-        Route::get('{id}/edit',   ['as' => 'shop-von.edit', 'uses' => 'ShopVonController@edit']);
-        Route::post('/update', ['as' => 'shop-von.update', 'uses' => 'ShopVonController@update']);
-        Route::get('{id}/destroy', ['as' => 'shop-von.destroy', 'uses' => 'ShopVonController@destroy']);
-    });   
+    });     
     Route::group(['prefix' => 'shop-type'], function () {
         Route::get('/', ['as' => 'shop-type.index', 'uses' => 'ShopTypeController@index']);
         Route::get('/create', ['as' => 'shop-type.create', 'uses' => 'ShopTypeController@create']);
@@ -68,30 +53,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'backend', 'middleware' => '
         Route::post('/update', ['as' => 'shop-type.update', 'uses' => 'ShopTypeController@update']);
         Route::get('{id}/destroy', ['as' => 'shop-type.destroy', 'uses' => 'ShopTypeController@destroy']);
     });
-    Route::group(['prefix' => 'shop-quy-mo'], function () {
-        Route::get('/', ['as' => 'shop-quy-mo.index', 'uses' => 'ShopQuyMoController@index']);
-        Route::get('/create', ['as' => 'shop-quy-mo.create', 'uses' => 'ShopQuyMoController@create']);
-        Route::post('/store', ['as' => 'shop-quy-mo.store', 'uses' => 'ShopQuyMoController@store']);
-        Route::get('{id}/edit',   ['as' => 'shop-quy-mo.edit', 'uses' => 'ShopQuyMoController@edit']);
-        Route::post('/update', ['as' => 'shop-quy-mo.update', 'uses' => 'ShopQuyMoController@update']);
-        Route::get('{id}/destroy', ['as' => 'shop-quy-mo.destroy', 'uses' => 'ShopQuyMoController@destroy']);
-    });  
-    Route::group(['prefix' => 'shop-cap-do'], function () {
-        Route::get('/', ['as' => 'shop-cap-do.index', 'uses' => 'ShopCapDoController@index']);
-        Route::get('/create', ['as' => 'shop-cap-do.create', 'uses' => 'ShopCapDoController@create']);
-        Route::post('/store', ['as' => 'shop-cap-do.store', 'uses' => 'ShopCapDoController@store']);
-        Route::get('{id}/edit',   ['as' => 'shop-cap-do.edit', 'uses' => 'ShopCapDoController@edit']);
-        Route::post('/update', ['as' => 'shop-cap-do.update', 'uses' => 'ShopCapDoController@update']);
-        Route::get('{id}/destroy', ['as' => 'shop-cap-do.destroy', 'uses' => 'ShopCapDoController@destroy']);
-    });   
-    Route::group(['prefix' => 'shop-size'], function () {
-        Route::get('/', ['as' => 'shop-size.index', 'uses' => 'ShopSizeController@index']);
-        Route::get('/create', ['as' => 'shop-size.create', 'uses' => 'ShopSizeController@create']);
-        Route::post('/store', ['as' => 'shop-size.store', 'uses' => 'ShopSizeController@store']);
-        Route::get('{id}/edit',   ['as' => 'shop-size.edit', 'uses' => 'ShopSizeController@edit']);
-        Route::post('/update', ['as' => 'shop-size.update', 'uses' => 'ShopSizeController@update']);
-        Route::get('{id}/destroy', ['as' => 'shop-size.destroy', 'uses' => 'ShopSizeController@destroy']);
-    });
+   
 
     Route::post('/tmp-upload', ['as' => 'image.tmp-upload', 'uses' => 'UploadController@tmpUpload']);
     Route::post('/tmp-upload-multiple', ['as' => 'image.tmp-upload-multiple', 'uses' => 'UploadController@tmpUploadMultiple']);
