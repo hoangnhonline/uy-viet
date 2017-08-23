@@ -209,7 +209,7 @@ class ShopController extends Controller
                 'Địa chỉ' => $data->full_address,
                 'Điện thoại' => $data->phone,
                 'Người liên hệ' => $data->namer,
-                'Danh mục' => $data->type->name,
+                'Danh mục' => $data->type->type,
                 'Tỉnh/thành' => $data->province->name,
                 'Quận/huyện' => $data->district->name,
                 'Phường/xã' => $data->ward->name
