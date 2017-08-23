@@ -4,7 +4,7 @@
     <!-- Sidebar user panel -->
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="{{ URL::asset('admin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+        <img src="{{ URL::asset('assets/images/logo_small.png') }}" class="img-circle" alt="User Image">
       </div>
       <div class="pull-left info">
         <p>{{ Auth::user()->fullname }}</p>
@@ -104,5 +104,8 @@
 <style type="text/css">
   .skin-blue .sidebar-menu>li>.treeview-menu{
     padding-left: 15px !important;
+  }
+  .img-circle{
+    border-radius: 0%;
   }
 </style>
