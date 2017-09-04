@@ -2,7 +2,7 @@
 
 class Swift_Bug35Test extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    protected function setUp()
     {
         Swift_Preferences::getInstance()->setCharset('utf-8');
     }
@@ -14,7 +14,7 @@ class Swift_Bug35Test extends \PHPUnit_Framework_TestCase
         $message->setSubject('test subject');
         $message->addPart('plain part', 'text/plain');
 
-        $attachment = Swift_Attachment::newInstance('<data>', 'images.gif', 'images/gif');
+        $attachment = Swift_Attachment::newInstance('<data>', 'image.gif', 'image/gif');
         $message->attach($attachment);
 
         $message->setBody('HTML part', 'text/html');
@@ -59,9 +59,9 @@ class Swift_Bug35Test extends \PHPUnit_Framework_TestCase
         '--\\1--'."\r\n".
         "\r\n\r\n".
         '--'.$boundary."\r\n".
-        'Content-Type: images/gif; name=images.gif'."\r\n".
+        'Content-Type: image/gif; name=image.gif'."\r\n".
         'Content-Transfer-Encoding: base64'."\r\n".
-        'Content-Disposition: attachment; filename=images.gif'."\r\n".
+        'Content-Disposition: attachment; filename=image.gif'."\r\n".
         "\r\n".
         preg_quote(base64_encode('<data>'), '~').
         "\r\n\r\n".

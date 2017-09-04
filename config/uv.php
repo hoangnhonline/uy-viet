@@ -9,10 +9,10 @@ return [
     'num_alert' => 10, // number rows for alert on top menu
     'upload_path' => public_path() . '/uploads/', // media_upload_path   
 	'upload_thumbs_path' => public_path() . '/uploads/thumbs/', // media_upload_path    
-    'upload_url' => config('app.url') . '/uploads/', // image path,
+    'upload_url' => config('app.url') . '/public/uploads/', // image path,
     'image_url' => config('app.url'),
     'upload_path_shop' => public_path() . '/', // media_upload_path   
-    'upload_url_shop' => config('app.url') . '/', // image path,
+    'upload_url_shop' => config('app.url') . '/public/', // image path,
     'max_size_upload' => 8000000    
 ];
 ?>

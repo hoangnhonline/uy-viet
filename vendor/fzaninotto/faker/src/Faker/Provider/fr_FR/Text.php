@@ -3223,7 +3223,7 @@ il semble que c'est vous qui palpitez sous leurs costumes.
 -- C'est vrai! c'est vrai! disait-elle.
 
 -- Vous est-il arrivé parfois, reprit Léon, de rencontrer dans un
-livre une idée vague que l'on a eue, quelque images obscurcie qui
+livre une idée vague que l'on a eue, quelque image obscurcie qui
 revient de loin, et comme l'exposition entière de votre sentiment
 le plus délié?
 
@@ -3600,7 +3600,7 @@ lavoir, près d'une bouteille pleine d'huile qui portait une plume
 poudreuse, parmi des pierres à fusil, des bouts de chandelle et
 des morceaux d'amadou. Enfin la dernière superfluité de cet
 appartement était une Renommée soufflant dans des trompettes,
-images découpée sans doute à même quelque prospectus de parfumerie,
+image découpée sans doute à même quelque prospectus de parfumerie,
 et que six pointes à sabot clouaient au mur.
 
 L'enfant d'Emma dormait à terre, dans un berceau d'osier. Elle la
@@ -4238,7 +4238,7 @@ Mais elle était pleine de convoitises, de rage, de haine. Cette
 robe aux plis droits cachait un coeur bouleversé, et ces lèvres si
 pudiques n'en racontaient pas la tourmente. Elle était amoureuse
 de Léon, et elle recherchait la solitude, afin de pouvoir plus à
-l'aise se délecter en son images. La vue de sa personne troublait
+l'aise se délecter en son image. La vue de sa personne troublait
 la volupté de cette méditation. Emma palpitait au bruit de ses
 pas; puis, en sa présence, l'émotion tombait, et il ne lui restait
 ensuite qu'un immense étonnement qui se finissait en tristesse.
@@ -5285,7 +5285,7 @@ charmant!... Oui, mais comment s'en débarrasser ensuite?
 Alors les encombrements du plaisir, entrevus en perspective, le
 firent, par contraste, songer à sa maîtresse. C'était une
 comédienne de Rouen, qu'il entretenait; et, quand il se fut arrêté
-sur cette images, dont il avait, en souvenir même, des
+sur cette image, dont il avait, en souvenir même, des
 rassasiements:
 
 -- Ah! madame Bovary, pensa-t-il, est bien plus jolie qu'elle,
@@ -7723,7 +7723,7 @@ en restait encore s'écroulait sous les coups furieux de son
 orgueil. Elle se délectait dans toutes les ironies mauvaises de
 l'adultère triomphant. Le souvenir de son amant revenait à elle
 avec des attractions vertigineuses: elle y jetait son âme,
-emportée vers cette images par un enthousiasme nouveau; et Charles
+emportée vers cette image par un enthousiasme nouveau; et Charles
 lui semblait aussi détaché de sa vie, aussi absent pour toujours,
 aussi impossible et anéanti, que s'il allait mourir et qu'il eût
 agonisé sous ses yeux.
@@ -8418,7 +8418,7 @@ pâles. C'était un mouchoir à elle, une fois qu'elle avait saigné
 du nez, en promenade; il ne s'en souvenait plus. Il y avait
 auprès, se cognant à tous les angles, la miniature donnée par
 Emma; sa toilette lui parut prétentieuse et son regard en coulisse
-du plus pitoyable effet; puis, à force de considérer cette images
+du plus pitoyable effet; puis, à force de considérer cette image
 et d'évoquer le souvenir du modèle, les traits d'Emma peu à peu se
 confondirent en sa mémoire, comme si la figure vivante et la
 figure peinte, se frottant l'une contre l'autre, se fussent
@@ -14993,7 +14993,7 @@ _amabilem conjugem calcas_! qui fut adopté.
 
 Une chose étrange, c'est que Bovary, tout en pensant à Emma
 continuellement, l'oubliait; et il se désespérait à sentir cette
-images lui échapper de la mémoire au milieu des efforts qu'il
+image lui échapper de la mémoire au milieu des efforts qu'il
 faisait pour la retenir. Chaque nuit pourtant, il la rêvait;
 c'était toujours le même rêve: il s'approchait d'elle; mais, quand
 il venait à l'étreindre, elle tombait en pourriture dans ses bras.

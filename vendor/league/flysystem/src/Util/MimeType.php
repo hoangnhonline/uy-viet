@@ -3,6 +3,7 @@
 namespace League\Flysystem\Util;
 
 use Finfo;
+use ErrorException;
 
 /**
  * @internal
@@ -21,11 +22,13 @@ class MimeType
         if ( ! class_exists('Finfo') || ! is_string($content)) {
             return;
         }
+        try {
+            $finfo = new Finfo(FILEINFO_MIME_TYPE);
 
-        $finfo = new Finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($content);
-
-        return $mimeType ?: null;
+            return $finfo->buffer($content) ?: null;
+        } catch( ErrorException $e ) {
+            // This is caused by an array to string conversion error.
+        }
     }
 
     /**
@@ -57,7 +60,7 @@ class MimeType
      */
     public static function detectByFilename($filename)
     {
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
         return empty($extension) ? 'text/plain' : static::detectByFileExtension($extension);
     }
@@ -130,15 +133,15 @@ class MimeType
             'ra'    => 'audio/x-realaudio',
             'rv'    => 'video/vnd.rn-realvideo',
             'wav'   => 'audio/x-wav',
-            'jpg'   => 'images/jpeg',
-            'jpeg'  => 'images/jpeg',
-            'jpe'   => 'images/jpeg',
-            'png'   => 'images/png',
-            'gif'   => 'images/gif',
-            'bmp'   => 'images/bmp',
-            'tiff'  => 'images/tiff',
-            'tif'   => 'images/tiff',
-            'svg'   => 'images/svg+xml',
+            'jpg'   => 'image/jpeg',
+            'jpeg'  => 'image/jpeg',
+            'jpe'   => 'image/jpeg',
+            'png'   => 'image/png',
+            'gif'   => 'image/gif',
+            'bmp'   => 'image/bmp',
+            'tiff'  => 'image/tiff',
+            'tif'   => 'image/tiff',
+            'svg'   => 'image/svg+xml',
             'css'   => 'text/css',
             'html'  => 'text/html',
             'htm'   => 'text/html',

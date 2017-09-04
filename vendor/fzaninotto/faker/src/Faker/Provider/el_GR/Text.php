@@ -2287,7 +2287,7 @@ EOT;
     Collection will not be considered an Adaptation for the purpose of
     this License. For the avoidance of doubt, where the Work is a musical
     work, performance or phonogram, the synchronization of the Work in
-    timed-relation with a moving images ("synching") will be considered an
+    timed-relation with a moving image ("synching") will be considered an
     Adaptation for the purpose of this License. "Collection" means a
     collection of literary or artistic works, such as encyclopedias and
     anthologies, or performances, phonograms or broadcasts, or other works

@@ -46,7 +46,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/octet-stream', $file->getClientMimeType());
 
         if (extension_loaded('fileinfo')) {
-            $this->assertEquals('images/gif', $file->getMimeType());
+            $this->assertEquals('image/gif', $file->getMimeType());
         }
     }
 
@@ -68,7 +68,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',
-            'images/gif',
+            'image/gif',
             filesize(__DIR__.'/Fixtures/test.gif'),
             null
         );
@@ -81,7 +81,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',
-            'images/jpeg',
+            'image/jpeg',
             filesize(__DIR__.'/Fixtures/test.gif'),
             null
         );
@@ -94,7 +94,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',
-            'images/gif',
+            'image/gif',
             filesize(__DIR__.'/Fixtures/test.gif'),
             null
         );
@@ -107,7 +107,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',
-            'images/gif',
+            'image/gif',
             filesize(__DIR__.'/Fixtures/test.gif'),
             null
         );
@@ -120,7 +120,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',
-            'images/gif',
+            'image/gif',
             filesize(__DIR__.'/Fixtures/test.gif'),
             null
         );
@@ -136,7 +136,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',
-            'images/gif',
+            'image/gif',
             filesize(__DIR__.'/Fixtures/test.gif'),
             UPLOAD_ERR_OK
         );
@@ -156,7 +156,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             $path,
             'original.gif',
-            'images/gif',
+            'image/gif',
             filesize($path),
             UPLOAD_ERR_OK,
             true
@@ -176,7 +176,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             '../../original.gif',
-            'images/gif',
+            'image/gif',
             filesize(__DIR__.'/Fixtures/test.gif'),
             null
         );
@@ -189,7 +189,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',
-            'images/gif',
+            'image/gif',
             filesize(__DIR__.'/Fixtures/test.gif'),
             null
         );
@@ -199,7 +199,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test',
             'original.gif',
-            'images/gif'
+            'image/gif'
         );
 
         $this->assertEquals(filesize(__DIR__.'/Fixtures/test'), $file->getSize());

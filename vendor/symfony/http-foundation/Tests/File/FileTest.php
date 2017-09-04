@@ -21,11 +21,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testGetMimeTypeUsesMimeTypeGuessers()
     {
         $file = new File(__DIR__.'/Fixtures/test.gif');
-        $guesser = $this->createMockGuesser($file->getPathname(), 'images/gif');
+        $guesser = $this->createMockGuesser($file->getPathname(), 'image/gif');
 
         MimeTypeGuesser::getInstance()->register($guesser);
 
-        $this->assertEquals('images/gif', $file->getMimeType());
+        $this->assertEquals('image/gif', $file->getMimeType());
     }
 
     public function testGuessExtensionWithoutGuesser()
@@ -38,7 +38,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testGuessExtensionIsBasedOnMimeType()
     {
         $file = new File(__DIR__.'/Fixtures/test');
-        $guesser = $this->createMockGuesser($file->getPathname(), 'images/gif');
+        $guesser = $this->createMockGuesser($file->getPathname(), 'image/gif');
 
         MimeTypeGuesser::getInstance()->register($guesser);
 
@@ -51,7 +51,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     public function testGuessExtensionWithReset()
     {
         $file = new File(__DIR__.'/Fixtures/other-file.example');
-        $guesser = $this->createMockGuesser($file->getPathname(), 'images/gif');
+        $guesser = $this->createMockGuesser($file->getPathname(), 'image/gif');
         MimeTypeGuesser::getInstance()->register($guesser);
 
         $this->assertEquals('gif', $file->guessExtension());

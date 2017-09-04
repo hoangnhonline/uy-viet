@@ -55,12 +55,12 @@ class ShopTypeController extends Controller
             
             $tmp = explode('/', $dataArr['icon_url']);
 
-            if(!is_dir('uploads/'.date('Y/m/d'))){
-                mkdir('uploads/'.date('Y/m/d'), 0777, true);
+            if(!is_dir('public/uploads/'.date('Y/m/d'))){
+                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
             }
 
             $destionation = date('Y/m/d'). '/'. end($tmp);
-            
+           
             File::move(config('uv.upload_path').$dataArr['icon_url'], config('uv.upload_path').$destionation);
             
             $dataArr['icon_url'] = $destionation;
@@ -128,12 +128,12 @@ class ShopTypeController extends Controller
             
             $tmp = explode('/', $dataArr['icon_url']);
 
-            if(!is_dir('uploads/'.date('Y/m/d'))){
-                mkdir('uploads/'.date('Y/m/d'), 0777, true);
+            if(!is_dir('public/uploads/'.date('Y/m/d'))){
+                mkdir('public/uploads/'.date('Y/m/d'), 0777, true);
             }
 
             $destionation = date('Y/m/d'). '/'. end($tmp);
-            
+            // dd(config('uv.upload_path').$dataArr['icon_url'], config('uv.upload_path').$destionation);
             File::move(config('uv.upload_path').$dataArr['icon_url'], config('uv.upload_path').$destionation);
             
             $dataArr['icon_url'] = $destionation;

@@ -6,7 +6,7 @@ class Swift_Bug38Test extends \PHPUnit_Framework_TestCase
     private $_attFileName;
     private $_attFileType;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->_attFileName = 'data.txt';
         $this->_attFileType = 'text/plain';
@@ -22,7 +22,7 @@ class Swift_Bug38Test extends \PHPUnit_Framework_TestCase
         $message->setCc('other@domain.tld');
         $message->setFrom('user@domain.tld');
 
-        $image = new Swift_Image('<data>', 'images.gif', 'images/gif');
+        $image = new Swift_Image('<data>', 'image.gif', 'image/gif');
 
         $cid = $message->embed($image);
         $message->setBody('HTML part', 'text/html');
@@ -55,10 +55,10 @@ class Swift_Bug38Test extends \PHPUnit_Framework_TestCase
             'HTML part'.
             "\r\n\r\n".
             '--'.$boundary."\r\n".
-            'Content-Type: images/gif; name=images.gif'."\r\n".
+            'Content-Type: image/gif; name=image.gif'."\r\n".
             'Content-Transfer-Encoding: base64'."\r\n".
             'Content-ID: <'.preg_quote($imgId, '~').'>'."\r\n".
-            'Content-Disposition: inline; filename=images.gif'."\r\n".
+            'Content-Disposition: inline; filename=image.gif'."\r\n".
             "\r\n".
             preg_quote(base64_encode('<data>'), '~').
             "\r\n\r\n".
@@ -76,7 +76,7 @@ class Swift_Bug38Test extends \PHPUnit_Framework_TestCase
         $message->setCc('other@domain.tld');
         $message->setFrom('user@domain.tld');
 
-        $image = new Swift_Image('<data>', 'images.gif', 'images/gif');
+        $image = new Swift_Image('<data>', 'image.gif', 'image/gif');
 
         $cid = $message->embed($image);
         $message->setBody('HTML part', 'text/html');
@@ -104,10 +104,10 @@ class Swift_Bug38Test extends \PHPUnit_Framework_TestCase
         'HTML part'.
         "\r\n\r\n".
         '--'.$boundary."\r\n".
-        'Content-Type: images/gif; name=images.gif'."\r\n".
+        'Content-Type: image/gif; name=image.gif'."\r\n".
         'Content-Transfer-Encoding: base64'."\r\n".
         'Content-ID: <'.preg_quote($imgId, '~').'>'."\r\n".
-        'Content-Disposition: inline; filename=images.gif'."\r\n".
+        'Content-Disposition: inline; filename=image.gif'."\r\n".
         "\r\n".
         preg_quote(base64_encode('<data>'), '~').
         "\r\n\r\n".
@@ -180,8 +180,6 @@ class Swift_Bug38Test extends \PHPUnit_Framework_TestCase
         $this->assertPatternInStream($pattern, $streamA);
         $this->assertPatternInStream($pattern, $streamB);
     }
-
-    // -- Helpers
 
     public function assertPatternInStream($pattern, $stream, $message = '%s')
     {

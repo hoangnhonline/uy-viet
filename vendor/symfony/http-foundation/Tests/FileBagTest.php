@@ -121,10 +121,10 @@ class FileBagTest extends \PHPUnit_Framework_TestCase
     {
         $tmpFile = $this->createTempFile();
         $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain', 100, 0);
-        $bag = new FileBag(array('images' => array('file' => $file)));
+        $bag = new FileBag(array('image' => array('file' => $file)));
 
         $files = $bag->all();
-        $this->assertEquals($file, $files['images']['file']);
+        $this->assertEquals($file, $files['image']['file']);
     }
 
     protected function createTempFile()

@@ -23,7 +23,7 @@ use App\Models\Image;
 use App\Models\Company;
 
 use Helper, File, Session, Auth;
-
+use Maatwebsite\Excel\Facades\Excel;
 class ShopController extends Controller
 {
     /**
@@ -105,7 +105,7 @@ class ShopController extends Controller
         $query->orderBy('shop.id', 'desc');   
         $items = $query->paginate(100);
         $shopTypeList = ShopType::all();
-        if($loginType == 1){
+        if($loginType < 3){
             $provinceList = Province::orderBy('name')->get();
         }else{
             $provinceList = Province::whereRaw('province.id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();            
@@ -113,7 +113,7 @@ class ShopController extends Controller
         $districtList = District::where('province_id', $province_id)->orderBy('name')->get();        
         
         $userListLevel = $tmpUser['userList'];
-
+        //dd("<pre>",$userListLevel,"</pre>");
         return view('backend.shop.index', compact( 
                                             'items', 
                                             'arrSearch', 
@@ -124,6 +124,104 @@ class ShopController extends Controller
                                             'companyList', 
                                             'userListLevel', 
                                             'userIdSelected'));
+    }
+
+    public function export(Request $request)
+    {
+        $contents = [];
+        $loginType = Auth::user()->type;
+        $loginId = Auth::user()->id;
+        
+        $companyList = Company::all();
+        $arrSearch['status'] = $status = isset($request->status) ? $request->status : 1;   
+        //$typeIdArr = ShopType::lists('id')->toArray();
+        $shopTypeList = ShopType::all();
+        
+        foreach ($shopTypeList as $key => $value) {
+            $typeIdDefault[] = $value->id;
+        }        
+        $arrSearch['type_id'] = $type_id = isset($request->type_id) ? $request->type_id : $typeIdDefault;     
+
+        $arrSearch['company_id'] = $company_id = $request->company_id ? $request->company_id : Company::first()->id;       
+
+        if($loginType >= 2){
+            $arrSearch['company_id'] = $company_id = Auth::user()->company_id;
+        }
+        
+        $tmpUser = Account::getUserIdChild($loginId, $loginType, $company_id);      
+
+        $arrSearch['district_id'] = $district_id = isset($request->district_id) ? $request->district_id : null;
+        $arrSearch['ward_id'] = $ward_id = isset($request->ward_id) ? $request->ward_id : null;
+        $arrSearch['user_id'] = $userIdSelected = isset($request->user_id) ? $request->user_id : [];
+        $arrSearch['condition_id'] = $condition_id = isset($request->condition_id) ? $request->condition_id : null;
+        $arrSearch['province_id'] = $province_id = isset($request->province_id) ? $request->province_id : null;
+
+        $arrSearch['user_type'] = $user_type = isset($request->user_type) ? $request->user_type : null;        
+        
+
+        $arrSearch['shop_name'] = $shop_name = isset($request->shop_name) && trim($request->shop_name) != '' ? trim($request->shop_name) : '';
+        
+        $query = Shop::where('shop.status', $status)->where('company_id', $company_id);
+
+        $wardList = (object) [];
+        if( $userIdSelected ){
+            
+            $userIdSelected[] = $loginId;
+            
+            $query->whereIn('shop.user_id', $userIdSelected);
+        }else{
+            if($loginType > 1){
+                $userIdSelected = $tmpUser['userId'];
+            
+                $userIdSelected[] = $loginId;
+            
+                $query->whereIn('shop.user_id', $userIdSelected);
+            }
+        }
+        if( $type_id ){
+            $query->whereIn('shop.type_id', $type_id);
+        }
+        if( $province_id ){
+            $query->where('shop.province_id', $province_id);
+        }            
+        if( $district_id ){
+            $query->where('shop.district_id', $district_id);
+            $wardList = Ward::where('district_id', $district_id)->get();
+        }
+        if( $ward_id ){
+            $query->where('shop.ward_id', $ward_id);
+        }       
+        if( $condition_id ){
+            $query->where('shop.condition_id', $condition_id);
+        }        
+        if( $shop_name != ''){
+            $query->where('shop.shop_name', 'LIKE', '%'.$shop_name.'%');            
+        }
+        
+        $query->orderBy('shop.id', 'desc');   
+        $items = $query->get();
+        $i = 0;
+        foreach ($items as $data) {
+            $i++;            
+            $contents[] = [
+                'STT' => $i,
+                'Tên shop' => $data->shop_name,
+                'Địa chỉ' => $data->full_address,
+                'Điện thoại' => $data->phone,
+                'Người liên hệ' => $data->namer,
+                'Danh mục' => $data->type->type,
+                'Tỉnh/thành' => $data->province->name,
+                'Quận/huyện' => $data->district->name,
+                'Phường/xã' => $data->ward->name
+            ];
+        }        
+        
+        Excel::create('shop_' . date('YmdHi'), function ($excel) use ($contents) {
+            // Set sheets
+            $excel->sheet('Shop', function ($sheet) use ($contents) {
+                $sheet->fromArray($contents, null, 'A1', false, true);
+            });
+        })->download('xls');
     }
     public function getListUser($company_id, $user_type){
         return $userList = Account::where(['company_id' => $company_id, 'type' => $user_type])->get();
@@ -238,8 +336,8 @@ class ShopController extends Controller
         $loginId = Auth::user()->id;
 
         $user_id_list = Account::getUserIdChild($loginId, $loginType, Auth::user()->company_id);
-
-        if($loginType > 1){
+        $user_id_list['userId'][] = $loginId;
+        if($loginType > 2){
             $provinceList = Province::whereRaw('id IN (SELECT province_id FROM user_province WHERE user_id = '.$loginId.')')->orderBy('name')->get();
         }else{
             $provinceList = Province::orderBy('name')->get();        
@@ -255,8 +353,8 @@ class ShopController extends Controller
                 ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
                 ->first();
                 ;                
-
-        if(!in_array($detail->user_id, $user_id_list) && $loginType > 1){ // ko co quyen truy cap
+        
+        if(!in_array($detail->user_id, $user_id_list['userId']) && $loginType > 1){ // ko co quyen truy cap
             return redirect()->route('shop.index');
         }
         $districtList = (object)[];
@@ -281,17 +379,16 @@ class ShopController extends Controller
                     $hinhArr[] = config('app.url')."/UY_VIET_DINH_VI/".$folder."/".basename($filename);                    
                 }
             }
-        }
-        
-        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder'));
+        }        
+        return view('backend.shop.edit', compact( 'detail', 'shopTypeList', 'companyList', 'provinceList', 'conditionList', 'districtList', 'wardList', 'hinhArr', 'folder', 'id'));
     }
     public function editMaps($id)
     {       
         $loginType = Auth::user()->type;
         $loginId = Auth::user()->id;
 
-        $detail = Shop::find($id);
-
+        $detail = Shop::where('id', $id)->first();
+        
         $tmpUser = Account::getUserIdChild($loginId, $loginType, $detail->company_id);
         // not admin
         $query =  Shop::where('shop.status', 1);
@@ -356,6 +453,7 @@ class ShopController extends Controller
         }
         
         $model = Shop::find($dataArr['id']);
+       
         $dataArr['location'] = $dataArr['latt'].",".$dataArr['longt'];
         $model->update($dataArr);
         
@@ -387,6 +485,6 @@ class ShopController extends Controller
 
         // redirect
         Session::flash('message', 'Xóa shop thành công');
-        return redirect()->route('shop.index');
+        return redirect()->back();
     }
 }

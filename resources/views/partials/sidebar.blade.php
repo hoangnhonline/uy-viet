@@ -2,7 +2,7 @@
 	<section class="sidebar">
 		<div class="user-panel">
 			<div class="pull-left image">
-				<img src="{{ URL::asset('assets/images/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+				<img src="{{ URL::asset('public/assets/images/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
 			</div>
 			<div class="pull-left info">
 				<p>Hi , {{ Auth::user()->fullname }}</p>
@@ -21,7 +21,7 @@
 				<ul class="treeview-menu list-group checked-list-box check-list-box filter_type">
 					<li class="active filter_all" data-filter="filter_type">
 						<a href="javascript:void(0)" title="" value="" data-col="type_id">							
-							<span><img src="{{ URL::asset('assets/images/all.png') }}" alt="Tất cả"></span>Tất cả
+							<span><img src="{{ URL::asset('public/assets/images/all.png') }}" alt="Tất cả"></span>Tất cả
 						</a>
 					</li>
 					@foreach($shopType as $type)		                        

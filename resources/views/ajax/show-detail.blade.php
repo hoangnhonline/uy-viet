@@ -28,10 +28,10 @@
      </div>                     
       @endforeach     
       <div class="row" style="clear:both;text-align:right">
-      <a data-toggle="modal" data-target="#modal-edit" class="pull-right edit-shop" data-id="{{ $detail->id }}" title="Cập nhật thông tin">
+      <a data-toggle="modal" data-target="#modal-edit" class="pull-right edit-shop" data-id="{{ $detail->shop_id }}" title="Cập nhật thông tin">
         <i class="fa fa-pencil-square-o"></i>
       </a>
-      <a href="{{ route( 'shop.edit-maps', [ 'id' => $detail->id ]) }}" target="_blank" title="Chỉnh sửa địa điểm">
+      <a href="{{ route( 'shop.edit-maps', [ 'id' => $detail->shop_id ]) }}" target="_blank" title="Chỉnh sửa địa điểm">
         <i class="fa fa-map-marker"></i>
       </a>&nbsp;&nbsp;&nbsp;
       </div>

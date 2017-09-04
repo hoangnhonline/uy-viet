@@ -81,7 +81,7 @@ class Directory extends Renderer
                     $node->getName()
                 );
 
-                $data['images'] = '<span class="glyphicon glyphicon-folder-open"></span> ';
+                $data['icon'] = '<span class="glyphicon glyphicon-folder-open"></span> ';
             } else {
                 $data['name'] = sprintf(
                     '<a href="%s.html">%s</a>',
@@ -89,7 +89,7 @@ class Directory extends Renderer
                     $node->getName()
                 );
 
-                $data['images'] = '<span class="glyphicon glyphicon-file"></span> ';
+                $data['icon'] = '<span class="glyphicon glyphicon-file"></span> ';
             }
         }
 

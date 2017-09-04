@@ -30,14 +30,14 @@ class CrawlerTest extends \PHPUnit_Framework_TestCase
     public function testGetUri()
     {
         $uri = 'http://symfony.com';
-        $crawler = new Crawler(null,  $uri);
+        $crawler = new Crawler(null, $uri);
         $this->assertEquals($uri, $crawler->getUri());
     }
 
     public function testGetBaseHref()
     {
         $baseHref = 'http://symfony.com';
-        $crawler = new Crawler(null,  null, $baseHref);
+        $crawler = new Crawler(null, null, $baseHref);
         $this->assertEquals($baseHref, $crawler->getBaseHref());
     }
 
@@ -666,13 +666,13 @@ EOF
         $this->assertInstanceOf('Symfony\\Component\\DomCrawler\\Crawler', $crawler, '->selectLink() returns a new instance of a crawler');
 
         $this->assertCount(1, $crawler->selectLink('Fabien\'s Foo'), '->selectLink() selects links by the node values');
-        $this->assertCount(1, $crawler->selectLink('Fabien\'s Bar'), '->selectLink() selects links by the alt attribute of a clickable images');
+        $this->assertCount(1, $crawler->selectLink('Fabien\'s Bar'), '->selectLink() selects links by the alt attribute of a clickable image');
 
         $this->assertCount(2, $crawler->selectLink('Fabien"s Foo'), '->selectLink() selects links by the node values');
-        $this->assertCount(2, $crawler->selectLink('Fabien"s Bar'), '->selectLink() selects links by the alt attribute of a clickable images');
+        $this->assertCount(2, $crawler->selectLink('Fabien"s Bar'), '->selectLink() selects links by the alt attribute of a clickable image');
 
         $this->assertCount(1, $crawler->selectLink('\' Fabien"s Foo'), '->selectLink() selects links by the node values');
-        $this->assertCount(1, $crawler->selectLink('\' Fabien"s Bar'), '->selectLink() selects links by the alt attribute of a clickable images');
+        $this->assertCount(1, $crawler->selectLink('\' Fabien"s Bar'), '->selectLink() selects links by the alt attribute of a clickable image');
 
         $this->assertCount(4, $crawler->selectLink('Foo'), '->selectLink() selects links by the node values');
         $this->assertCount(4, $crawler->selectLink('Bar'), '->selectLink() selects links by the node values');
@@ -790,13 +790,13 @@ HTML;
     public function testImage()
     {
         $crawler = $this->createTestCrawler('http://example.com/bar/')->selectImage('Bar');
-        $this->assertInstanceOf('Symfony\\Component\\DomCrawler\\Image', $crawler->image(), '->images() returns an Image instance');
+        $this->assertInstanceOf('Symfony\\Component\\DomCrawler\\Image', $crawler->image(), '->image() returns an Image instance');
 
         try {
             $this->createTestCrawler()->filterXPath('//ol')->image();
-            $this->fail('->images() throws an \InvalidArgumentException if the node list is empty');
+            $this->fail('->image() throws an \InvalidArgumentException if the node list is empty');
         } catch (\InvalidArgumentException $e) {
-            $this->assertTrue(true, '->images() throws an \InvalidArgumentException if the node list is empty');
+            $this->assertTrue(true, '->image() throws an \InvalidArgumentException if the node list is empty');
         }
     }
 
