@@ -16,6 +16,8 @@ use App\Models\UserProvince;
 use App\Models\Shop;
 use App\Models\District;
 use App\Models\Ward;
+use App\Models\Image;
+use App\Models\ShopSelectCondition;
 
 use Helper, File, Session, Auth;
 
@@ -55,14 +57,25 @@ class GetController extends Controller
         $info = $request->info;
 
         $dataArr  = json_decode($info, true);   
-       
+        
+        $detailUser = Account::find($dataArr['user_id']);
+        
+        $dataArr['company_id'] = $detailUser->company_id;
+
+        $wardDetail = Ward::find($dataArr['ward_id']);
+        $districtDetail = District::find($dataArr['district_id']);
+        $provinceDetail = Province::find($dataArr['province_id']);
+        $dataArr['full_address'] = $dataArr['address']. ", ". $dataArr['street']. ", ". $wardDetail->name. ", ". $districtDetail->name. ", ". $provinceDetail->name ;
+        $dataArr['add_time'] = date('Y-m-d H:i:s', time());        
         $rs = Shop::create($dataArr);
-        if($rs->id ){
-            $result = ['result' => true];
+        if($rs->id ){         
+            ShopSelectCondition::create(['shop_id' => $rs->id]);
+            Image::create(['url' => $dataArr['image'], 'shop_id' => $rs->id]);   
+            $result = "Successful";
         }else{
-            $result = ['result' => false];
+            $result = "fail";
         }
-        return json_encode($result);
+        return $result;
     }
 
     public function search(Request $request){
@@ -74,8 +87,18 @@ class GetController extends Controller
         $shop_name = $dataArr['shop_name'];
 
         $user_id = $dataArr['user_id'];
-
-        $result = Shop::where('user_id', $user_id)->where('shop_name', 'LIKE', '%'.$shop_name.'%')->get()->toArray();
+        
+        $index = isset($dataArr['index']) ? $dataArr['index'] : 1;
+        $start = ( $index -1 )* 20;
+        $result = Shop::where('user_id', $user_id)->where('shop_name', 'LIKE', '%'.$shop_name.'%')
+            ->join('province', 'shop.province_id', '=', 'province.id')
+            ->join('district', 'shop.district_id', '=', 'district.id')
+            ->join('ward', 'shop.ward_id', '=', 'ward.id')
+            ->join('image', 'shop.id', '=', 'image.shop_id')
+            ->select('shop.*', 'ward.name as ward_name', 'district.name as district_name', 'province.name as province_name', 'image.url as image')
+            ->offset($start)
+            ->limit(20)
+        ->get()->toArray();
 
         return json_encode($result);
 
