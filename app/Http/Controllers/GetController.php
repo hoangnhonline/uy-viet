@@ -25,19 +25,7 @@ class GetController extends Controller
 {
     public function login(Request $request)
     {   
-        $arrDefault = [
-            'id' => '',
-            'username' => '',
-            'fullname' => '',
-            'email' => '',
-            'type' => '',
-            'phone' => '',
-            'status' => '',
-            'create_time' => '',
-            'company_id' => '',
-            'created_at' => '',
-            'updated_at' => ''
-        ];
+        $arr = [];
         $info = $request->info;
 
         $dataArr  = json_decode($info, true);   
@@ -45,11 +33,18 @@ class GetController extends Controller
         if (Auth::validate($dataArr)) {
 
             if (Auth::attempt($dataArr)) {              
-                $arrDefault = Auth::user();              
-            }
+                $arr['info'] = Auth::user();
+                $arr['province'] = UserProvince::where('user_id', Auth::user()->id)->join('province', 'user_province.province_id', '=', 'province.id') 
+                                ->select('province_id', 'province.name as province_name')->get()->toArray();
+                $arr['result'] = "success";
+            }   
 
+        }else{
+            $arr['info'] = [];
+            $arr['province'] = [];
+            $arr['result'] = "fail";
         }
-        return json_encode($arrDefault);
+        return json_encode($arr);
     }
 
     public function addPoint(Request $request)
