@@ -20,7 +20,7 @@
     <div class="row">
       <!-- left column -->
 
-      <div class="col-md-8">
+      <div class="col-md-7">
         <!-- general form elements -->
         <div class="box box-primary">
           <div class="box-header with-border">
@@ -131,16 +131,7 @@
                     <option value="2" {{ old('status') == 2 ? "selected" : "" }}>Khóa</option>                  
                   </select>
                 </div>                 
-                <div class="form-group col-md-12">
-                    <label>Tỉnh / Thành</label>
-                    <select class="form-control select2" name="province_id[]" id="province_id" multiple="multiple">                  
-                      @if( $provinceList->count() > 0)
-                        @foreach( $provinceList as $value )
-                        <option value="{{ $value->id }}" {{ (in_array($value->id, old('tags', []))) ? "selected" : "" }}>{{ $value->name }}</option>
-                        @endforeach
-                      @endif
-                    </select>                    
-                  </div>         
+                       
                 
             </div>
             <input type="hidden" name="url_return" value="{{ $url_return }}">
@@ -156,7 +147,28 @@
         <!-- /.box -->     
 
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">Tỉnh / Thành</h3>
+          </div>
+            
+
+            <div class="box-body">
+              @if( $provinceList->count() > 0)
+                    @foreach( $provinceList as $value )
+                    <div class="col-md-3">
+                        <label>
+                          <input type="checkbox" name="province_id[]" value="{{ $value->id }}" {{ (in_array($value->id, old('province_id', []))) ? "checked" : "" }}>
+                          {{ $value->name }}
+                        </label>
+                    </div>
+                    @endforeach
+                    @endif                       
+                    <div class="clearfix"></div>     
+
+            </div>
+          </div>
       </div>
       <!--/.col (left) -->      
     </div>

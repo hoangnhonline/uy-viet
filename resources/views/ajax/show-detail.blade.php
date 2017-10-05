@@ -2,7 +2,7 @@
    <div class="col-sm-4" style="padding:0px;position:relative">                 
    	<img src="{{ $firstImage }}" class="img-responsive" style="width:100%">        
    	@if($have_image == 1)
-   	<a class="btn btn-info btn-sm view-more" data-id="{{ $detail->id }}" style="padding: 4px 10px; margin-top:2px;position:absolute;bottom:0;width:100%" data="{{ $detail->id }}">More</a>
+   	<a class="btn btn-info btn-sm view-more" data-id="{{ $detail->shop_id }}" style="padding: 4px 10px; margin-top:2px;position:absolute;bottom:0;width:100%" data="{{ $detail->shop_id }}">More</a>
    	@endif
    </div>
    <div class="info-box-text-wrap col-sm-8">
