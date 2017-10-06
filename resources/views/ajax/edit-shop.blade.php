@@ -1,6 +1,6 @@
  <section class="content">      
       <form role="form" method="POST" action="{{ route('shop.update') }}" id="formData">
-         <input type="hidden" name="id" value="{{ $detail->id }}">
+         <input type="hidden" name="id" value="{{ $detail->shop_id }}">
          <div class="row">
             <!-- left column -->
             <div class="col-md-12">

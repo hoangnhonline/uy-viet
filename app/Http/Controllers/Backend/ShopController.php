@@ -303,6 +303,9 @@ class ShopController extends Controller
 
             }
             ShopSelectCondition::create($arrCond);
+        }else{
+            $arrCond['shop_id'] = $id;
+            ShopSelectCondition::create($arrCond);
         }
         Image::create([
             'url' => $dataArr['folder'],
@@ -438,6 +441,10 @@ class ShopController extends Controller
 
             if(!empty($dataArr['cond'])){
                 $model = ShopSelectCondition::where('shop_id', $dataArr['id'])->first();
+				
+                if(!$model){
+                    $model = ShopSelectCondition::create(['shop_id' => $dataArr['id']]);
+                }
                 foreach ($dataArr['cond'] as $column => $value) {
                     
                     $model->$column = $value;

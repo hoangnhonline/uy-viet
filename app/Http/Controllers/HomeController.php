@@ -333,8 +333,9 @@ class HomeController
         
         $companyList = Company::all();
         
-        $detail = Shop::where('shop.id', $id)
+         $detail = Shop::where('shop.id', $id)
                 ->join('shop_select_condition', 'shop_select_condition.shop_id', '=', 'shop.id')
+                ->select('shop.id as shop_id', 'shop.*', 'shop_select_condition.*')
                 ->first();
                 ;
         
